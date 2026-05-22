@@ -1,5 +1,14 @@
 # Scripts
 
+## `build_selected_manual_scoring.mjs`
+
+Builds the selected-task manual scoring workbook at:
+
+- `outputs/pilot_v0.1/manual_scoring_selected_001_009_012_017_020_025.xlsx`
+
+This builder currently targets the original v0.1 0-2 score sheet.
+It depends on `@oai/artifact-tool`; in the Codex desktop workspace this is provided through the ignored local `scripts/node_modules` symlink.
+
 ## `run_llm_planner.py`
 
 Runs `dataset/tasks_public_v0.1.jsonl` with `prompts/planner_prompt.md` and writes:

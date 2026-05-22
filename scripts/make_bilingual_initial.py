@@ -1,7 +1,7 @@
 import csv
 from pathlib import Path
 
-root = Path(r"C:\Users\user\Desktop\EMNLP2026\pim_planbench")
+root = Path(__file__).resolve().parents[1]
 src = root / "scores" / "pilot_v0.1" / "manual_scoring_same_task_models_cn_v0.1.csv"
 out = root / "scores" / "pilot_v0.1" / "manual_scoring_same_task_models_bilingual_v0.1.csv"
 

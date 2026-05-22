@@ -1,8 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { SpreadsheetFile, Workbook } from "@oai/artifact-tool";
 
-const root = "/Users/0x47/Desktop/pim_planbench";
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputDir = path.join(root, "outputs", "pilot_v0.1");
 const outputPath = path.join(outputDir, "manual_scoring_selected_001_009_012_017_020_025.xlsx");
 
