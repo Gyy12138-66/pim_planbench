@@ -5,8 +5,10 @@ import { SpreadsheetFile, Workbook } from "@oai/artifact-tool";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputDir = path.join(root, "outputs", "scoring_v0.3");
-const outputPath = path.join(outputDir, "manual_scoring_selected_001_009_012_017_020_025_v0.3.xlsx");
+const outputPath = path.join(outputDir, "manual_scoring_random6_seed20260525_v0.3.xlsx");
 const autoScorePath = "scores/pilot_v0.3/3ModelOutput_scored.csv";
+const randomSeed = "20260525";
+const samplingNote = "Random sample of 6 tasks from tasks_public_v0.3 excluding the previous selected set 001/009/012/017/020/025.";
 
 const benchmarkContract = {
   publicTasks: "dataset/tasks_public_v0.3.jsonl",
@@ -17,12 +19,12 @@ const benchmarkContract = {
 };
 
 const selectedTaskIds = [
-  "easy_heat_1d_dirichlet_001",
-  "medium_heat_inverse_alpha_009",
-  "medium_wave_sparse_sensors_012",
-  "hard_cahn_hilliard_017",
-  "hard_helmholtz_high_frequency_020",
-  "hard_plus_mhd_divergence_025",
+  "easy_poisson_2d_source_003",
+  "easy_wave_1d_icbc_002",
+  "medium_periodic_advdiff_015",
+  "hard_plus_acoustic_scattering_maze_022",
+  "hard_plus_rayleigh_benard_024",
+  "hard_plus_euler_shock_023",
 ];
 
 const facetOrder = [
@@ -70,6 +72,8 @@ const headers = [
   "你的评分0-5",
   "错误标签",
   "备注",
+  "初步评分参考",
+  "初步评分依据",
 ];
 
 const rubricStandards = {
@@ -296,11 +300,13 @@ for (const taskId of selectedTaskIds) {
         referenceText,
         makeAutoReview(answer, facetId, modelRecord),
         rubricStandards[facetId],
-        autoScore.score ? Number(autoScore.score) : null,
         null,
+        null,
+        null,
+        autoScore.score ? Number(autoScore.score) : null,
         autoScore.score_rationale
-          ? `AUTO_SYNC from ${autoScorePath}: ${autoScore.score_rationale}\n请人工复核后保留或修改分数。`
-          : `AUTO_SYNC from ${autoScorePath}. 请人工复核后保留或修改分数。`,
+          ? `AUTO_SYNC from ${autoScorePath}: ${autoScore.score_rationale}\n仅供参考；请在“你的评分0-5”列独立人工标注。`
+          : `AUTO_SYNC from ${autoScorePath}. 仅供参考；请在“你的评分0-5”列独立人工标注。`,
       ]);
     }
   }
@@ -342,7 +348,7 @@ scoringSheet.getRange(`${scoreCol}2:${scoreCol}${lastRow}`).dataValidation = {
 
 const widthsPx = [
   215, 70, 130, 165, 190, 440, 110, 145, 145, 140,
-  195, 560, 520, 380, 460, 95, 160, 260,
+  195, 560, 520, 380, 460, 95, 160, 260, 115, 420,
 ];
 for (let i = 0; i < widthsPx.length; i += 1) {
   scoringSheet.getRange(`${colLetter(i + 1)}:${colLetter(i + 1)}`).format.columnWidthPx = widthsPx[i];
@@ -351,26 +357,28 @@ scoringSheet.getRange(`A1:${lastCol}1`).format.rowHeightPx = 40;
 scoringSheet.getRange(`A2:${lastCol}${lastRow}`).format.rowHeightPx = 128;
 scoringSheet.freezePanes.freezeRows(1);
 scoringSheet.freezePanes.freezeColumns(3);
-const scoringTable = scoringSheet.tables.add(`A1:${lastCol}${lastRow}`, true, "ManualScoringRowsV03");
+const scoringTable = scoringSheet.tables.add(`A1:${lastCol}${lastRow}`, true, "RandomManualScoringRowsV03");
 scoringTable.style = "TableStyleMedium2";
 scoringTable.showFilterButton = true;
 
 const guideSheet = workbook.worksheets.add("说明");
 guideSheet.showGridLines = false;
-guideSheet.getRange("A1:F1").values = [["PIM-PlanBench 人工评分表 v0.3", "", "", "", "", ""]];
+guideSheet.getRange("A1:F1").values = [["PIM-PlanBench 随机抽样人工评分表 v0.3", "", "", "", "", ""]];
 guideSheet.mergeCells("A1:F1");
 guideSheet.getRange("A1:F1").format = {
   fill: "#1F4E79",
   font: { bold: true, color: "#FFFFFF", size: 15 },
   horizontalAlignment: "center",
 };
-guideSheet.getRange("A3:B11").values = [
+guideSheet.getRange("A3:B13").values = [
   ["Public tasks", benchmarkContract.publicTasks],
   ["Private references", benchmarkContract.privateReferences],
   ["Prompt setting", benchmarkContract.promptSetting],
   ["Rubric", benchmarkContract.rubric],
   ["Score scale", benchmarkContract.scoreScale],
   ["Auto score source", autoScorePath],
+  ["Random seed", randomSeed],
+  ["Sampling note", samplingNote],
   ["任务数量", selectedTaskIds.length],
   ["模型数量", modelFiles.length],
   ["评分行数", bodyRows.length],
@@ -393,7 +401,7 @@ const modelListEndRow = 10 + modelFiles.length;
 guideSheet.getRange(`D11:F${modelListEndRow}`).values = modelFiles.map((model) => [model.display, model.original, model.path]);
 guideSheet.getRange("D10:F10").values = [["模型", "模型原名", "Normalized file"]];
 guideSheet.getRange("A3:F18").format = { wrapText: true, verticalAlignment: "top" };
-guideSheet.getRange("A3:A11").format = { font: { bold: true }, fill: "#D9EAF7" };
+guideSheet.getRange("A3:A13").format = { font: { bold: true }, fill: "#D9EAF7" };
 guideSheet.getRange("A12:A18").format = { font: { bold: true }, fill: "#FFF2CC" };
 guideSheet.getRange("D2:E2").format = { fill: "#D9EAF7", font: { bold: true } };
 guideSheet.getRange("D10:F10").format = { fill: "#D9EAF7", font: { bold: true } };
@@ -427,15 +435,15 @@ progressSheet.getRange(`E2:E${selectedTaskIds.length + 1}`).format.numberFormat 
 progressSheet.getRange(`F2:F${selectedTaskIds.length + 1}`).format.numberFormat = "0.00";
 progressSheet.getRange("A:F").format.columnWidthPx = 155;
 progressSheet.freezePanes.freezeRows(1);
-const progressTable = progressSheet.tables.add(`A1:F${selectedTaskIds.length + 1}`, true, "ScoringProgressV03");
+const progressTable = progressSheet.tables.add(`A1:F${selectedTaskIds.length + 1}`, true, "RandomScoringProgressV03");
 progressTable.style = "TableStyleMedium4";
 
 const topCheck = await workbook.inspect({
   kind: "table",
-  range: "人工评分!A1:R8",
+  range: `人工评分!A1:${lastCol}8`,
   include: "values,formulas",
   tableMaxRows: 8,
-  tableMaxCols: 18,
+  tableMaxCols: headers.length,
   tableMaxCellChars: 120,
 });
 console.log(topCheck.ndjson);
@@ -449,7 +457,7 @@ const errorCheck = await workbook.inspect({
 console.log(errorCheck.ndjson);
 
 try {
-  await workbook.render({ sheetName: "人工评分", range: "A1:R12", scale: 1, format: "png" });
+  await workbook.render({ sheetName: "人工评分", range: `A1:${lastCol}12`, scale: 1, format: "png" });
   await workbook.render({ sheetName: "说明", range: "A1:F18", scale: 1, format: "png" });
   await workbook.render({ sheetName: "评分进度", range: "A1:F8", scale: 1, format: "png" });
 } catch (error) {

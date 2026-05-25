@@ -11,6 +11,7 @@ This builder targets the current PlanScore v0.3 0-5 score sheet. It reads:
 - `dataset/tasks_public_v0.3.jsonl`
 - `dataset/references_private_v0.3.jsonl`
 - normalized model outputs under `runs/pilot_v0.3/normalized/`
+- rubric-assisted scores from `scores/pilot_v0.3/3ModelOutput_scored.csv`, prefilled into the manual score column for reviewer adjustment
 
 It depends on `@oai/artifact-tool`; in the Codex desktop workspace this is provided through the ignored local `scripts/node_modules` symlink.
 
@@ -56,6 +57,20 @@ Then build the HTML report with:
 
 ```powershell
 python scores/visualize_model_scores.py --input scores/pilot_v0.3/3ModelOutput_scored.csv --output scores/pilot_v0.3/model_score_report.html
+```
+
+## `build_random_manual_scoring_v03.mjs`
+
+Builds a reproducible random 6-task manual annotation workbook at:
+
+- `outputs/scoring_v0.3/manual_scoring_random6_seed20260525_v0.3.xlsx`
+
+The workbook leaves `你的评分0-5` blank for independent human annotation and appends `初步评分参考` plus `初步评分依据` as the rightmost columns.
+
+Run it with:
+
+```powershell
+node scripts/build_random_manual_scoring_v03.mjs
 ```
 
 ## `run_llm_planner.py`
