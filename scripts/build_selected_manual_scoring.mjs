@@ -10,7 +10,7 @@ const outputPath = path.join(outputDir, "manual_scoring_selected_001_009_012_017
 const benchmarkContract = {
   publicTasks: "dataset/tasks_public_v0.3.jsonl",
   privateReferences: "dataset/references_private_v0.3.jsonl",
-  promptSetting: "canonical_v0.1",
+  promptSetting: "canonical_v0.3",
   rubric: "docs/rubric_v0.3.md",
   scoreScale: "0-5 per facet; 25 points per task",
 };
@@ -36,22 +36,17 @@ const modelFiles = [
   {
     display: "DeepSeek-V4-Flash",
     original: "deepseek-ai/DeepSeek-V4-Flash",
-    path: "runs/pilot_v0.1/normalized/deepseek-ai_DeepSeek-V4-Flash__canonical_v0.1.jsonl",
-  },
-  {
-    display: "GPT-5.5-Thinking",
-    original: "Open-ai/GPT-5.5-Thinking",
-    path: "runs/pilot_v0.1/normalized/Open-ai_GPT-5.5-Thinking__canonical_v0.1.jsonl",
+    path: "runs/pilot_v0.3/normalized/deepseek-ai_DeepSeek-V4-Flash__canonical_v0.3.jsonl",
   },
   {
     display: "Kimi-K2.6",
     original: "Pro/moonshotai/Kimi-K2.6",
-    path: "runs/pilot_v0.1/normalized/Pro_moonshotai_Kimi-K2.6__canonical_v0.1.jsonl",
+    path: "runs/pilot_v0.3/normalized/Pro_moonshotai_Kimi-K2.6__canonical_v0.3.jsonl",
   },
   {
     display: "GLM-4.7",
     original: "Pro/zai-org/GLM-4.7",
-    path: "runs/pilot_v0.1/normalized/Pro_zai-org_GLM-4.7__canonical_v0.1.jsonl",
+    path: "runs/pilot_v0.3/normalized/Pro_zai-org_GLM-4.7__canonical_v0.3.jsonl",
   },
 ];
 
@@ -117,6 +112,15 @@ function colLetter(indexOneBased) {
     n = Math.floor((n - 1) / 26);
   }
   return out;
+}
+
+function sanitizeCell(value) {
+  if (typeof value !== "string") return value;
+  return value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g, " ");
+}
+
+function sanitizeRows(rows) {
+  return rows.map((row) => row.map(sanitizeCell));
 }
 
 function formatValue(value) {
@@ -256,7 +260,7 @@ const lastCol = colLetter(headers.length);
 const lastRow = matrix.length;
 const scoreCol = colLetter(headers.indexOf("你的评分0-5") + 1);
 
-scoringSheet.getRange(`A1:${lastCol}${lastRow}`).values = matrix;
+scoringSheet.getRange(`A1:${lastCol}${lastRow}`).values = sanitizeRows(matrix);
 scoringSheet.getRange(`A1:${lastCol}1`).format = {
   fill: "#1F4E79",
   font: { bold: true, color: "#FFFFFF" },
@@ -325,7 +329,8 @@ guideSheet.getRange("D3:E8").values = selectedTaskIds.map((taskId) => {
   return [taskId, task?.pde_system ?? ""];
 });
 guideSheet.getRange("D2:E2").values = [["选中题目", "PDE/系统"]];
-guideSheet.getRange("D11:F14").values = modelFiles.map((model) => [model.display, model.original, model.path]);
+const modelListEndRow = 10 + modelFiles.length;
+guideSheet.getRange(`D11:F${modelListEndRow}`).values = modelFiles.map((model) => [model.display, model.original, model.path]);
 guideSheet.getRange("D10:F10").values = [["模型", "模型原名", "Normalized file"]];
 guideSheet.getRange("A3:F18").format = { wrapText: true, verticalAlignment: "top" };
 guideSheet.getRange("A3:A10").format = { font: { bold: true }, fill: "#D9EAF7" };
@@ -383,9 +388,13 @@ const errorCheck = await workbook.inspect({
 });
 console.log(errorCheck.ndjson);
 
-await workbook.render({ sheetName: "人工评分", range: "A1:R12", scale: 1, format: "png" });
-await workbook.render({ sheetName: "说明", range: "A1:F18", scale: 1, format: "png" });
-await workbook.render({ sheetName: "评分进度", range: "A1:F8", scale: 1, format: "png" });
+try {
+  await workbook.render({ sheetName: "人工评分", range: "A1:R12", scale: 1, format: "png" });
+  await workbook.render({ sheetName: "说明", range: "A1:F18", scale: 1, format: "png" });
+  await workbook.render({ sheetName: "评分进度", range: "A1:F8", scale: 1, format: "png" });
+} catch (error) {
+  console.warn(`Workbook render preview skipped: ${error?.message ?? error}`);
+}
 
 await fs.mkdir(outputDir, { recursive: true });
 const output = await SpreadsheetFile.exportXlsx(workbook);

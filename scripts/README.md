@@ -10,7 +10,7 @@ This builder targets the current PlanScore v0.3 0-5 score sheet. It reads:
 
 - `dataset/tasks_public_v0.3.jsonl`
 - `dataset/references_private_v0.3.jsonl`
-- normalized model outputs under `runs/pilot_v0.1/normalized/`
+- normalized model outputs under `runs/pilot_v0.3/normalized/`
 
 It depends on `@oai/artifact-tool`; in the Codex desktop workspace this is provided through the ignored local `scripts/node_modules` symlink.
 
@@ -18,6 +18,20 @@ Run it with:
 
 ```powershell
 node scripts/build_selected_manual_scoring.mjs
+```
+
+## `build_manual_scoring_facet_rows_v03.py`
+
+Builds the full v0.3 facet-level manual scoring CSV at:
+
+- `outputs/scoring_v0.3/manual_scoring_facet_rows_v0.3.csv`
+
+This table covers all 26 public v0.3 tasks, 3 normalized model outputs, and 5 rubric facets per task. The human scoring column is `human_score_0_5`.
+
+Run it with:
+
+```powershell
+python scripts/build_manual_scoring_facet_rows_v03.py
 ```
 
 ## `run_llm_planner.py`
