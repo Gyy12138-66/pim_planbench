@@ -1,0 +1,6 @@
+﻿facet,n_rows,n_compared,missing_manual,missing_auto,human_mean,human_variance,auto_mean,auto_variance,diff_mean_human_minus_auto,diff_variance,abs_diff_mean,abs_diff_max,exact_match_rate,within_0_5_rate,within_1_0_rate
+Model Choice,36,36,0,0,4.347,0.312,4.472,0.542,-0.125,0.248,0.375,1.000,0.389,0.861,1.000
+Physics Constraints,36,36,0,0,4.278,0.435,4.222,0.463,0.056,0.311,0.389,1.000,0.444,0.778,1.000
+Problem Formalization,36,36,0,0,4.569,0.145,4.889,0.102,-0.319,0.174,0.375,1.000,0.417,0.833,1.000
+Training Strategy,36,36,0,0,4.375,0.263,4.444,0.483,-0.069,0.288,0.375,1.000,0.444,0.806,1.000
+Validation Failure Risks,36,36,0,0,4.333,0.286,4.250,0.479,0.083,0.307,0.417,1.500,0.333,0.861,0.972

@@ -73,6 +73,25 @@ Run it with:
 node scripts/build_random_manual_scoring_v03.mjs
 ```
 
+## `compare_manual_auto_scores_v03.py`
+
+Compares the two v0.3 manual scoring workbooks against the automatic score CSV and reports row-level differences plus mean/variance summaries by workbook, facet, model, and facet-model group.
+
+Default inputs:
+
+- `outputs/scoring_v0.3/manual_scoring_selected_*_v0.3_compare.xlsx`
+- `scores/pilot_v0.3/3ModelOutput_scored.csv`
+
+Default output directory:
+
+- `outputs/scoring_v0.3/manual_auto_comparison_v0.3/`
+
+Run it with:
+
+```powershell
+python scripts/compare_manual_auto_scores_v03.py
+```
+
 ## `run_llm_planner.py`
 
 By default, runs `dataset/tasks_public_v0.1.jsonl` with `prompts/planner_prompt.md` and writes:

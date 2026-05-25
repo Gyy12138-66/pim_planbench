@@ -1,0 +1,7 @@
+﻿manual_file,model,n_rows,n_compared,missing_manual,missing_auto,human_mean,human_variance,auto_mean,auto_variance,diff_mean_human_minus_auto,diff_variance,abs_diff_mean,abs_diff_max,exact_match_rate,within_0_5_rate,within_1_0_rate
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Pro/moonshotai/Kimi-K2.6,30,30,0,0,4.400,0.128,4.633,0.240,-0.233,0.202,0.367,1.000,0.400,0.867,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Pro/zai-org/GLM-4.7,30,30,0,0,3.933,0.254,4.367,0.447,-0.433,0.202,0.433,1.000,0.467,0.667,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,deepseek-ai/DeepSeek-V4-Flash,30,30,0,0,4.350,0.313,4.533,0.671,-0.183,0.301,0.417,1.500,0.367,0.833,0.967
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Pro/moonshotai/Kimi-K2.6,30,30,0,0,4.650,0.192,4.667,0.230,-0.017,0.181,0.283,1.000,0.500,0.933,1.000
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Pro/zai-org/GLM-4.7,30,30,0,0,4.400,0.472,4.067,0.754,0.333,0.316,0.533,1.000,0.233,0.700,1.000
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,deepseek-ai/DeepSeek-V4-Flash,30,30,0,0,4.550,0.127,4.467,0.257,0.083,0.157,0.283,1.000,0.467,0.967,1.000

@@ -1,0 +1,31 @@
+﻿manual_file,facet,model,n_rows,n_compared,missing_manual,missing_auto,human_mean,human_variance,auto_mean,auto_variance,diff_mean_human_minus_auto,diff_variance,abs_diff_mean,abs_diff_max,exact_match_rate,within_0_5_rate,within_1_0_rate
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Model Choice,Pro/moonshotai/Kimi-K2.6,6,6,0,0,4.417,0.242,4.667,0.267,-0.250,0.175,0.250,1.000,0.667,0.833,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Model Choice,Pro/zai-org/GLM-4.7,6,6,0,0,3.917,0.242,4.500,0.300,-0.583,0.242,0.583,1.000,0.333,0.500,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Model Choice,deepseek-ai/DeepSeek-V4-Flash,6,6,0,0,4.667,0.067,5.000,0.000,-0.333,0.067,0.333,0.500,0.333,1.000,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Physics Constraints,Pro/moonshotai/Kimi-K2.6,6,6,0,0,4.417,0.142,4.333,0.267,0.083,0.342,0.417,1.000,0.333,0.833,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Physics Constraints,Pro/zai-org/GLM-4.7,6,6,0,0,3.583,0.442,4.000,0.800,-0.417,0.242,0.417,1.000,0.500,0.667,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Physics Constraints,deepseek-ai/DeepSeek-V4-Flash,6,6,0,0,4.000,0.700,4.167,0.967,-0.167,0.067,0.167,0.500,0.667,1.000,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Problem Formalization,Pro/moonshotai/Kimi-K2.6,6,6,0,0,4.583,0.142,5.000,0.000,-0.417,0.142,0.417,1.000,0.333,0.833,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Problem Formalization,Pro/zai-org/GLM-4.7,6,6,0,0,4.250,0.175,4.833,0.167,-0.583,0.242,0.583,1.000,0.333,0.500,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Problem Formalization,deepseek-ai/DeepSeek-V4-Flash,6,6,0,0,4.583,0.142,5.000,0.000,-0.417,0.142,0.417,1.000,0.333,0.833,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Training Strategy,Pro/moonshotai/Kimi-K2.6,6,6,0,0,4.250,0.075,4.667,0.267,-0.417,0.142,0.417,1.000,0.333,0.833,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Training Strategy,Pro/zai-org/GLM-4.7,6,6,0,0,4.000,0.000,4.333,0.267,-0.333,0.267,0.333,1.000,0.667,0.667,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Training Strategy,deepseek-ai/DeepSeek-V4-Flash,6,6,0,0,4.333,0.167,4.500,0.700,-0.167,0.467,0.500,1.000,0.333,0.667,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Validation Failure Risks,Pro/moonshotai/Kimi-K2.6,6,6,0,0,4.333,0.067,4.500,0.300,-0.167,0.167,0.333,0.500,0.333,1.000,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Validation Failure Risks,Pro/zai-org/GLM-4.7,6,6,0,0,3.917,0.342,4.167,0.567,-0.250,0.075,0.250,0.500,0.500,1.000,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,Validation Failure Risks,deepseek-ai/DeepSeek-V4-Flash,6,6,0,0,4.167,0.367,4.000,1.200,0.167,0.767,0.667,1.500,0.167,0.667,0.833
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Model Choice,Pro/moonshotai/Kimi-K2.6,6,6,0,0,4.667,0.067,4.500,0.300,0.167,0.167,0.333,0.500,0.333,1.000,1.000
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Model Choice,Pro/zai-org/GLM-4.7,6,6,0,0,3.833,0.567,3.500,1.100,0.333,0.267,0.500,1.000,0.167,0.833,1.000
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Model Choice,deepseek-ai/DeepSeek-V4-Flash,6,6,0,0,4.583,0.142,4.667,0.267,-0.083,0.142,0.250,0.500,0.500,1.000,1.000
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Physics Constraints,Pro/moonshotai/Kimi-K2.6,6,6,0,0,4.583,0.242,4.500,0.300,0.083,0.442,0.417,1.000,0.500,0.667,1.000
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Physics Constraints,Pro/zai-org/GLM-4.7,6,6,0,0,4.583,0.442,4.000,0.400,0.583,0.242,0.583,1.000,0.333,0.500,1.000
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Physics Constraints,deepseek-ai/DeepSeek-V4-Flash,6,6,0,0,4.500,0.100,4.333,0.267,0.167,0.167,0.333,0.500,0.333,1.000,1.000
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Problem Formalization,Pro/moonshotai/Kimi-K2.6,6,6,0,0,4.750,0.075,5.000,0.000,-0.250,0.075,0.250,0.500,0.500,1.000,1.000
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Problem Formalization,Pro/zai-org/GLM-4.7,6,6,0,0,4.583,0.142,4.667,0.267,-0.083,0.342,0.417,1.000,0.333,0.833,1.000
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Problem Formalization,deepseek-ai/DeepSeek-V4-Flash,6,6,0,0,4.667,0.167,4.833,0.167,-0.167,0.067,0.167,0.500,0.667,1.000,1.000
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Training Strategy,Pro/moonshotai/Kimi-K2.6,6,6,0,0,4.833,0.067,4.833,0.167,0.000,0.100,0.167,0.500,0.667,1.000,1.000
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Training Strategy,Pro/zai-org/GLM-4.7,6,6,0,0,4.333,0.867,4.000,1.200,0.333,0.267,0.500,1.000,0.167,0.833,1.000
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Training Strategy,deepseek-ai/DeepSeek-V4-Flash,6,6,0,0,4.500,0.200,4.333,0.267,0.167,0.267,0.333,1.000,0.500,0.833,1.000
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Validation Failure Risks,Pro/moonshotai/Kimi-K2.6,6,6,0,0,4.417,0.542,4.500,0.300,-0.083,0.142,0.250,0.500,0.500,1.000,1.000
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Validation Failure Risks,Pro/zai-org/GLM-4.7,6,6,0,0,4.667,0.167,4.167,0.567,0.500,0.400,0.667,1.000,0.167,0.500,1.000
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,Validation Failure Risks,deepseek-ai/DeepSeek-V4-Flash,6,6,0,0,4.500,0.100,4.167,0.167,0.333,0.067,0.333,0.500,0.333,1.000,1.000

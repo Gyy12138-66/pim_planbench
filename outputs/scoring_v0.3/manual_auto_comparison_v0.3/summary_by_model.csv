@@ -1,0 +1,4 @@
+﻿model,n_rows,n_compared,missing_manual,missing_auto,human_mean,human_variance,auto_mean,auto_variance,diff_mean_human_minus_auto,diff_variance,abs_diff_mean,abs_diff_max,exact_match_rate,within_0_5_rate,within_1_0_rate
+Pro/moonshotai/Kimi-K2.6,60,60,0,0,4.525,0.173,4.650,0.231,-0.125,0.200,0.325,1.000,0.450,0.900,1.000
+Pro/zai-org/GLM-4.7,60,60,0,0,4.167,0.412,4.217,0.613,-0.050,0.404,0.483,1.000,0.350,0.683,1.000
+deepseek-ai/DeepSeek-V4-Flash,60,60,0,0,4.450,0.226,4.500,0.458,-0.050,0.243,0.350,1.500,0.417,0.900,0.983
