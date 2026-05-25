@@ -1,0 +1,157 @@
+﻿task_id,difficulty,domain,task_type,pde_system,model,task_score_out_of_25,avg_facet_score
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,Pro/moonshotai/Kimi-K2.6,24.0,4.800
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,Pro/zai-org/GLM-4.7,19.0,3.800
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,Pro/zai-org/GLM-5.1,19.0,3.800
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,deepseek-ai/DeepSeek-V4-Flash,20.0,4.000
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,deepseek/deepseek-v4-pro,22.0,4.400
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,qwen/qwen3.7-max,20.0,4.000
+easy_burgers_1d_periodic_004,easy,fluid_dynamics,forward_pde_solving,1D viscous Burgers equation,Pro/moonshotai/Kimi-K2.6,22.0,4.400
+easy_burgers_1d_periodic_004,easy,fluid_dynamics,forward_pde_solving,1D viscous Burgers equation,Pro/zai-org/GLM-4.7,20.0,4.000
+easy_burgers_1d_periodic_004,easy,fluid_dynamics,forward_pde_solving,1D viscous Burgers equation,Pro/zai-org/GLM-5.1,22.0,4.400
+easy_burgers_1d_periodic_004,easy,fluid_dynamics,forward_pde_solving,1D viscous Burgers equation,deepseek-ai/DeepSeek-V4-Flash,22.0,4.400
+easy_burgers_1d_periodic_004,easy,fluid_dynamics,forward_pde_solving,1D viscous Burgers equation,deepseek/deepseek-v4-pro,21.0,4.200
+easy_burgers_1d_periodic_004,easy,fluid_dynamics,forward_pde_solving,1D viscous Burgers equation,qwen/qwen3.7-max,22.0,4.400
+easy_heat_1d_dirichlet_001,easy,heat_transfer,forward_pde_solving,1D heat equation,Pro/moonshotai/Kimi-K2.6,22.0,4.400
+easy_heat_1d_dirichlet_001,easy,heat_transfer,forward_pde_solving,1D heat equation,Pro/zai-org/GLM-4.7,21.0,4.200
+easy_heat_1d_dirichlet_001,easy,heat_transfer,forward_pde_solving,1D heat equation,Pro/zai-org/GLM-5.1,23.0,4.600
+easy_heat_1d_dirichlet_001,easy,heat_transfer,forward_pde_solving,1D heat equation,deepseek-ai/DeepSeek-V4-Flash,21.0,4.200
+easy_heat_1d_dirichlet_001,easy,heat_transfer,forward_pde_solving,1D heat equation,deepseek/deepseek-v4-pro,22.0,4.400
+easy_heat_1d_dirichlet_001,easy,heat_transfer,forward_pde_solving,1D heat equation,qwen/qwen3.7-max,21.0,4.200
+easy_laplace_2d_boundary_007,easy,potential_fields,boundary_value_problem,2D Laplace equation,Pro/moonshotai/Kimi-K2.6,21.0,4.200
+easy_laplace_2d_boundary_007,easy,potential_fields,boundary_value_problem,2D Laplace equation,Pro/zai-org/GLM-4.7,20.0,4.000
+easy_laplace_2d_boundary_007,easy,potential_fields,boundary_value_problem,2D Laplace equation,Pro/zai-org/GLM-5.1,23.0,4.600
+easy_laplace_2d_boundary_007,easy,potential_fields,boundary_value_problem,2D Laplace equation,deepseek-ai/DeepSeek-V4-Flash,22.0,4.400
+easy_laplace_2d_boundary_007,easy,potential_fields,boundary_value_problem,2D Laplace equation,deepseek/deepseek-v4-pro,19.0,3.800
+easy_laplace_2d_boundary_007,easy,potential_fields,boundary_value_problem,2D Laplace equation,qwen/qwen3.7-max,20.0,4.000
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,Pro/moonshotai/Kimi-K2.6,24.0,4.800
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,Pro/zai-org/GLM-4.7,18.0,3.600
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,Pro/zai-org/GLM-5.1,22.0,4.400
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,deepseek-ai/DeepSeek-V4-Flash,21.0,4.200
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,deepseek/deepseek-v4-pro,20.0,4.000
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,qwen/qwen3.7-max,23.0,4.600
+easy_reaction_diffusion_1d_006,easy,chemical_biology,forward_pde_solving,1D reaction-diffusion equation,Pro/moonshotai/Kimi-K2.6,21.0,4.200
+easy_reaction_diffusion_1d_006,easy,chemical_biology,forward_pde_solving,1D reaction-diffusion equation,Pro/zai-org/GLM-4.7,18.0,3.600
+easy_reaction_diffusion_1d_006,easy,chemical_biology,forward_pde_solving,1D reaction-diffusion equation,Pro/zai-org/GLM-5.1,22.0,4.400
+easy_reaction_diffusion_1d_006,easy,chemical_biology,forward_pde_solving,1D reaction-diffusion equation,deepseek-ai/DeepSeek-V4-Flash,21.0,4.200
+easy_reaction_diffusion_1d_006,easy,chemical_biology,forward_pde_solving,1D reaction-diffusion equation,deepseek/deepseek-v4-pro,22.0,4.400
+easy_reaction_diffusion_1d_006,easy,chemical_biology,forward_pde_solving,1D reaction-diffusion equation,qwen/qwen3.7-max,22.0,4.400
+easy_wave_1d_icbc_002,easy,wave_propagation,forward_pde_solving,1D wave equation,Pro/moonshotai/Kimi-K2.6,22.0,4.400
+easy_wave_1d_icbc_002,easy,wave_propagation,forward_pde_solving,1D wave equation,Pro/zai-org/GLM-4.7,22.0,4.400
+easy_wave_1d_icbc_002,easy,wave_propagation,forward_pde_solving,1D wave equation,Pro/zai-org/GLM-5.1,24.0,4.800
+easy_wave_1d_icbc_002,easy,wave_propagation,forward_pde_solving,1D wave equation,deepseek-ai/DeepSeek-V4-Flash,21.0,4.200
+easy_wave_1d_icbc_002,easy,wave_propagation,forward_pde_solving,1D wave equation,deepseek/deepseek-v4-pro,22.0,4.400
+easy_wave_1d_icbc_002,easy,wave_propagation,forward_pde_solving,1D wave equation,qwen/qwen3.7-max,22.0,4.400
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,Pro/moonshotai/Kimi-K2.6,22.0,4.400
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,Pro/zai-org/GLM-4.7,19.0,3.800
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,Pro/zai-org/GLM-5.1,22.0,4.400
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,deepseek-ai/DeepSeek-V4-Flash,23.0,4.600
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,deepseek/deepseek-v4-pro,22.0,4.400
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,qwen/qwen3.7-max,18.0,3.600
+hard_cahn_hilliard_017,hard,phase_field,high_order_pde_modeling,Cahn-Hilliard equation,Pro/moonshotai/Kimi-K2.6,23.0,4.600
+hard_cahn_hilliard_017,hard,phase_field,high_order_pde_modeling,Cahn-Hilliard equation,Pro/zai-org/GLM-4.7,22.0,4.400
+hard_cahn_hilliard_017,hard,phase_field,high_order_pde_modeling,Cahn-Hilliard equation,Pro/zai-org/GLM-5.1,23.0,4.600
+hard_cahn_hilliard_017,hard,phase_field,high_order_pde_modeling,Cahn-Hilliard equation,deepseek-ai/DeepSeek-V4-Flash,24.0,4.800
+hard_cahn_hilliard_017,hard,phase_field,high_order_pde_modeling,Cahn-Hilliard equation,deepseek/deepseek-v4-pro,23.0,4.600
+hard_cahn_hilliard_017,hard,phase_field,high_order_pde_modeling,Cahn-Hilliard equation,qwen/qwen3.7-max,24.0,4.800
+hard_darcy_heterogeneous_019,hard,porous_media,heterogeneous_coefficient_field,Darcy flow,Pro/moonshotai/Kimi-K2.6,21.0,4.200
+hard_darcy_heterogeneous_019,hard,porous_media,heterogeneous_coefficient_field,Darcy flow,Pro/zai-org/GLM-4.7,20.0,4.000
+hard_darcy_heterogeneous_019,hard,porous_media,heterogeneous_coefficient_field,Darcy flow,Pro/zai-org/GLM-5.1,19.0,3.800
+hard_darcy_heterogeneous_019,hard,porous_media,heterogeneous_coefficient_field,Darcy flow,deepseek-ai/DeepSeek-V4-Flash,18.0,3.600
+hard_darcy_heterogeneous_019,hard,porous_media,heterogeneous_coefficient_field,Darcy flow,deepseek/deepseek-v4-pro,20.0,4.000
+hard_darcy_heterogeneous_019,hard,porous_media,heterogeneous_coefficient_field,Darcy flow,qwen/qwen3.7-max,20.0,4.000
+hard_helmholtz_high_frequency_020,hard,wave_physics,high_frequency_frequency_domain_modeling,Helmholtz equation,Pro/moonshotai/Kimi-K2.6,22.0,4.400
+hard_helmholtz_high_frequency_020,hard,wave_physics,high_frequency_frequency_domain_modeling,Helmholtz equation,Pro/zai-org/GLM-4.7,20.0,4.000
+hard_helmholtz_high_frequency_020,hard,wave_physics,high_frequency_frequency_domain_modeling,Helmholtz equation,Pro/zai-org/GLM-5.1,24.0,4.800
+hard_helmholtz_high_frequency_020,hard,wave_physics,high_frequency_frequency_domain_modeling,Helmholtz equation,deepseek-ai/DeepSeek-V4-Flash,22.0,4.400
+hard_helmholtz_high_frequency_020,hard,wave_physics,high_frequency_frequency_domain_modeling,Helmholtz equation,deepseek/deepseek-v4-pro,24.0,4.800
+hard_helmholtz_high_frequency_020,hard,wave_physics,high_frequency_frequency_domain_modeling,Helmholtz equation,qwen/qwen3.7-max,23.0,4.600
+hard_navier_stokes_2d_018,hard,fluid_dynamics,forward_or_data_assimilation,2D incompressible Navier-Stokes equations,Pro/moonshotai/Kimi-K2.6,21.0,4.200
+hard_navier_stokes_2d_018,hard,fluid_dynamics,forward_or_data_assimilation,2D incompressible Navier-Stokes equations,Pro/zai-org/GLM-4.7,20.0,4.000
+hard_navier_stokes_2d_018,hard,fluid_dynamics,forward_or_data_assimilation,2D incompressible Navier-Stokes equations,Pro/zai-org/GLM-5.1,22.0,4.400
+hard_navier_stokes_2d_018,hard,fluid_dynamics,forward_or_data_assimilation,2D incompressible Navier-Stokes equations,deepseek-ai/DeepSeek-V4-Flash,22.0,4.400
+hard_navier_stokes_2d_018,hard,fluid_dynamics,forward_or_data_assimilation,2D incompressible Navier-Stokes equations,deepseek/deepseek-v4-pro,20.0,4.000
+hard_navier_stokes_2d_018,hard,fluid_dynamics,forward_or_data_assimilation,2D incompressible Navier-Stokes equations,qwen/qwen3.7-max,20.0,4.000
+hard_plus_acoustic_scattering_maze_022,hard_plus,acoustics,complex_geometry_scattering,Acoustic scattering in maze-like geometry,Pro/moonshotai/Kimi-K2.6,22.0,4.400
+hard_plus_acoustic_scattering_maze_022,hard_plus,acoustics,complex_geometry_scattering,Acoustic scattering in maze-like geometry,Pro/zai-org/GLM-4.7,21.0,4.200
+hard_plus_acoustic_scattering_maze_022,hard_plus,acoustics,complex_geometry_scattering,Acoustic scattering in maze-like geometry,Pro/zai-org/GLM-5.1,21.0,4.200
+hard_plus_acoustic_scattering_maze_022,hard_plus,acoustics,complex_geometry_scattering,Acoustic scattering in maze-like geometry,deepseek-ai/DeepSeek-V4-Flash,22.0,4.400
+hard_plus_acoustic_scattering_maze_022,hard_plus,acoustics,complex_geometry_scattering,Acoustic scattering in maze-like geometry,deepseek/deepseek-v4-pro,21.0,4.200
+hard_plus_acoustic_scattering_maze_022,hard_plus,acoustics,complex_geometry_scattering,Acoustic scattering in maze-like geometry,qwen/qwen3.7-max,21.0,4.200
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,Pro/moonshotai/Kimi-K2.6,23.0,4.600
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,Pro/zai-org/GLM-4.7,15.0,3.000
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,Pro/zai-org/GLM-5.1,23.0,4.600
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,deepseek-ai/DeepSeek-V4-Flash,22.0,4.400
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,deepseek/deepseek-v4-pro,19.0,3.800
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,qwen/qwen3.7-max,23.0,4.600
+hard_plus_helmholtz_staircase_021,hard_plus,wave_physics,complex_geometry_high_frequency_modeling,High-frequency Helmholtz equation in staircase geometry,Pro/moonshotai/Kimi-K2.6,22.0,4.400
+hard_plus_helmholtz_staircase_021,hard_plus,wave_physics,complex_geometry_high_frequency_modeling,High-frequency Helmholtz equation in staircase geometry,Pro/zai-org/GLM-4.7,21.0,4.200
+hard_plus_helmholtz_staircase_021,hard_plus,wave_physics,complex_geometry_high_frequency_modeling,High-frequency Helmholtz equation in staircase geometry,Pro/zai-org/GLM-5.1,22.0,4.400
+hard_plus_helmholtz_staircase_021,hard_plus,wave_physics,complex_geometry_high_frequency_modeling,High-frequency Helmholtz equation in staircase geometry,deepseek-ai/DeepSeek-V4-Flash,22.0,4.400
+hard_plus_helmholtz_staircase_021,hard_plus,wave_physics,complex_geometry_high_frequency_modeling,High-frequency Helmholtz equation in staircase geometry,deepseek/deepseek-v4-pro,22.0,4.400
+hard_plus_helmholtz_staircase_021,hard_plus,wave_physics,complex_geometry_high_frequency_modeling,High-frequency Helmholtz equation in staircase geometry,qwen/qwen3.7-max,22.0,4.400
+hard_plus_mhd_divergence_025,hard_plus,magnetohydrodynamics,coupled_divergence_free_field_modeling,Resistive magnetohydrodynamics,Pro/moonshotai/Kimi-K2.6,23.0,4.600
+hard_plus_mhd_divergence_025,hard_plus,magnetohydrodynamics,coupled_divergence_free_field_modeling,Resistive magnetohydrodynamics,Pro/zai-org/GLM-4.7,23.0,4.600
+hard_plus_mhd_divergence_025,hard_plus,magnetohydrodynamics,coupled_divergence_free_field_modeling,Resistive magnetohydrodynamics,Pro/zai-org/GLM-5.1,24.0,4.800
+hard_plus_mhd_divergence_025,hard_plus,magnetohydrodynamics,coupled_divergence_free_field_modeling,Resistive magnetohydrodynamics,deepseek-ai/DeepSeek-V4-Flash,25.0,5.000
+hard_plus_mhd_divergence_025,hard_plus,magnetohydrodynamics,coupled_divergence_free_field_modeling,Resistive magnetohydrodynamics,deepseek/deepseek-v4-pro,19.0,3.800
+hard_plus_mhd_divergence_025,hard_plus,magnetohydrodynamics,coupled_divergence_free_field_modeling,Resistive magnetohydrodynamics,qwen/qwen3.7-max,18.0,3.600
+hard_plus_multiscale_darcy_026,hard_plus,porous_media,multiscale_operator_or_solver_design,Multiscale Darcy flow with high-contrast permeability,Pro/moonshotai/Kimi-K2.6,23.0,4.600
+hard_plus_multiscale_darcy_026,hard_plus,porous_media,multiscale_operator_or_solver_design,Multiscale Darcy flow with high-contrast permeability,Pro/zai-org/GLM-4.7,19.0,3.800
+hard_plus_multiscale_darcy_026,hard_plus,porous_media,multiscale_operator_or_solver_design,Multiscale Darcy flow with high-contrast permeability,Pro/zai-org/GLM-5.1,23.0,4.600
+hard_plus_multiscale_darcy_026,hard_plus,porous_media,multiscale_operator_or_solver_design,Multiscale Darcy flow with high-contrast permeability,deepseek-ai/DeepSeek-V4-Flash,21.0,4.200
+hard_plus_multiscale_darcy_026,hard_plus,porous_media,multiscale_operator_or_solver_design,Multiscale Darcy flow with high-contrast permeability,deepseek/deepseek-v4-pro,24.0,4.800
+hard_plus_multiscale_darcy_026,hard_plus,porous_media,multiscale_operator_or_solver_design,Multiscale Darcy flow with high-contrast permeability,qwen/qwen3.7-max,21.0,4.200
+hard_plus_rayleigh_benard_024,hard_plus,thermal_fluid_dynamics,coupled_multiphysics_modeling,Rayleigh-Benard convection under Boussinesq approximation,Pro/moonshotai/Kimi-K2.6,23.0,4.600
+hard_plus_rayleigh_benard_024,hard_plus,thermal_fluid_dynamics,coupled_multiphysics_modeling,Rayleigh-Benard convection under Boussinesq approximation,Pro/zai-org/GLM-4.7,21.0,4.200
+hard_plus_rayleigh_benard_024,hard_plus,thermal_fluid_dynamics,coupled_multiphysics_modeling,Rayleigh-Benard convection under Boussinesq approximation,Pro/zai-org/GLM-5.1,21.0,4.200
+hard_plus_rayleigh_benard_024,hard_plus,thermal_fluid_dynamics,coupled_multiphysics_modeling,Rayleigh-Benard convection under Boussinesq approximation,deepseek-ai/DeepSeek-V4-Flash,22.0,4.400
+hard_plus_rayleigh_benard_024,hard_plus,thermal_fluid_dynamics,coupled_multiphysics_modeling,Rayleigh-Benard convection under Boussinesq approximation,deepseek/deepseek-v4-pro,22.0,4.400
+hard_plus_rayleigh_benard_024,hard_plus,thermal_fluid_dynamics,coupled_multiphysics_modeling,Rayleigh-Benard convection under Boussinesq approximation,qwen/qwen3.7-max,21.0,4.200
+medium_advection_diffusion_008,medium,transport,forward_pde_solving,Advection-diffusion equation,Pro/moonshotai/Kimi-K2.6,22.0,4.400
+medium_advection_diffusion_008,medium,transport,forward_pde_solving,Advection-diffusion equation,Pro/zai-org/GLM-4.7,17.0,3.400
+medium_advection_diffusion_008,medium,transport,forward_pde_solving,Advection-diffusion equation,Pro/zai-org/GLM-5.1,19.0,3.800
+medium_advection_diffusion_008,medium,transport,forward_pde_solving,Advection-diffusion equation,deepseek-ai/DeepSeek-V4-Flash,19.0,3.800
+medium_advection_diffusion_008,medium,transport,forward_pde_solving,Advection-diffusion equation,deepseek/deepseek-v4-pro,20.0,4.000
+medium_advection_diffusion_008,medium,transport,forward_pde_solving,Advection-diffusion equation,qwen/qwen3.7-max,19.0,3.800
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,Pro/moonshotai/Kimi-K2.6,21.0,4.200
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,Pro/zai-org/GLM-4.7,22.0,4.400
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,Pro/zai-org/GLM-5.1,23.0,4.600
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,deepseek-ai/DeepSeek-V4-Flash,19.0,3.800
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,deepseek/deepseek-v4-pro,22.0,4.400
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,qwen/qwen3.7-max,24.0,4.800
+medium_heat_inverse_alpha_009,medium,heat_transfer,inverse_parameter_estimation,1D heat equation,Pro/moonshotai/Kimi-K2.6,22.0,4.400
+medium_heat_inverse_alpha_009,medium,heat_transfer,inverse_parameter_estimation,1D heat equation,Pro/zai-org/GLM-4.7,19.0,3.800
+medium_heat_inverse_alpha_009,medium,heat_transfer,inverse_parameter_estimation,1D heat equation,Pro/zai-org/GLM-5.1,19.0,3.800
+medium_heat_inverse_alpha_009,medium,heat_transfer,inverse_parameter_estimation,1D heat equation,deepseek-ai/DeepSeek-V4-Flash,18.0,3.600
+medium_heat_inverse_alpha_009,medium,heat_transfer,inverse_parameter_estimation,1D heat equation,deepseek/deepseek-v4-pro,19.0,3.800
+medium_heat_inverse_alpha_009,medium,heat_transfer,inverse_parameter_estimation,1D heat equation,qwen/qwen3.7-max,20.0,4.000
+medium_heat_mixed_bc_014,medium,heat_transfer,boundary_condition_handling,1D heat equation,Pro/moonshotai/Kimi-K2.6,24.0,4.800
+medium_heat_mixed_bc_014,medium,heat_transfer,boundary_condition_handling,1D heat equation,Pro/zai-org/GLM-4.7,22.0,4.400
+medium_heat_mixed_bc_014,medium,heat_transfer,boundary_condition_handling,1D heat equation,Pro/zai-org/GLM-5.1,24.0,4.800
+medium_heat_mixed_bc_014,medium,heat_transfer,boundary_condition_handling,1D heat equation,deepseek-ai/DeepSeek-V4-Flash,23.0,4.600
+medium_heat_mixed_bc_014,medium,heat_transfer,boundary_condition_handling,1D heat equation,deepseek/deepseek-v4-pro,23.0,4.600
+medium_heat_mixed_bc_014,medium,heat_transfer,boundary_condition_handling,1D heat equation,qwen/qwen3.7-max,24.0,4.800
+medium_periodic_advdiff_015,medium,transport,periodic_constraint_handling,Periodic advection-diffusion equation,Pro/moonshotai/Kimi-K2.6,22.0,4.400
+medium_periodic_advdiff_015,medium,transport,periodic_constraint_handling,Periodic advection-diffusion equation,Pro/zai-org/GLM-4.7,20.0,4.000
+medium_periodic_advdiff_015,medium,transport,periodic_constraint_handling,Periodic advection-diffusion equation,Pro/zai-org/GLM-5.1,20.0,4.000
+medium_periodic_advdiff_015,medium,transport,periodic_constraint_handling,Periodic advection-diffusion equation,deepseek-ai/DeepSeek-V4-Flash,20.0,4.000
+medium_periodic_advdiff_015,medium,transport,periodic_constraint_handling,Periodic advection-diffusion equation,deepseek/deepseek-v4-pro,20.0,4.000
+medium_periodic_advdiff_015,medium,transport,periodic_constraint_handling,Periodic advection-diffusion equation,qwen/qwen3.7-max,20.0,4.000
+medium_poisson_source_recovery_011,medium,potential_fields,unknown_source_recovery,2D Poisson equation,Pro/moonshotai/Kimi-K2.6,22.0,4.400
+medium_poisson_source_recovery_011,medium,potential_fields,unknown_source_recovery,2D Poisson equation,Pro/zai-org/GLM-4.7,21.0,4.200
+medium_poisson_source_recovery_011,medium,potential_fields,unknown_source_recovery,2D Poisson equation,Pro/zai-org/GLM-5.1,24.0,4.800
+medium_poisson_source_recovery_011,medium,potential_fields,unknown_source_recovery,2D Poisson equation,deepseek-ai/DeepSeek-V4-Flash,21.0,4.200
+medium_poisson_source_recovery_011,medium,potential_fields,unknown_source_recovery,2D Poisson equation,deepseek/deepseek-v4-pro,23.0,4.600
+medium_poisson_source_recovery_011,medium,potential_fields,unknown_source_recovery,2D Poisson equation,qwen/qwen3.7-max,21.0,4.200
+medium_reaction_diffusion_noisy_013,medium,chemical_biology,noisy_data_fitting,Two-species reaction-diffusion system,Pro/moonshotai/Kimi-K2.6,20.0,4.000
+medium_reaction_diffusion_noisy_013,medium,chemical_biology,noisy_data_fitting,Two-species reaction-diffusion system,Pro/zai-org/GLM-4.7,18.0,3.600
+medium_reaction_diffusion_noisy_013,medium,chemical_biology,noisy_data_fitting,Two-species reaction-diffusion system,Pro/zai-org/GLM-5.1,19.0,3.800
+medium_reaction_diffusion_noisy_013,medium,chemical_biology,noisy_data_fitting,Two-species reaction-diffusion system,deepseek-ai/DeepSeek-V4-Flash,18.0,3.600
+medium_reaction_diffusion_noisy_013,medium,chemical_biology,noisy_data_fitting,Two-species reaction-diffusion system,deepseek/deepseek-v4-pro,19.0,3.800
+medium_reaction_diffusion_noisy_013,medium,chemical_biology,noisy_data_fitting,Two-species reaction-diffusion system,qwen/qwen3.7-max,20.0,4.000
+medium_wave_sparse_sensors_012,medium,wave_propagation,sparse_observation_modeling,1D wave equation,Pro/moonshotai/Kimi-K2.6,22.0,4.400
+medium_wave_sparse_sensors_012,medium,wave_propagation,sparse_observation_modeling,1D wave equation,Pro/zai-org/GLM-4.7,20.0,4.000
+medium_wave_sparse_sensors_012,medium,wave_propagation,sparse_observation_modeling,1D wave equation,Pro/zai-org/GLM-5.1,20.0,4.000
+medium_wave_sparse_sensors_012,medium,wave_propagation,sparse_observation_modeling,1D wave equation,deepseek-ai/DeepSeek-V4-Flash,20.0,4.000
+medium_wave_sparse_sensors_012,medium,wave_propagation,sparse_observation_modeling,1D wave equation,deepseek/deepseek-v4-pro,19.0,3.800
+medium_wave_sparse_sensors_012,medium,wave_propagation,sparse_observation_modeling,1D wave equation,qwen/qwen3.7-max,22.0,4.400

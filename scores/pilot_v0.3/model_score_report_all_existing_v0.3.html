@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PIM-PlanBench v0.3 Model Score Report</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5c6670;
+      --line: #d8dee6;
+      --panel: #f7f8fa;
+      --accent: #2666cf;
+      --accent-2: #14866d;
+      --warn: #b05200;
+      --low: #f9d8d3;
+      --mid: #fee7b7;
+      --midhi: #cce7d8;
+      --hi: #9bd0c4;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #ffffff;
+    }
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 24px 56px;
+    }
+    h1 { margin: 0 0 8px; font-size: 28px; letter-spacing: 0; }
+    h2 { margin: 28px 0 12px; font-size: 18px; letter-spacing: 0; }
+    p { color: var(--muted); line-height: 1.5; }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 20px 0 8px;
+    }
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 16px;
+      background: var(--panel);
+    }
+    .metric span { display: block; color: var(--muted); font-size: 12px; }
+    .metric strong { display: block; margin-top: 5px; font-size: 22px; }
+    .chart {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      overflow-x: auto;
+    }
+    svg { min-width: 760px; width: 100%; height: auto; }
+    .axis { stroke: #77808a; stroke-width: 1; }
+    .grid { stroke: #e8ebef; stroke-width: 1; }
+    .bar { fill: var(--accent); }
+    .ylabel { font-size: 13px; fill: var(--ink); }
+    .tick, .value { font-size: 12px; fill: var(--muted); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      font-size: 13px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 9px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    thead th { background: #eef2f6; color: #26323f; }
+    tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+    .matrix td { text-align: right; font-variant-numeric: tabular-nums; }
+    .matrix th:first-child { min-width: 150px; }
+    .score-hi { background: var(--hi); }
+    .score-midhi { background: var(--midhi); }
+    .score-mid { background: var(--mid); }
+    .score-low { background: var(--low); }
+    .quality td:last-child {
+      max-width: 480px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .quality-ok { color: var(--accent-2); font-weight: 700; }
+    .quality-warn { color: var(--warn); font-weight: 700; }
+    .compact { max-width: 720px; }
+    @media (max-width: 780px) {
+      main { padding: 20px 14px 40px; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      table { display: block; overflow-x: auto; white-space: nowrap; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>PIM-PlanBench v0.3 Model Score Report</h1>
+  <p>Automatic deterministic scoring over the currently normalized model outputs. Schema-invalid task answers are kept as empty facet answers, so they receive zero in the automatic score.</p>
+  <section class="metrics">
+    <div class="metric"><span>Models</span><strong>6</strong></div>
+    <div class="metric"><span>Tasks</span><strong>26</strong></div>
+    <div class="metric"><span>Facet Rows</span><strong>780</strong></div>
+    <div class="metric"><span>Best Avg /25</span><strong>Kimi-K2.6: 22.15</strong></div>
+  </section>
+
+  <h2>Overall Ranking</h2>
+  <div class="chart"><svg viewBox="0 0 804 238" role="img" aria-label="Average task score by model">
+<line x1="172" y1="20" x2="712" y2="20" class="axis" />
+<line x1="172.0" y1="16" x2="172.0" y2="230" class="grid" />
+<text x="172.0" y="12" text-anchor="middle" class="tick">0</text>
+<line x1="280.0" y1="16" x2="280.0" y2="230" class="grid" />
+<text x="280.0" y="12" text-anchor="middle" class="tick">5</text>
+<line x1="388.0" y1="16" x2="388.0" y2="230" class="grid" />
+<text x="388.0" y="12" text-anchor="middle" class="tick">10</text>
+<line x1="496.0" y1="16" x2="496.0" y2="230" class="grid" />
+<text x="496.0" y="12" text-anchor="middle" class="tick">15</text>
+<line x1="604.0" y1="16" x2="604.0" y2="230" class="grid" />
+<text x="604.0" y="12" text-anchor="middle" class="tick">20</text>
+<line x1="712.0" y1="16" x2="712.0" y2="230" class="grid" />
+<text x="712.0" y="12" text-anchor="middle" class="tick">25</text>
+<text x="0" y="50" class="ylabel">Kimi-K2.6</text>
+<rect x="172" y="32" width="478.5" height="22" rx="4" class="bar" />
+<text x="658.5" y="48" class="value">22.15</text>
+<text x="0" y="84" class="ylabel">GLM-5.1</text>
+<rect x="172" y="66" width="471.1" height="22" rx="4" class="bar" />
+<text x="651.1" y="82" class="value">21.81</text>
+<text x="0" y="118" class="ylabel">Qwen3.7-Max</text>
+<rect x="172" y="100" width="457.7" height="22" rx="4" class="bar" />
+<text x="637.7" y="116" class="value">21.19</text>
+<text x="0" y="152" class="ylabel">DeepSeek-V4-Flash</text>
+<rect x="172" y="134" width="456.1" height="22" rx="4" class="bar" />
+<text x="636.1" y="150" class="value">21.11</text>
+<text x="0" y="186" class="ylabel">DeepSeek-V4-Pro</text>
+<rect x="172" y="168" width="456.1" height="22" rx="4" class="bar" />
+<text x="636.1" y="184" class="value">21.11</text>
+<text x="0" y="220" class="ylabel">GLM-4.7</text>
+<rect x="172" y="202" width="430.3" height="22" rx="4" class="bar" />
+<text x="610.3" y="218" class="value">19.92</text>
+</svg></div>
+
+  <h2>Facet Breakdown</h2>
+  <table class="matrix"><thead><tr><th>Model</th><th>Avg /25</th><th>Problem Formalization</th><th>Physics Constraints</th><th>Model Choice</th><th>Training Strategy</th><th>Validation Failure Risks</th></tr></thead><tbody><tr><th>Kimi-K2.6</th><td>22.15</td><td class="score-hi">4.38</td><td class="score-midhi">4.23</td><td class="score-hi">4.62</td><td class="score-hi">4.58</td><td class="score-hi">4.35</td></tr>
+<tr><th>GLM-5.1</th><td>21.81</td><td class="score-midhi">4.04</td><td class="score-midhi">4.27</td><td class="score-hi">4.65</td><td class="score-hi">4.46</td><td class="score-hi">4.38</td></tr>
+<tr><th>Qwen3.7-Max</th><td>21.19</td><td class="score-midhi">4.19</td><td class="score-midhi">4.08</td><td class="score-hi">4.42</td><td class="score-hi">4.50</td><td class="score-midhi">4.00</td></tr>
+<tr><th>DeepSeek-V4-Flash</th><td>21.11</td><td class="score-midhi">4.08</td><td class="score-midhi">4.15</td><td class="score-hi">4.65</td><td class="score-midhi">4.27</td><td class="score-midhi">3.96</td></tr>
+<tr><th>DeepSeek-V4-Pro</th><td>21.11</td><td class="score-midhi">4.23</td><td class="score-midhi">4.00</td><td class="score-hi">4.35</td><td class="score-hi">4.42</td><td class="score-midhi">4.12</td></tr>
+<tr><th>GLM-4.7</th><td>19.92</td><td class="score-midhi">4.00</td><td class="score-midhi">3.81</td><td class="score-midhi">3.92</td><td class="score-midhi">4.12</td><td class="score-midhi">4.08</td></tr></tbody></table>
+
+  <h2>Difficulty Breakdown</h2>
+  <table class="matrix"><thead><tr><th>Model</th><th>easy</th><th>medium</th><th>hard</th><th>hard_plus</th></tr></thead><tbody><tr><th>Kimi-K2.6</th><td class="score-hi">22.29</td><td class="score-hi">21.88</td><td class="score-hi">21.80</td><td class="score-hi">22.67</td></tr>
+<tr><th>GLM-5.1</th><td class="score-hi">22.14</td><td class="score-midhi">21.00</td><td class="score-hi">22.00</td><td class="score-hi">22.33</td></tr>
+<tr><th>Qwen3.7-Max</th><td class="score-midhi">21.43</td><td class="score-midhi">21.25</td><td class="score-midhi">21.00</td><td class="score-midhi">21.00</td></tr>
+<tr><th>DeepSeek-V4-Flash</th><td class="score-midhi">21.14</td><td class="score-midhi">19.75</td><td class="score-hi">21.80</td><td class="score-hi">22.33</td></tr>
+<tr><th>DeepSeek-V4-Pro</th><td class="score-midhi">21.14</td><td class="score-midhi">20.62</td><td class="score-hi">21.80</td><td class="score-midhi">21.17</td></tr>
+<tr><th>GLM-4.7</th><td class="score-midhi">19.71</td><td class="score-midhi">19.88</td><td class="score-midhi">20.20</td><td class="score-midhi">20.00</td></tr></tbody></table>
+
+  <h2>Output Quality Audit</h2>
+  <table class="quality"><thead><tr><th>Model</th><th>Rows</th><th>Valid</th><th>Invalid</th><th>Included</th><th>Invalid Task IDs</th></tr></thead><tbody><tr><th>Kimi-K2.6</th><td>26</td><td>26</td><td class="quality-ok">0</td><td>yes</td><td></td></tr>
+<tr><th>GLM-4.7</th><td>26</td><td>26</td><td class="quality-ok">0</td><td>yes</td><td></td></tr>
+<tr><th>GLM-5.1</th><td>26</td><td>26</td><td class="quality-ok">0</td><td>yes</td><td></td></tr>
+<tr><th>DeepSeek-V4-Flash</th><td>26</td><td>26</td><td class="quality-ok">0</td><td>yes</td><td></td></tr>
+<tr><th>DeepSeek-V4-Pro</th><td>26</td><td>26</td><td class="quality-ok">0</td><td>yes</td><td></td></tr>
+<tr><th>Qwen3.7-Max</th><td>26</td><td>26</td><td class="quality-ok">0</td><td>yes</td><td></td></tr></tbody></table>
+
+  <h2>Easiest And Hardest Tasks By Mean Score</h2>
+  <table class="compact"><thead><tr><th>Task</th><th>Difficulty</th><th>Mean /25</th></tr></thead><tbody><tr><th>medium_reaction_diffusion_noisy_013</th><td>medium</td><td>19.00</td></tr>
+<tr><th>medium_advection_diffusion_008</th><td>medium</td><td>19.33</td></tr>
+<tr><th>medium_heat_inverse_alpha_009</th><td>medium</td><td>19.50</td></tr>
+<tr><th>hard_darcy_heterogeneous_019</th><td>hard</td><td>19.67</td></tr>
+<tr><th>medium_periodic_advdiff_015</th><td>medium</td><td>20.33</td></tr>
+<tr><th>medium_wave_sparse_sensors_012</th><td>medium</td><td>20.50</td></tr>
+<tr><th>hard_plus_mhd_divergence_025</th><td>hard_plus</td><td>22.00</td></tr>
+<tr><th>medium_poisson_source_recovery_011</th><td>medium</td><td>22.00</td></tr>
+<tr><th>easy_wave_1d_icbc_002</th><td>easy</td><td>22.17</td></tr>
+<tr><th>hard_helmholtz_high_frequency_020</th><td>hard</td><td>22.50</td></tr>
+<tr><th>hard_cahn_hilliard_017</th><td>hard</td><td>23.17</td></tr>
+<tr><th>medium_heat_mixed_bc_014</th><td>medium</td><td>23.33</td></tr></tbody></table>
+
+  <script type="application/json" id="report-metadata">
+  {"average_facet_score": 4.244, "scored": "scores/pilot_v0.3/ModelOutput_all_existing_scored_v0.3.csv", "summary": "scores/pilot_v0.3/score_summary_by_model_all_existing_v0.3.csv"}
+  </script>
+</main>
+</body>
+</html>

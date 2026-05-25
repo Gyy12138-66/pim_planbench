@@ -1,0 +1,7 @@
+﻿model,normalized_file,total_rows,valid_rows,invalid_rows,missing_task_count,duplicate_task_count,extra_task_count,include_in_scoring,prompt_settings,providers,invalid_task_ids,missing_task_ids,duplicate_task_ids,extra_task_ids
+Pro/moonshotai/Kimi-K2.6,runs/pilot_v0.3/normalized/Pro_moonshotai_Kimi-K2.6__canonical_v0.3.jsonl,26,26,0,0,0,0,yes,canonical_v0.3,siliconflow,,,,
+Pro/zai-org/GLM-4.7,runs/pilot_v0.3/normalized/Pro_zai-org_GLM-4.7__canonical_v0.3.jsonl,26,26,0,0,0,0,yes,canonical_v0.3,siliconflow,,,,
+Pro/zai-org/GLM-5.1,runs/pilot_v0.3/normalized/Pro_zai-org_GLM-5.1__canonical_v0.3.jsonl,26,26,0,0,0,0,yes,canonical_v0.3,siliconflow,,,,
+deepseek-ai/DeepSeek-V4-Flash,runs/pilot_v0.3/normalized/deepseek-ai_DeepSeek-V4-Flash__canonical_v0.3.jsonl,26,26,0,0,0,0,yes,canonical_v0.3,siliconflow,,,,
+deepseek/deepseek-v4-pro,runs/pilot_v0.3/normalized/deepseek_deepseek-v4-pro__canonical_v0.3.jsonl,26,26,0,0,0,0,yes,canonical_v0.3,openrouter,,,,
+qwen/qwen3.7-max,runs/pilot_v0.3/normalized/qwen_qwen3.7-max__canonical_v0.3.jsonl,26,26,0,0,0,0,yes,canonical_v0.3,openrouter,,,,
