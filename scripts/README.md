@@ -4,10 +4,21 @@
 
 Builds the selected-task manual scoring workbook at:
 
-- `outputs/pilot_v0.1/manual_scoring_selected_001_009_012_017_020_025.xlsx`
+- `outputs/scoring_v0.2/manual_scoring_selected_001_009_012_017_020_025_v0.2.xlsx`
 
-This builder currently targets the original v0.1 0-2 score sheet.
+This builder targets the current PlanScore v0.2 0-5 score sheet. It reads:
+
+- `dataset/tasks_public_v0.1.jsonl`
+- `dataset/references_private_v0.3.jsonl`
+- normalized model outputs under `runs/pilot_v0.1/normalized/`
+
 It depends on `@oai/artifact-tool`; in the Codex desktop workspace this is provided through the ignored local `scripts/node_modules` symlink.
+
+Run it with:
+
+```powershell
+node scripts/build_selected_manual_scoring.mjs
+```
 
 ## `run_llm_planner.py`
 
