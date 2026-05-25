@@ -9,7 +9,7 @@ The current paper baseline is frozen as:
 - Public task set: `dataset/tasks_public_v0.3.jsonl`
 - Private scoring references: `dataset/references_private_v0.3.jsonl`
 - Canonical prompt: `prompts/planner_prompt.md`
-- Scoring rubric: `docs/rubric_v0.2.md`
+- Scoring rubric: `docs/rubric_v0.3.md`
 - Score scale: 0-5 per facet, 25 points per task
 - Required facets: `Problem Formalization`, `Physics Constraints`, `Model Choice`, `Training Strategy`, `Validation Failure Risks`
 
@@ -23,7 +23,8 @@ Existing `runs/pilot_v0.1/` outputs and `scores/pilot_v0.1/` scores were generat
 - `dataset/tasks_public_v0.1.jsonl`: archived pilot public task wording used for the first runs.
 - `docs/rubric.md`: alias copy of the current 0-5 scoring rubric.
 - `docs/rubric_v0.1.md`: archived original 0-2 pilot rubric.
-- `docs/rubric_v0.2.md`: current 0-5 PlanScore rubric.
+- `docs/rubric_v0.2.md`: pilot 0-5 PlanScore rubric before v0.3 hard-trap cap rules.
+- `docs/rubric_v0.3.md`: current 0-5 PlanScore rubric with general and task-specific cap rules.
 - `dataset/references_private_v0.1.jsonl` and `dataset/references_private_v0.2.jsonl`: archived private reference drafts.
 - `archive/legacy_inputs/`: legacy root-level input files retained for comparison.
 
@@ -34,7 +35,7 @@ Existing `runs/pilot_v0.1/` outputs and `scores/pilot_v0.1/` scores were generat
 - `runs/pilot_v0.1/reports/`: generated run summaries.
 - `scores/pilot_v0.1/`: legacy pilot scoring CSVs and preliminary 0-5 score reports.
 - `outputs/pilot_v0.1/`: archived original pilot review workbooks.
-- `outputs/scoring_v0.2/`: current 0-5 manual scoring workbooks.
+- `outputs/scoring_v0.3/`: current 0-5 manual scoring workbooks.
 - `scripts/`: benchmark runners, translation helpers, and scoring workbook builders.
 - `docs/`: run plans, annotation notes, and rubric versions.
 
@@ -46,7 +47,7 @@ Existing `runs/pilot_v0.1/` outputs and `scores/pilot_v0.1/` scores were generat
 ## Next Paper-Readiness Steps
 
 1. Rerun the selected models on `dataset/tasks_public_v0.3.jsonl` before scoring the updated benchmark.
-2. Use only the 0-5 rubric in `docs/rubric_v0.2.md` for new scoring passes.
+2. Use only the 0-5 rubric in `docs/rubric_v0.3.md` for new scoring passes.
 3. Keep new 0-5 scoring workbooks and exports separate from the old v0.1 pilot outputs.
 4. Treat old 0-2 artifacts as pilot history, not as current paper results.
 5. Add inter-annotator agreement and execution-validation subsets before final paper release.

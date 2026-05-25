@@ -4,11 +4,11 @@
 
 Builds the selected-task manual scoring workbook at:
 
-- `outputs/scoring_v0.2/manual_scoring_selected_001_009_012_017_020_025_v0.2.xlsx`
+- `outputs/scoring_v0.3/manual_scoring_selected_001_009_012_017_020_025_v0.3.xlsx`
 
-This builder targets the current PlanScore v0.2 0-5 score sheet. It reads:
+This builder targets the current PlanScore v0.3 0-5 score sheet. It reads:
 
-- `dataset/tasks_public_v0.1.jsonl`
+- `dataset/tasks_public_v0.3.jsonl`
 - `dataset/references_private_v0.3.jsonl`
 - normalized model outputs under `runs/pilot_v0.1/normalized/`
 
@@ -109,3 +109,5 @@ python scripts/audit_benchmark_readiness.py
 Default output:
 
 - `docs/benchmark_readiness_audit_v0.2.md`
+
+The current scoring rubric is `docs/rubric_v0.3.md`; `docs/rubric.md` is kept as its alias.

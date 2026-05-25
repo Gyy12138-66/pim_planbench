@@ -4,14 +4,14 @@ import { fileURLToPath } from "node:url";
 import { SpreadsheetFile, Workbook } from "@oai/artifact-tool";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const outputDir = path.join(root, "outputs", "scoring_v0.2");
-const outputPath = path.join(outputDir, "manual_scoring_selected_001_009_012_017_020_025_v0.2.xlsx");
+const outputDir = path.join(root, "outputs", "scoring_v0.3");
+const outputPath = path.join(outputDir, "manual_scoring_selected_001_009_012_017_020_025_v0.3.xlsx");
 
 const benchmarkContract = {
-  publicTasks: "dataset/tasks_public_v0.1.jsonl",
+  publicTasks: "dataset/tasks_public_v0.3.jsonl",
   privateReferences: "dataset/references_private_v0.3.jsonl",
   promptSetting: "canonical_v0.1",
-  rubric: "docs/rubric_v0.2.md",
+  rubric: "docs/rubric_v0.3.md",
   scoreScale: "0-5 per facet; 25 points per task",
 };
 
