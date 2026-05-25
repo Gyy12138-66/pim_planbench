@@ -416,15 +416,100 @@ def raw_score(row: dict[str, str], reference: dict[str, Any]) -> tuple[int, str]
 
     score = max(0, min(5, int(round(score_float))))
 
+    notes: list[str] = []
+
     if facet_id == "problem_formalization":
         has_governing_setup = contains_any(answer, ["pde", "equation", "governing", "system"])
         has_known_or_given = contains_any(answer, ["known", "given", "prescribed", "available", "user input"])
-        has_domain_or_variables = contains_any(answer, ["domain", "omega", "boundary", "x", "t", "field"])
-        handles_missing = contains_any(answer, ["missing", "unspecified", "not specified", "not explicitly", "must be specified"])
+        has_target_or_unknown = contains_any(answer, ["unknown", "target", "output", "approximate", "solve", "estimate", "infer", "recover", "identify"])
+        has_domain_or_variables = contains_any(answer, ["domain", "omega", "boundary", "geometry", "x", "t", "field", "coordinates"])
+        has_task_type = contains_any(answer, [
+            "forward",
+            "inverse",
+            "data assimilation",
+            "sparse",
+            "observation",
+            "sensor",
+            "surrogate",
+            "operator",
+            "reusable",
+            "single-instance",
+            "single instance",
+            "boundary-value",
+            "initial-boundary",
+            "solve",
+            "recover",
+            "infer",
+            "estimate",
+        ])
+        handles_missing = contains_any(answer, [
+            "missing",
+            "unspecified",
+            "not specified",
+            "not provided",
+            "not explicitly",
+            "must be specified",
+            "must be supplied",
+            "must be provided",
+            "requires",
+            "need to specify",
+            "user input",
+            "if available",
+            "if specified",
+        ])
+
+        task_id = row["task_id"]
+        task_specific_cues = []
+        if "inverse" in task_id or "recovery" in task_id:
+            task_specific_cues.extend(["inverse", "infer", "estimate", "identify", "recover", "unknown parameter", "unknown source"])
+        if "sparse" in task_id or "noisy" in task_id:
+            task_specific_cues.extend(["sparse", "observation", "sensor", "data", "noise", "noisy"])
+        if "periodic" in task_id:
+            task_specific_cues.extend(["periodic", "endpoint", "topology", "identified"])
+        if "cahn_hilliard" in task_id:
+            task_specific_cues.extend(["cahn-hilliard", "chemical", "potential", "mass", "conserved"])
+        if "helmholtz" in task_id:
+            task_specific_cues.extend(["helmholtz", "complex", "frequency", "phase", "amplitude"])
+        if "euler_shock" in task_id:
+            task_specific_cues.extend(["euler", "conservative", "conservation", "density", "momentum", "energy", "shock"])
+        if "mhd" in task_id:
+            task_specific_cues.extend(["magnetic", "velocity", "coupled", "induction", "divergence"])
+        if "multiscale_darcy" in task_id:
+            task_specific_cues.extend(["single-instance", "single instance", "surrogate", "operator", "high-contrast", "permeability"])
+        if "acoustic" in task_id:
+            task_specific_cues.extend(["acoustic", "scattering", "geometry", "boundary", "frequency"])
+        if "rayleigh_benard" in task_id:
+            task_specific_cues.extend(["rayleigh", "boussinesq", "temperature", "velocity", "pressure"])
+
+        task_specific_ok = not task_specific_cues or contains_any(answer, task_specific_cues)
+        has_known_unknown_split = has_known_or_given and has_target_or_unknown
+
         if has_governing_setup and has_known_or_given and has_domain_or_variables and length >= 250:
             score = max(score, 4)
-        if handles_missing and specificity >= 0.45 and length >= 350:
+
+        qualifies_for_5 = (
+            has_known_unknown_split
+            and has_task_type
+            and handles_missing
+            and task_specific_ok
+            and specificity >= 0.70
+            and length >= 350
+        )
+        if qualifies_for_5:
             score = max(score, 5)
+        elif score > 4:
+            score = 4
+            notes.append(
+                "pf_strict_cap<=4: 5 requires known/unknown split, task type, missing-spec handling, task-specific decision, and high reference match"
+            )
+
+        task_needs_type = any(marker in task_id for marker in ["inverse", "recovery", "sparse", "noisy", "periodic", "helmholtz", "euler", "mhd", "darcy"])
+        if task_needs_type and not has_task_type and score > 3:
+            score = 3
+            notes.append("pf_strict_cap<=3: missing workflow-changing task-type/data-role distinction")
+        if not has_known_unknown_split and score > 4:
+            score = 4
+            notes.append("pf_strict_cap<=4: known inputs and unknown targets are not explicitly separated")
 
     if facet_id == "validation_failure_risks":
         risk_markers = [
@@ -453,6 +538,8 @@ def raw_score(row: dict[str, str], reference: dict[str, Any]) -> tuple[int, str]
             score = max(score, 5)
 
     rationale = f"core_cue_ratio={core:.2f}; reference_item_match={matched}/{total}"
+    if notes:
+        rationale += "; " + "; ".join(notes)
     return score, rationale
 
 

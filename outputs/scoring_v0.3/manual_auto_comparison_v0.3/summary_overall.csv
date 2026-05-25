@@ -1,2 +1,2 @@
 ﻿n_rows,n_compared,missing_manual,missing_auto,human_mean,human_variance,auto_mean,auto_variance,diff_mean_human_minus_auto,diff_variance,abs_diff_mean,abs_diff_max,exact_match_rate,within_0_5_rate,within_1_0_rate
-180,180,0,0,4.381,0.292,4.456,0.462,-0.075,0.281,0.386,1.500,0.406,0.828,0.994
+180,180,0,0,4.381,0.292,4.278,0.481,0.103,0.371,0.442,2.000,0.378,0.783,0.967

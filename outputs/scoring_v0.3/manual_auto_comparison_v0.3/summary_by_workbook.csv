@@ -1,3 +1,3 @@
 ﻿manual_file,n_rows,n_compared,missing_manual,missing_auto,human_mean,human_variance,auto_mean,auto_variance,diff_mean_human_minus_auto,diff_variance,abs_diff_mean,abs_diff_max,exact_match_rate,within_0_5_rate,within_1_0_rate
-manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,90,90,0,0,4.228,0.271,4.511,0.455,-0.283,0.242,0.406,1.500,0.411,0.789,0.989
-manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,90,90,0,0,4.533,0.269,4.400,0.467,0.133,0.235,0.367,1.000,0.400,0.867,1.000
+manual_scoring_selected_01_09_12_17_20_25_v0.3_compare.xlsx,90,90,0,0,4.228,0.271,4.322,0.468,-0.094,0.348,0.428,1.500,0.400,0.767,0.978
+manual_scoring_selected_02_03_15_22_23_24_v0.3_compare.xlsx,90,90,0,0,4.533,0.269,4.233,0.496,0.300,0.319,0.456,2.000,0.356,0.800,0.956
