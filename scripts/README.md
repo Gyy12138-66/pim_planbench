@@ -85,3 +85,21 @@ python scripts/run_llm_planner.py --normalize-raw runs/pilot_v0.1/raw/GPT-5.5-Th
 ```
 
 By default, a raw filename ending in `__answers_public` is written to the matching normalized path without that suffix, for example `runs/pilot_v0.1/normalized/GPT-5.5-Thinking__canonical_v0.1.jsonl`. Use `--normalized-output` to choose a different destination.
+
+## `audit_benchmark_readiness.py`
+
+Builds a diagnostic readiness report for the current paper baseline:
+
+- task taxonomy coverage
+- score coverage and model/facet/task discrimination
+- score ceiling indicators
+- private reference failure-trap and cap-rule coverage
+- suggested next benchmark edits
+
+```powershell
+python scripts/audit_benchmark_readiness.py
+```
+
+Default output:
+
+- `docs/benchmark_readiness_audit_v0.2.md`
