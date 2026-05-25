@@ -34,6 +34,30 @@ Run it with:
 python scripts/build_manual_scoring_facet_rows_v03.py
 ```
 
+## `score_3modeloutput_v03.py`
+
+Builds a rubric-assisted first-pass score file for:
+
+- `scores/pilot_v0.3/3ModelOutput.csv`
+
+Default outputs:
+
+- `scores/pilot_v0.3/3ModelOutput_scored.csv`
+- `scores/pilot_v0.3/score_summary_by_model.csv`
+- `scores/pilot_v0.3/score_summary_by_task_model.csv`
+
+Run it with:
+
+```powershell
+python scripts/score_3modeloutput_v03.py
+```
+
+Then build the HTML report with:
+
+```powershell
+python scores/visualize_model_scores.py --input scores/pilot_v0.3/3ModelOutput_scored.csv --output scores/pilot_v0.3/model_score_report.html
+```
+
 ## `run_llm_planner.py`
 
 By default, runs `dataset/tasks_public_v0.1.jsonl` with `prompts/planner_prompt.md` and writes:
