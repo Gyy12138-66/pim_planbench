@@ -22,11 +22,17 @@ node scripts/build_selected_manual_scoring.mjs
 
 ## `run_llm_planner.py`
 
-Runs `dataset/tasks_public_v0.1.jsonl` with `prompts/planner_prompt.md` and writes:
+By default, runs `dataset/tasks_public_v0.1.jsonl` with `prompts/planner_prompt.md` and writes:
 
 - raw API responses to `runs/pilot_v0.1/raw/`
 - normalized scoring records to `runs/pilot_v0.1/normalized/`
 - rendered prompts to `runs/pilot_v0.1/rendered_prompts/` when `--dry-run` is used
+
+For the current v0.3 task wording, pass the task file and a separate run directory:
+
+```powershell
+python scripts/run_llm_planner.py --tasks dataset/tasks_public_v0.3.jsonl --out-dir runs/pilot_v0.3 --provider siliconflow --model Pro/zai-org/GLM-4.7
+```
 
 ### Dry run
 
