@@ -66,6 +66,8 @@ class ApiConfig:
     temperature: float
     max_tokens: int
     timeout: int
+    extra_headers: Dict[str, str]
+    proxy_url: Optional[str]
 
 
 def load_dotenv(path: Path) -> None:
@@ -160,9 +162,19 @@ def chat_completions(config: ApiConfig, prompt: str) -> Dict[str, Any]:
     if config.provider == "openrouter":
         headers.setdefault("HTTP-Referer", "https://local.pim-planbench")
         headers.setdefault("X-Title", "PIM-PlanBench")
+    headers.update(config.extra_headers)
     request = urllib.request.Request(endpoint, data=body, headers=headers, method="POST")
     try:
-        with urllib.request.urlopen(request, timeout=config.timeout) as response:
+        opener = urllib.request.urlopen
+        if config.proxy_url:
+            proxy_handler = urllib.request.ProxyHandler(
+                {
+                    "http": config.proxy_url,
+                    "https": config.proxy_url,
+                }
+            )
+            opener = urllib.request.build_opener(proxy_handler).open
+        with opener(request, timeout=config.timeout) as response:
             raw = response.read().decode("utf-8")
             return json.loads(raw)
     except urllib.error.HTTPError as exc:
@@ -398,6 +410,17 @@ def resolve_api_config(args: argparse.Namespace, root: Path) -> Optional[ApiConf
     if not api_key:
         raise ValueError(f"Missing API key. Set {api_key_env} or pass --api-key-env/--api-key.")
 
+    extra_headers: Dict[str, str] = {}
+    for item in args.header or []:
+        if "=" not in item:
+            raise ValueError(f"Invalid --header value '{item}'. Expected NAME=VALUE.")
+        key, value = item.split("=", 1)
+        key = key.strip()
+        value = value.strip()
+        if not key:
+            raise ValueError(f"Invalid --header value '{item}'. Header name is empty.")
+        extra_headers[key] = value
+
     return ApiConfig(
         provider=args.provider,
         model=args.model,
@@ -406,6 +429,8 @@ def resolve_api_config(args: argparse.Namespace, root: Path) -> Optional[ApiConf
         temperature=args.temperature,
         max_tokens=args.max_tokens,
         timeout=args.timeout,
+        extra_headers=extra_headers,
+        proxy_url=args.proxy_url,
     )
 
 
@@ -435,6 +460,8 @@ def parse_args(argv: Optional[Iterable[str]] = None) -> argparse.Namespace:
     parser.add_argument("--base-url", default=None, help="Override OpenAI-compatible base URL.")
     parser.add_argument("--api-key-env", default=None, help="Environment variable that stores the API key.")
     parser.add_argument("--api-key", default=None, help="API key value. Prefer environment variables for real runs.")
+    parser.add_argument("--header", action="append", default=None, help="Extra HTTP header as NAME=VALUE; repeatable.")
+    parser.add_argument("--proxy-url", default=None, help="Explicit HTTP/HTTPS proxy URL, e.g. http://127.0.0.1:7890.")
     parser.add_argument("--prompt-setting", default="canonical_v0.1")
     parser.add_argument("--temperature", type=float, default=0.2)
     parser.add_argument("--max-tokens", type=int, default=1800)

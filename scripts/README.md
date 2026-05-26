@@ -154,6 +154,64 @@ $env:OPENAI_COMPATIBLE_BASE_URL="https://your-endpoint.example.com/v1"
 python scripts/run_llm_planner.py --provider custom --model your-model-name --limit 2
 ```
 
+### Overseas OpenAI-compatible APIs through HTTP
+
+The runner sends direct HTTP POST requests to `{base_url}/chat/completions`.
+Use this path for OpenRouter, OpenAI-compatible gateways, or overseas model APIs
+that expose the OpenAI chat-completions protocol.
+
+OpenRouter example:
+
+```powershell
+$env:OPENROUTER_API_KEY="YOUR_KEY"
+python scripts/run_llm_planner.py `
+  --tasks dataset/tasks_public_v0.3.jsonl `
+  --out-dir runs/pilot_v0.3 `
+  --provider openrouter `
+  --model openai/gpt-4.1 `
+  --prompt-setting canonical_v0.3 `
+  --max-tokens 6000 `
+  --timeout 240 `
+  --sleep 1
+```
+
+Custom overseas gateway example:
+
+```powershell
+$env:OPENAI_COMPATIBLE_API_KEY="YOUR_KEY"
+$env:OPENAI_COMPATIBLE_BASE_URL="https://your-overseas-gateway.example.com/v1"
+python scripts/run_llm_planner.py `
+  --tasks dataset/tasks_public_v0.3.jsonl `
+  --out-dir runs/pilot_v0.3_custom `
+  --provider custom `
+  --model provider/model-name `
+  --prompt-setting canonical_v0.3 `
+  --max-tokens 6000
+```
+
+If the gateway requires additional HTTP headers, repeat `--header`:
+
+```powershell
+python scripts/run_llm_planner.py `
+  --provider custom `
+  --base-url https://your-overseas-gateway.example.com/v1 `
+  --api-key-env OPENAI_COMPATIBLE_API_KEY `
+  --model provider/model-name `
+  --header "HTTP-Referer=https://local.pim-planbench" `
+  --header "X-Title=PIM-PlanBench" `
+  --limit 2
+```
+
+If your network requires an explicit proxy:
+
+```powershell
+python scripts/run_llm_planner.py `
+  --provider openrouter `
+  --model openai/gpt-4.1 `
+  --proxy-url http://127.0.0.1:7890 `
+  --limit 2
+```
+
 Use `--task-id TASK_ID` to run a specific task, repeatable. Use `--overwrite` to rerun tasks already present in the normalized output file.
 
 ### Normalize an existing raw output file
