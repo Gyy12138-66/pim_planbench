@@ -47,6 +47,13 @@ def esc(value: object) -> str:
     return html.escape("" if value is None else str(value), quote=True)
 
 
+def display_path(path: Path) -> str:
+    try:
+        return path.resolve().relative_to(ROOT).as_posix()
+    except ValueError:
+        return str(path)
+
+
 def short_model(model: str) -> str:
     replacements = {
         "Pro/moonshotai/Kimi-K2.6": "Kimi-K2.6",
@@ -345,7 +352,7 @@ def main() -> int:
   {top_bottom_tasks(task_summary)}
 
   <script type="application/json" id="report-metadata">
-  {json.dumps({"average_facet_score": round(avg, 3), "scored": str(args.scored), "summary": str(args.summary)}, ensure_ascii=False)}
+  {json.dumps({"average_facet_score": round(avg, 3), "scored": display_path(args.scored), "summary": display_path(args.summary)}, ensure_ascii=False)}
   </script>
 </main>
 </body>

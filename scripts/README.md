@@ -1,185 +1,118 @@
 # Scripts
 
-## `build_selected_manual_scoring.mjs`
+These scripts now default to the v0.3 baseline unless a command explicitly passes older archived paths.
 
-Builds the selected-task manual scoring workbook at:
+## Run Or Normalize Model Outputs
 
-- `outputs/scoring_v0.3/manual_scoring_selected_001_009_012_017_020_025_v0.3.xlsx`
+`run_llm_planner.py` defaults to:
 
-This builder targets the current PlanScore v0.3 0-5 score sheet. It reads:
+- tasks: `dataset/tasks_public_v0.3.jsonl`
+- prompt: `prompts/planner_prompt.md`
+- output directory: `runs/pilot_v0.3/`
+- prompt setting: `canonical_v0.3`
 
-- `dataset/tasks_public_v0.3.jsonl`
-- `dataset/references_private_v0.3.jsonl`
-- normalized model outputs under `runs/pilot_v0.3/normalized/`
-- rubric-assisted scores from `scores/pilot_v0.3/3ModelOutput_scored.csv`, prefilled into the manual score column for reviewer adjustment
-
-It depends on `@oai/artifact-tool`; in the Codex desktop workspace this is provided through the ignored local `scripts/node_modules` symlink.
-
-Run it with:
+Example:
 
 ```powershell
-node scripts/build_selected_manual_scoring.mjs
+python scripts/run_llm_planner.py --provider siliconflow --model Pro/zai-org/GLM-4.7
 ```
 
-## `build_manual_scoring_facet_rows_v03.py`
-
-Builds the full v0.3 facet-level manual scoring CSV at:
-
-- `outputs/scoring_v0.3/manual_scoring_facet_rows_v0.3.csv`
-
-This table covers all 26 public v0.3 tasks, 3 normalized model outputs, and 5 rubric facets per task. The human scoring column is `human_score_0_5`.
-
-Run it with:
-
-```powershell
-python scripts/build_manual_scoring_facet_rows_v03.py
-```
-
-## `score_3modeloutput_v03.py`
-
-Builds a rubric-assisted first-pass score file for:
-
-- `scores/pilot_v0.3/3ModelOutput.csv`
-
-Default outputs:
-
-- `scores/pilot_v0.3/3ModelOutput_scored.csv`
-- `scores/pilot_v0.3/score_summary_by_model.csv`
-- `scores/pilot_v0.3/score_summary_by_task_model.csv`
-
-Run it with:
-
-```powershell
-python scripts/score_3modeloutput_v03.py
-```
-
-Then build the HTML report with:
-
-```powershell
-python scores/visualize_model_scores.py --input scores/pilot_v0.3/3ModelOutput_scored.csv --output scores/pilot_v0.3/model_score_report.html
-```
-
-## `build_random_manual_scoring_v03.mjs`
-
-Builds a reproducible random 6-task manual annotation workbook at:
-
-- `outputs/scoring_v0.3/manual_scoring_random6_seed20260525_v0.3.xlsx`
-
-The workbook leaves `你的评分0-5` blank for independent human annotation and appends `初步评分参考` plus `初步评分依据` as the rightmost columns.
-
-Run it with:
-
-```powershell
-node scripts/build_random_manual_scoring_v03.mjs
-```
-
-## `compare_manual_auto_scores_v03.py`
-
-Compares the two v0.3 manual scoring workbooks against the automatic score CSV and reports row-level differences plus mean/variance summaries by workbook, facet, model, and facet-model group.
-
-Default inputs:
-
-- `outputs/scoring_v0.3/manual_scoring_selected_*_v0.3_compare.xlsx`
-- `scores/pilot_v0.3/3ModelOutput_scored.csv`
-
-Default output directory:
-
-- `outputs/scoring_v0.3/manual_auto_comparison_v0.3/`
-
-Run it with:
-
-```powershell
-python scripts/compare_manual_auto_scores_v03.py
-```
-
-## `run_llm_planner.py`
-
-By default, runs `dataset/tasks_public_v0.1.jsonl` with `prompts/planner_prompt.md` and writes:
-
-- raw API responses to `runs/pilot_v0.1/raw/`
-- normalized scoring records to `runs/pilot_v0.1/normalized/`
-- rendered prompts to `runs/pilot_v0.1/rendered_prompts/` when `--dry-run` is used
-
-For the current v0.3 task wording, pass the task file and a separate run directory:
-
-```powershell
-python scripts/run_llm_planner.py --tasks dataset/tasks_public_v0.3.jsonl --out-dir runs/pilot_v0.3 --provider siliconflow --model Pro/zai-org/GLM-4.7
-```
-
-### Dry run
+Dry run:
 
 ```powershell
 python scripts/run_llm_planner.py --model dry-run-model --dry-run --limit 2
 ```
 
-### OpenAI
+Normalize an existing raw v0.3 output file:
 
 ```powershell
-$env:OPENAI_API_KEY="YOUR_KEY"
-python scripts/run_llm_planner.py --provider openai --model gpt-4.1 --limit 2
+python scripts/run_llm_planner.py --normalize-raw runs/pilot_v0.3/raw/Pro_zai-org_GLM-4.7__canonical_v0.3.jsonl --overwrite
 ```
 
-### DeepSeek
+## Build Model-Output Rows
+
+`build_model_output_rows_v03.py` builds the all-existing v0.3 facet table from normalized outputs:
+
+- input tasks: `dataset/tasks_public_v0.3.jsonl`
+- input references: `dataset/references_private_v0.3.jsonl`
+- input normalized directory: `runs/pilot_v0.3/normalized/`
+- output: `scores/pilot_v0.3/ModelOutput_all_existing_v0.3.csv`
+- quality output: `scores/pilot_v0.3/model_output_quality_v0.3.csv`
 
 ```powershell
-$env:DEEPSEEK_API_KEY="YOUR_KEY"
-python scripts/run_llm_planner.py --provider deepseek --model deepseek-chat --limit 2
+python scripts/build_model_output_rows_v03.py
 ```
 
-### Qwen / DashScope compatible mode
+`build_manual_scoring_facet_rows_v03.py` builds the three-model manual scoring CSV:
+
+- output: `outputs/scoring_v0.3/manual_scoring_facet_rows_v0.3.csv`
 
 ```powershell
-$env:DASHSCOPE_API_KEY="YOUR_KEY"
-python scripts/run_llm_planner.py --provider qwen --model qwen-plus --limit 2
+python scripts/build_manual_scoring_facet_rows_v03.py
 ```
 
+## Score Outputs
 
-### SiliconFlow
+`score_3modeloutput_v03.py` scores a facet-row CSV with the v0.3 private references.
+
+Default three-model subset:
 
 ```powershell
-$env:SILICONFLOW_API_KEY="YOUR_KEY"
-python scripts/run_llm_planner.py --provider siliconflow --model Pro/zai-org/GLM-4.7 --limit 2
+python scripts/score_3modeloutput_v03.py
 ```
 
-If the provider times out, resume without `--overwrite` and increase the timeout/retry settings:
+All-existing v0.3 scoring:
 
 ```powershell
-python scripts/run_llm_planner.py --provider siliconflow --model Pro/zai-org/GLM-4.7 --timeout 300 --retries 4 --retry-sleep 10 --sleep 1
+python scripts/score_3modeloutput_v03.py --input scores/pilot_v0.3/ModelOutput_all_existing_v0.3.csv --output scores/pilot_v0.3/ModelOutput_all_existing_scored_v0.3.csv --summary scores/pilot_v0.3/score_summary_by_model_all_existing_v0.3.csv --task-summary scores/pilot_v0.3/score_summary_by_task_model_all_existing_v0.3.csv
 ```
-### Custom OpenAI-compatible endpoint
+
+## Visualize Scores
+
+`visualize_model_scores.py` builds the all-existing v0.3 HTML score report:
+
+- output: `scores/pilot_v0.3/model_score_report_all_existing_v0.3.html`
 
 ```powershell
-$env:OPENAI_COMPATIBLE_API_KEY="YOUR_KEY"
-$env:OPENAI_COMPATIBLE_BASE_URL="https://your-endpoint.example.com/v1"
-python scripts/run_llm_planner.py --provider custom --model your-model-name --limit 2
+python scripts/visualize_model_scores.py
 ```
 
-Use `--task-id TASK_ID` to run a specific task, repeatable. Use `--overwrite` to rerun tasks already present in the normalized output file.
+The old three-model visualizer from `scores/visualize_model_scores.py` has been archived under `archive/unused_code/`.
 
-### Normalize an existing raw output file
+## Manual Review Workbooks
+
+`build_selected_manual_scoring.mjs` builds the fixed selected-task workbook for v0.3.
 
 ```powershell
-python scripts/run_llm_planner.py --normalize-raw runs/pilot_v0.1/raw/GPT-5.5-Thinking__canonical_v0.1__answers_public.jsonl --overwrite
+node scripts/build_selected_manual_scoring.mjs
 ```
 
-By default, a raw filename ending in `__answers_public` is written to the matching normalized path without that suffix, for example `runs/pilot_v0.1/normalized/GPT-5.5-Thinking__canonical_v0.1.jsonl`. Use `--normalized-output` to choose a different destination.
+`build_random_manual_scoring_v03.mjs` builds the reproducible second selected-task workbook for v0.3.
 
-## `audit_benchmark_readiness.py`
+```powershell
+node scripts/build_random_manual_scoring_v03.mjs
+```
 
-Builds a diagnostic readiness report for the current paper baseline:
+Both builders depend on `@oai/artifact-tool`; in the Codex desktop workspace this is usually provided through the ignored local `scripts/node_modules` symlink.
 
-- task taxonomy coverage
-- score coverage and model/facet/task discrimination
-- score ceiling indicators
-- private reference failure-trap and cap-rule coverage
-- suggested next benchmark edits
+## Compare Manual And Auto Scores
+
+`compare_manual_auto_scores_v03.py` compares the v0.3 manual scoring workbooks against `scores/pilot_v0.3/3ModelOutput_scored.csv` and writes summaries to:
+
+- `outputs/scoring_v0.3/manual_auto_comparison_v0.3/`
+
+```powershell
+python scripts/compare_manual_auto_scores_v03.py
+```
+
+## Readiness Audit
+
+`audit_benchmark_readiness.py` defaults to the v0.3 public tasks, v0.3 private references, and all-existing v0.3 scored output.
+
+Default output:
+
+- `docs/benchmark_readiness_audit_v0.3.md`
 
 ```powershell
 python scripts/audit_benchmark_readiness.py
 ```
-
-Default output:
-
-- `docs/benchmark_readiness_audit_v0.2.md`
-
-The current scoring rubric is `docs/rubric_v0.3.md`; `docs/rubric.md` is kept as its alias.

@@ -435,7 +435,7 @@ def parse_args(argv: Optional[Iterable[str]] = None) -> argparse.Namespace:
     parser.add_argument("--base-url", default=None, help="Override OpenAI-compatible base URL.")
     parser.add_argument("--api-key-env", default=None, help="Environment variable that stores the API key.")
     parser.add_argument("--api-key", default=None, help="API key value. Prefer environment variables for real runs.")
-    parser.add_argument("--prompt-setting", default="canonical_v0.1")
+    parser.add_argument("--prompt-setting", default="canonical_v0.3")
     parser.add_argument("--temperature", type=float, default=0.2)
     parser.add_argument("--max-tokens", type=int, default=1800)
     parser.add_argument("--timeout", type=int, default=120)
@@ -452,9 +452,9 @@ def parse_args(argv: Optional[Iterable[str]] = None) -> argparse.Namespace:
 def main(argv: Optional[Iterable[str]] = None) -> int:
     args = parse_args(argv)
     root = args.root.resolve()
-    tasks_path = args.tasks or (root / "dataset" / "tasks_public_v0.1.jsonl")
+    tasks_path = args.tasks or (root / "dataset" / "tasks_public_v0.3.jsonl")
     prompt_path = args.prompt or (root / "prompts" / "planner_prompt.md")
-    out_dir = args.out_dir or (root / "runs" / "pilot_v0.1")
+    out_dir = args.out_dir or (root / "runs" / "pilot_v0.3")
     raw_dir = out_dir / "raw"
     normalized_dir = out_dir / "normalized"
     rendered_dir = out_dir / "rendered_prompts"

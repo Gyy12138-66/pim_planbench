@@ -27,4 +27,4 @@ The matching entries in `dataset/references_private_v0.3.jsonl` now use `scoring
 
 ## Result Status
 
-Existing `runs/pilot_v0.1/` and `scores/pilot_v0.1/` artifacts were generated from public v0.1 prompts. They should be treated as pilot evidence only. New model runs are required before scoring v0.3.
+The active v0.3 runs and scores are stored under `runs/pilot_v0.3/` and `scores/pilot_v0.3/`. Existing v0.1 artifacts were generated from public v0.1 prompts and have been moved under `archive/v0.1_results/`; treat them as development history rather than current paper-facing results.
