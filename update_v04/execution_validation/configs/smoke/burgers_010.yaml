@@ -1,0 +1,8 @@
+# SMOKE：验证 harness（含反问题 ν 估计），非正式实验臂
+task: medium_burgers_inverse_viscosity_010
+arm: smoke
+constraints: {hard_ic: true}
+weights: {data: 10.0}
+optimizer:
+  adam: {steps: 8000}
+  lbfgs: {steps: 300}

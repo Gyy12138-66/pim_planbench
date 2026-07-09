@@ -1,0 +1,67 @@
+# ============================================================================
+# 预注册默认值表 v0.4（计划未指定的旋钮一律取此表的值）
+#
+# 规则（见 docs/execution_validation_protocol_v0.4.md 第 5 节）：
+#   * 正式运行前本文件必须冻结：作者批准 -> git commit -> 之后不得改动；
+#   * 取值原则是"中性的社区常规做法"，不偏向任何计划；
+#   * TODO_REVIEW: 正式跑之前需作者最终批准一次。
+# ============================================================================
+task: null            # 由各 arm 配置指定
+arm: null
+seed: 0
+device: auto          # auto = cuda 优先, 否则 cpu；可显式 cpu / cuda / mps
+dtype: float32
+log_every: 1000
+
+net:
+  width: 64
+  depth: 4
+  activation: tanh    # 菜单: tanh | gelu | sin
+
+features:
+  periodic_harmonics: 0      # >0 时对空间坐标做周期嵌入（sin/cos 谐波数）
+  fourier:
+    num: 0                   # >0 时启用随机 Fourier 特征
+    sigma: 5.0
+
+constraints:
+  hard_bc: false      # 硬边界约束（按任务的 ansatz 实现）
+  hard_ic: false      # 硬初值约束
+
+sampling:
+  n_pde: 10000        # 配点数
+  n_bc: 400
+  n_ic: 400
+  resample_every: 0   # >0: 每 N 步重采配点
+  rar:
+    every: 0          # >0: 每 N 步做一次残差自适应加点
+    pool: 50000
+    add: 500
+
+weights:              # 损失权重；数值或 {start, end, steps} 线性 ramp
+  pde: 1.0
+  bc: 1.0
+  ic: 1.0
+  data: 1.0
+  periodic: 1.0
+
+optimizer:
+  adam:
+    lr: 1.0e-3
+    steps: 20000
+  lbfgs:
+    steps: 0          # >0: Adam 之后接 L-BFGS 精修
+    lr: 1.0
+
+curriculum: []        # 时间推进课程, 如 [{t_frac: 0.25, steps: 5000}, ...]
+
+inverse:
+  init_nu: 0.1        # Burgers 反问题的 ν 初值（log 参数化）
+
+data:                 # 反问题观测集（固定种子，预注册）
+  n_obs: 2000
+  noise_rel: 0.01
+  seed: 0
+
+euler:
+  artificial_viscosity: 0.0   # Euler 残差的人工粘性 ε

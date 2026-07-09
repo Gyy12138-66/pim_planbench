@@ -1,0 +1,5 @@
+# SMOKE：验证 harness，非正式实验臂
+task: easy_poisson_2d_source_003
+arm: smoke
+constraints: {hard_bc: true}
+optimizer: {adam: {steps: 5000}}

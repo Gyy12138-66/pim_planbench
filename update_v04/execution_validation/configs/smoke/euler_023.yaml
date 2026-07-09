@@ -1,0 +1,8 @@
+# SMOKE：验证 harness（守恒残差 + 人工粘性），非正式实验臂。
+# 注意：本题受"可行性门"约束——正式纳入前需先验证金计划配置能在小尺度收敛。
+task: hard_plus_euler_shock_023
+arm: smoke
+weights: {ic: 10.0, bc: 10.0}
+euler: {artificial_viscosity: 0.005}
+sampling: {n_pde: 8000, resample_every: 1000}
+optimizer: {adam: {steps: 12000}}

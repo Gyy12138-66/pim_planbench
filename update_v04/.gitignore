@@ -1,0 +1,4 @@
+__pycache__/
+execution_validation/reference_data/
+execution_validation/analysis_v0.4/
+execution_validation/*.csv

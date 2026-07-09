@@ -1,0 +1,10 @@
+# SMOKE：验证 harness（含课程式时间推进），非正式实验臂
+task: hard_allen_cahn_016
+arm: smoke
+features: {periodic_harmonics: 4}
+constraints: {hard_ic: true}
+sampling: {resample_every: 1000}
+curriculum:
+  - {t_frac: 0.25, steps: 4000}
+  - {t_frac: 0.5, steps: 4000}
+  - {t_frac: 1.0, steps: 8000}
