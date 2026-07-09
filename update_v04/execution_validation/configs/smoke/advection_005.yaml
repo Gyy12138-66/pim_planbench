@@ -1,0 +1,6 @@
+# SMOKE：验证 harness，非正式实验臂
+task: easy_advection_1d_periodic_005
+arm: smoke
+features: {periodic_harmonics: 4}
+constraints: {hard_ic: true}
+optimizer: {adam: {steps: 5000}}
