@@ -188,6 +188,13 @@ def markdown_table(headers: list[str], rows: Iterable[Iterable[Any]]) -> str:
     return "\n".join(out)
 
 
+def display_path(path: Path, root: Path) -> str:
+    try:
+        return path.resolve().relative_to(root).as_posix()
+    except ValueError:
+        return str(path)
+
+
 def fmt(value: float, digits: int = 2) -> str:
     if math.isnan(value):
         return "NA"
@@ -273,6 +280,7 @@ def build_audit(
     scores: list[ScoreRow],
     args: argparse.Namespace,
 ) -> str:
+    root = Path(__file__).resolve().parents[1]
     tasks_by_id = {row["id"]: row for row in tasks}
     refs_by_id = {row["id"]: row for row in references}
     task_ids = sorted(tasks_by_id, key=task_number)
@@ -500,7 +508,7 @@ def build_audit(
 
     generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
     report: list[str] = [
-        "# PIM-PlanBench Benchmark Readiness Audit v0.2",
+        "# PIM-PlanBench Benchmark Readiness Audit v0.3",
         "",
         f"Generated: {generated_at}",
         "",
@@ -509,9 +517,9 @@ def build_audit(
         markdown_table(
             ["Input", "Path"],
             [
-                ["Public tasks", args.tasks],
-                ["Private references", args.references],
-                ["Score CSV", args.scores],
+                ["Public tasks", display_path(args.tasks, root)],
+                ["Private references", display_path(args.references, root)],
+                ["Score CSV", display_path(args.scores, root)],
             ],
         ),
         "",
@@ -696,10 +704,10 @@ def build_audit(
 def parse_args() -> argparse.Namespace:
     root = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser(description="Audit PIM-PlanBench readiness for paper-facing benchmark use.")
-    parser.add_argument("--tasks", type=Path, default=root / "dataset" / "tasks_public_v0.1.jsonl")
+    parser.add_argument("--tasks", type=Path, default=root / "dataset" / "tasks_public_v0.3.jsonl")
     parser.add_argument("--references", type=Path, default=root / "dataset" / "references_private_v0.3.jsonl")
-    parser.add_argument("--scores", type=Path, default=root / "scores" / "pilot_v0.1" / "3ModelOutput.csv")
-    parser.add_argument("--output", type=Path, default=root / "docs" / "benchmark_readiness_audit_v0.2.md")
+    parser.add_argument("--scores", type=Path, default=root / "scores" / "pilot_v0.3" / "ModelOutput_all_existing_scored_v0.3.csv")
+    parser.add_argument("--output", type=Path, default=root / "docs" / "benchmark_readiness_audit_v0.3.md")
     parser.add_argument("--facet-ceiling-threshold", type=float, default=4.5)
     parser.add_argument("--task-ceiling-threshold", type=float, default=22.5)
     parser.add_argument("--low-task-range-threshold", type=float, default=3.0)
