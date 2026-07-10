@@ -1,0 +1,2 @@
+task,arm,config,seed,adam_steps,diverged,rel_l2,rel_l2_rho,rel_l2_u,rel_l2_p,nu_hat,nu_rel_err,pde_override,wall_time_s,eval_error
+hard_plus_euler_shock_023,arm_db5c98,arm_db5c98.yaml,0,20000,0,0.09127458034027691,0.0447065932197589,0.17475536468670708,0.054361783114364785,,,,5268.7,
