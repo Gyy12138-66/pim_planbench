@@ -59,9 +59,20 @@ inverse:
   init_nu: 0.1        # Burgers 反问题的 ν 初值（log 参数化）
 
 data:                 # 反问题观测集（固定种子，预注册）
+  enabled: true       # false: 关闭数据损失（010 的 D2 正问题化消融用）
   n_obs: 2000
   noise_rel: 0.01
   seed: 0
+
+pde:                  # PDE 系数覆盖：null = 按任务实例化表取真值。
+                      # 仅两种情况允许非空：消融臂 D2/D3；或计划文本明确断言了
+                      # 与实例化表冲突的系数（转写清单 #12，记 conflict）。
+  poisson_source_scale: null   # 003: 源项 f 的乘性因子
+  advection_c: null            # 005: 对流速度 c（真值 1.0）
+  burgers_nu_fixed: null       # 010: 设定后 ν 固定为该值、不再可训练
+  ac_d: null                   # 016: 扩散系数 d（真值 1e-4）
+  ac_reaction: null            # 016: 反应项系数（真值 5.0）
+  euler_gamma: null            # 023: 比热比 γ（真值 1.4）
 
 euler:
   artificial_viscosity: 0.0   # Euler 残差的人工粘性 ε

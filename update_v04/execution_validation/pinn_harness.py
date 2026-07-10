@@ -163,6 +163,11 @@ class TaskBase:
     def t(self, arr):
         return torch.tensor(np.asarray(arr), device=self.device, dtype=self.dtype)
 
+    def pde_param(self, key, default):
+        """PDE 系数：默认取任务实例化值；配置的 pde.* 非空时覆盖（消融臂 D2/D3 用）。"""
+        v = (self.cfg.get("pde") or {}).get(key)
+        return float(default) if v is None else float(v)
+
     def rand(self, n, lo, hi, rng):
         u = torch.rand(n, len(lo), generator=rng, device=self.device, dtype=self.dtype)
         lo = self.t(lo)
@@ -213,6 +218,7 @@ class Poisson003(TaskBase):
         u_xx = grad(g[:, :1], X)[:, :1]
         u_yy = grad(g[:, 1:2], X)[:, 1:2]
         f = 2.0 * math.pi**2 * torch.sin(math.pi * X[:, :1]) * torch.sin(math.pi * X[:, 1:2])
+        f = f * self.pde_param("poisson_source_scale", 1.0)
         return u_xx + u_yy + f
 
     def output_transform(self, X, raw):
@@ -255,7 +261,7 @@ class Advection005(TaskBase):
         X = X.detach().requires_grad_(True)
         u = model(X)
         g = grad(u, X)
-        return g[:, 1:2] + self.C * g[:, :1]
+        return g[:, 1:2] + self.pde_param("advection_c", self.C) * g[:, :1]
 
     def output_transform(self, X, raw):
         if self.hard_ic:
@@ -290,16 +296,22 @@ class BurgersInverse010(TaskBase):
 
     def __init__(self, cfg, device, dtype):
         super().__init__(cfg, device, dtype)
-        init_nu = float(cfg["inverse"].get("init_nu", 0.1))
-        self.log_nu = torch.nn.Parameter(
-            torch.tensor(math.log(init_nu), device=device, dtype=dtype))
+        nu_fixed = (cfg.get("pde") or {}).get("burgers_nu_fixed")
+        if nu_fixed is not None:  # D2 正问题化：ν 视为已知常数，不参与训练
+            self.log_nu = torch.tensor(math.log(float(nu_fixed)),
+                                       device=device, dtype=dtype)
+        else:
+            init_nu = float(cfg["inverse"].get("init_nu", 0.1))
+            self.log_nu = torch.nn.Parameter(
+                torch.tensor(math.log(init_nu), device=device, dtype=dtype))
         d = cfg["data"]
+        self.use_data = bool(d.get("enabled", True))
         obs = refs.burgers_observations(d["n_obs"], d["noise_rel"], d["seed"])
         self.obs_X = self.t(np.stack([obs["x"], obs["t"]], 1))
         self.obs_u = self.t(obs["u"]).reshape(-1, 1)
 
     def extra_parameters(self):
-        return [self.log_nu]
+        return [self.log_nu] if isinstance(self.log_nu, torch.nn.Parameter) else []
 
     def u0(self, x):
         return -torch.sin(math.pi * x)
@@ -321,7 +333,9 @@ class BurgersInverse010(TaskBase):
         return raw
 
     def loss_terms(self, model, rng, t_frac=1.0):
-        terms = {"data": mse(model(self.obs_X), self.obs_u)}
+        terms = {}
+        if self.use_data:
+            terms["data"] = mse(model(self.obs_X), self.obs_u)
         if not self.hard_ic:
             n = self.cfg["sampling"]["n_ic"]
             x = -1 + 2 * torch.rand(n, 1, generator=rng, device=self.device, dtype=self.dtype)
@@ -359,7 +373,9 @@ class AllenCahn016(TaskBase):
         u = model(X)
         g = grad(u, X)
         u_xx = grad(g[:, :1], X)[:, :1]
-        return g[:, 1:2] - self.D * u_xx - 5.0 * (u - u**3)
+        d = self.pde_param("ac_d", self.D)
+        r = self.pde_param("ac_reaction", 5.0)
+        return g[:, 1:2] - d * u_xx - r * (u - u**3)
 
     def output_transform(self, X, raw):
         if self.hard_ic:
@@ -412,7 +428,7 @@ class EulerSod023(TaskBase):
         X = X.detach().requires_grad_(True)
         out = model(X)
         rho, u, p = out[:, :1], out[:, 1:2], out[:, 2:3]
-        g = refs.GAMMA
+        g = self.pde_param("euler_gamma", refs.GAMMA)
         m = rho * u
         E = p / (g - 1.0) + 0.5 * rho * u**2
         U = [rho, m, E]
@@ -580,9 +596,11 @@ def run_from_config(cfg_path, seed=None, max_adam_steps=None):
     except Exception as e:
         metrics["diverged"] = 1
         metrics["eval_error"] = str(e)
+    pde_over = {k: v for k, v in (cfg.get("pde") or {}).items() if v is not None}
     metrics.update({"task": cfg["task"], "arm": cfg.get("arm", "?"),
                     "seed": cfg["seed"], "config": os.path.basename(cfg_path),
-                    "adam_steps": cfg["optimizer"]["adam"]["steps"]})
+                    "adam_steps": cfg["optimizer"]["adam"]["steps"],
+                    "pde_override": json.dumps(pde_over) if pde_over else ""})
     return metrics
 
 
@@ -590,7 +608,7 @@ def append_csv(path, row):
     exists = os.path.exists(path)
     keys = ["task", "arm", "config", "seed", "adam_steps", "diverged",
             "rel_l2", "rel_l2_rho", "rel_l2_u", "rel_l2_p",
-            "nu_hat", "nu_rel_err", "wall_time_s", "eval_error"]
+            "nu_hat", "nu_rel_err", "pde_override", "wall_time_s", "eval_error"]
     with open(path, "a", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=keys, extrasaction="ignore")
         if not exists:

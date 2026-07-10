@@ -28,13 +28,15 @@ defaults_v0.4.yaml 的预注册默认值），并在 mapping_log 记 `unspecifie
 | 9 | 课程/时间推进 | `curriculum` | 计划提 time-marching/课程训练才启用；未给分段→ [0.25,0.5,1.0] 三段均分总步数，记 `partial` |
 | 10 | 反问题初值 | `inverse.init_nu` | 010 专用；计划给了先验/初值按其值，否则默认 |
 | 11 | 人工粘性 | `euler.artificial_viscosity` | 023 专用；计划提人工粘性/扩散正则才启用，未给量→ 0.005 记 `partial` |
+| 12 | PDE 系数 | `pde.*`（poisson_source_scale / advection_c / burgers_nu_fixed / ac_d / ac_reaction / euler_gamma） | 计划**明确断言了具体数值**且与实例化表冲突 → 按计划值填入对应键，记 `conflict`；符号表述（"对流速度 c"）、与实例化一致、或未提 → **不写**。转写者手头有实例化表（公开材料），无须知道臂身份即可判定冲突 |
+| 13 | 数据损失开关 | `data.enabled` | 010 专用；计划明确表述"ν 已知 / 正问题 / 不使用观测数据" → enabled=false，且 ν 值按计划断言填 `pde.burgers_nu_fixed`（计划未给值 → 0.1，记 `partial`）；否则不写 |
 
 **菜单外组件**（如自适应权重算法、注意力网络、域分解）：不实现；就近映射
 （说明理由）或忽略，必须在 mapping_log 记 `out_of_menu`。此日志随论文附录发布。
 
 ## 2. mapping_log.csv 字段
 
-`arm_code, knob, plan_quote(原文摘录), decision, tag(exact|partial|qualitative|unspecified|out_of_menu)`
+`arm_code, knob, plan_quote(原文摘录), decision, tag(exact|partial|qualitative|unspecified|out_of_menu|conflict)`
 
 ## 3. 审计
 
@@ -46,6 +48,10 @@ defaults_v0.4.yaml 的预注册默认值），并在 mapping_log 记 `unspecifie
 
 - 基底一律为该题金计划 G；只做**最小文本编辑**，其余逐字保留；
 - D1：删去 rubric 判定为关键的物理约束/BC 描述段；
-- D2：把任务类型表述改错（如把"估计 ν 的反问题"改写为"ν 已知的正问题"，随之删去 data loss 描述）；
-- D3：植入幻觉规格（改错方程系数/编造一个不存在的损失组件名）；
+- D2：把任务类型表述改错。**仅 010 撰写可执行版**（"估计 ν 的反问题"改写为
+  "ν = 0.1 已知的正问题"，随之删去 data loss 描述 → 转写落到 #13）；
+  其余 4 题的 D2 只进评分器侧检验，不执行（见协议 §4 可执行性边界）；
+- D3：植入幻觉规格。**优先用系数篡改**（改错方程系数并写明具体数值，
+  如 ν=0.1、c=2、γ=2.0、d=10⁻²、源项翻倍 → 转写落到 #12，全部 5 题可执行）；
+  "编造损失组件名"变体只进评分器侧检验，不进 H4b 配对；
 - 每个消融的 diff 存 `ablation_diffs/`，随附录发布。
