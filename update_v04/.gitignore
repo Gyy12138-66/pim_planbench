@@ -4,3 +4,4 @@ execution_validation/analysis_v0.4/
 execution_validation/*.csv
 !execution_validation/arms_v0.4.csv
 !execution_validation/config_diversity.csv
+execution_validation/configs_mps/
