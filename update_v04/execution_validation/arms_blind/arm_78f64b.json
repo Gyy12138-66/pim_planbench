@@ -1,0 +1,11 @@
+{
+ "code": "arm_78f64b",
+ "task_id": "easy_advection_1d_periodic_005",
+ "facets": {
+  "Problem Formalization": "Forward linear transport problem: solve the 1D advection equation u_t + c*u_x = 0 with constant known speed c = 1.0 on the domain x in [0,1), t in [0,1]. Known/given: the transport speed c and the initial condition u(x,0) = sin(2*pi*x); unknown/target: the scalar field u(x,t). The exact dynamics transport the initial profile unchanged along the characteristics x - c*t, so the solution is the shifted initial profile. Values not specified by the public task statement (final time, amplitude) must be stated as explicit assumptions before implementation; here we fix the reference setting above.",
+  "Physics Constraints": "The advection residual u_t + c*u_x must vanish across the space-time domain - the equation is purely hyperbolic, and no diffusion term may be added without evidence. The initial condition loss pins u(x,0) = sin(2*pi*x). The characteristic structure - information travels at speed c - dictates where residual accuracy matters.",
+  "Model Choice": "A PINN on inputs (x,t): a fully connected MLP, 4 hidden layers of 64 units, tanh activation, scalar output u.",
+  "Training Strategy": "Sample 10000 collocation points uniformly across space-time for the advection residual; sample 400 points on the initial line for the initial condition loss. Time and space are already normalized to unit scale. Optimize with Adam at learning rate 1e-3 for 20000 steps. Because errors manifest as phase error accumulating in time along the characteristics, monitor the transported wave's phase during training rather than the loss value alone.",
+  "Validation Failure Risks": "Validate against the exact shifted profile u(x,t) = u0((x - c*t) mod 1): report the relative L2 error on a held-out grid, the phase error of the transported wave, and the PDE residual error. Failure risks: (1) adding artificial diffusion that smears the profile - excluded by construction and checked via amplitude decay; (2) ignoring phase-shift validation, so a stalled or slowly drifting wave looks converged under residual-only metrics."
+ }
+}

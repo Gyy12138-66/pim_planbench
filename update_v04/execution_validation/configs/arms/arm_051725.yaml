@@ -1,0 +1,19 @@
+# blind transcription v0.4
+task: hard_allen_cahn_016
+arm: arm_051725
+sampling:
+  rar:
+    every: 1000      # "residual-based adaptive refinement" 未给参数 -> 默认（partial）
+    pool: 50000
+    add: 500
+weights:
+  pde: 1.0           # PDE residual 作为 loss 项，未给权重 -> 1.0（partial）
+  ic: 1.0            # IC "imposed as additional loss terms"，未给权重 -> 1.0（partial）
+  periodic: 1.0      # BC（含 periodic 选项）作为 loss 项提及，未给权重 -> 1.0（partial）
+optimizer:
+  lbfgs:
+    steps: 500       # "possibly switching to L-BFGS for fine-tuning" -> 500（partial）
+curriculum:          # "time-marching or causal training strategy" 未给分段 -> 默认三段均分 20000（partial）
+  - {t_frac: 0.25, steps: 6667}
+  - {t_frac: 0.5, steps: 6667}
+  - {t_frac: 1.0, steps: 6666}

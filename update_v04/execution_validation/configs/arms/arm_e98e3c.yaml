@@ -1,0 +1,20 @@
+# blind transcription v0.4
+task: medium_burgers_inverse_viscosity_010
+arm: arm_e98e3c
+
+sampling:
+  rar:
+    every: 1000
+    pool: 50000
+    add: 500
+
+optimizer:
+  adam:
+    lr: 1.0e-3
+  lbfgs:
+    steps: 500
+
+curriculum:
+  - {t_frac: 0.25, steps: 6666}
+  - {t_frac: 0.5, steps: 6667}
+  - {t_frac: 1.0, steps: 6667}

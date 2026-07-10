@@ -1,0 +1,194 @@
+arm_code,knob,plan_quote,decision,tag
+arm_051725,net.width/depth,"a fully connected architecture","only says fully connected, no numbers -> not written, defaults apply",unspecified
+arm_051725,net.activation,"use a multi-scale or adaptive activation function (e.g., with a trainable scale parameter)","adaptive/trainable-scale activation not in menu, no committed nearest mapping -> ignored, default tanh",out_of_menu
+arm_051725,features.fourier,"Alternatively, a Fourier feature embedding or a sinusoidal representation network (SIREN) can help","offered only as alternatives to the primary (adaptive activation) choice, no commitment -> not enabled",unspecified
+arm_051725,features.periodic_harmonics,"(no mention of periodic input encoding/embedding)","not enabled",unspecified
+arm_051725,constraints.hard_ic,"boundary loss, initial loss","IC via loss term -> soft (default)",unspecified
+arm_051725,sampling.n_pde/n_bc/n_ic,"(no collocation point counts given)","defaults apply",unspecified
+arm_051725,sampling.resample_every,"(no plain dynamic resampling separate from RAR)","defaults apply",unspecified
+arm_051725,sampling.rar,"concentrate points near interfaces (e.g., using residual-based adaptive refinement...)","RAR explicitly proposed, no params -> every=1000 pool=50000 add=500 per rule #6",partial
+arm_051725,weights.pde,"The model must enforce the Allen-Cahn PDE residual as a loss term","mentioned, no value -> 1.0",partial
+arm_051725,weights.ic,"initial condition must be imposed as additional loss terms","mentioned, no value -> 1.0",partial
+arm_051725,weights.periodic,"Boundary conditions (e.g., Dirichlet, Neumann, or periodic) ... imposed as additional loss terms","BC mentioned (task BC is periodic), no value -> 1.0",partial
+arm_051725,optimizer.adam.lr,"Adam with learning rate scheduling","no lr value given (scheduling itself is out of menu, see below) -> default",unspecified
+arm_051725,optimizer.adam.steps,"(no step count given)","default 20000",unspecified
+arm_051725,optimizer.lbfgs.steps,"possibly switching to L-BFGS for fine-tuning","Adam-then-L-BFGS mentioned (hedged 'possibly'), no steps -> 500 per rule #8",partial
+arm_051725,curriculum,"Use a time-marching or causal training strategy (e.g., sequential training over time intervals)","time-marching mentioned, no segments -> t_frac [0.25,0.5,1.0], 20000 steps split 6667/6667/6666 per rule #9",partial
+arm_051725,pde.ac_d,"the small parameter epsilon (not given)","epsilon kept symbolic, no numeric assertion -> not written",unspecified
+arm_051725,pde.ac_reaction,"f(u) = u - u^3 is the derivative of a double-well potential","canonical symbolic double-well form, no instance rate multiplier asserted -> not written (judgment: not treated as asserting strength 1)",unspecified
+arm_051725,out_of_menu:adaptive_loss_weighting,"adaptive loss weighting (e.g., using gradient statistics or uncertainty weighting)","not in menu -> ignored",out_of_menu
+arm_051725,out_of_menu:two_stage_pretraining,"first, pre-train on the initial condition and boundary conditions...; second, add the PDE residual loss","staged pretraining not a menu knob and not literal weight warmup/annealing -> ignored",out_of_menu
+arm_051725,out_of_menu:optimizer_extras,"learning rate scheduling ... gradient clipping and early stopping","lr schedule/clipping/early stopping not in menu -> ignored",out_of_menu
+arm_051725,out_of_menu:gradient_penalty,"possibly additional regularization (e.g., gradient penalty)","not in menu -> ignored",out_of_menu
+arm_051725,out_of_menu:residual_prediction_network,"a separate network to predict high-residual regions","alternative to RAR, not in menu -> ignored",out_of_menu
+arm_11f3c6,net.width/depth/activation,"fully connected MLP ... 4 hidden layers of 128 units, tanh","width=128 depth=4 activation=tanh",exact
+arm_11f3c6,features.fourier,"random Fourier features on the inputs (64 features, sigma = 5)","num=64 sigma=5.0",exact
+arm_11f3c6,features.periodic_harmonics,"a periodic input embedding (harmonics k = 1..4 in x) makes the representation exactly periodic","periodic_harmonics=4",exact
+arm_11f3c6,constraints.hard_ic,"Initial condition loss on the given phase-field profile","IC via loss -> soft (default)",unspecified
+arm_11f3c6,sampling.n_pde,"Base sampling 10000 collocation points","n_pde=10000",exact
+arm_11f3c6,sampling.n_bc/n_ic,"(no counts given)","defaults apply",unspecified
+arm_11f3c6,sampling.resample_every,"(none separate from RAR)","defaults apply",unspecified
+arm_11f3c6,sampling.rar,"every 1000 steps add the 500 highest-residual points from a 50000-point candidate pool","every=1000 pool=50000 add=500",exact
+arm_11f3c6,weights.pde,"Allen-Cahn residual u_t - d*u_xx - 5*(u - u^3) = 0","mentioned, no value -> 1.0",partial
+arm_11f3c6,weights.ic,"weight the initial condition loss at 10","ic=10.0",exact
+arm_11f3c6,weights.periodic,"Periodic boundary conditions in both value ... and spatial derivative","mentioned, no value -> 1.0",partial
+arm_11f3c6,optimizer.adam.lr,"Adam at learning rate 1e-3","lr=1e-3",exact
+arm_11f3c6,optimizer.adam.steps,"20000 total steps","steps=20000",exact
+arm_11f3c6,optimizer.lbfgs.steps,"(L-BFGS not mentioned)","not enabled (0)",unspecified
+arm_11f3c6,curriculum,"first train on t in [0,0.25], then extend to [0,0.5], then the full [0,1], splitting the step budget across the three stages","t_frac [0.25,0.5,1.0] given; split proportions not given -> equal 6667/6667/6666 of 20000",partial
+arm_11f3c6,pde.ac_d,"small known diffusion coefficient d = 1e-4 (interface parameter epsilon = 1e-2, d = epsilon^2)","consistent with instantiation table (d=1e-4) -> not written",exact
+arm_11f3c6,pde.ac_reaction,"5*(u - u^3)","consistent with instantiation table (5.0) -> not written",exact
+arm_2bae6f,net.width/depth/activation,"fully connected MLP ... 4 hidden layers of 128 units, tanh","width=128 depth=4 activation=tanh",exact
+arm_2bae6f,features.fourier,"random Fourier features on the inputs (64 features, sigma = 5)","num=64 sigma=5.0",exact
+arm_2bae6f,features.periodic_harmonics,"a periodic input embedding (harmonics k = 1..4 in x)","periodic_harmonics=4",exact
+arm_2bae6f,constraints.hard_ic,"Initial condition loss on the given phase-field profile","IC via loss -> soft (default)",unspecified
+arm_2bae6f,sampling.n_pde,"Base sampling 10000 collocation points","n_pde=10000",exact
+arm_2bae6f,sampling.n_bc/n_ic,"(no counts given)","defaults apply",unspecified
+arm_2bae6f,sampling.resample_every,"(none separate from RAR)","defaults apply",unspecified
+arm_2bae6f,sampling.rar,"every 1000 steps add the 500 highest-residual points from a 50000-point candidate pool","every=1000 pool=50000 add=500",exact
+arm_2bae6f,weights.pde,"Allen-Cahn residual ... = 0","mentioned, no value -> 1.0",partial
+arm_2bae6f,weights.ic,"weight the initial condition loss at 10","ic=10.0",exact
+arm_2bae6f,weights.periodic,"Periodic boundary conditions in both value ... and spatial derivative","mentioned, no value -> 1.0",partial
+arm_2bae6f,optimizer.adam.lr,"Adam at learning rate 1e-3","lr=1e-3",exact
+arm_2bae6f,optimizer.adam.steps,"20000 total steps","steps=20000",exact
+arm_2bae6f,optimizer.lbfgs.steps,"(L-BFGS not mentioned)","not enabled (0)",unspecified
+arm_2bae6f,curriculum,"first train on t in [0,0.25], then [0,0.5], then the full [0,1], splitting the step budget","t_frac given; equal split 6667/6667/6666 of 20000",partial
+arm_2bae6f,pde.ac_d,"small known diffusion coefficient d = 1e-2 (interface parameter epsilon = 1e-1, d = epsilon^2)","asserted d=1e-2 conflicts with instantiation d=1e-4 -> pde.ac_d=1e-2 per rule #12",conflict
+arm_2bae6f,pde.ac_reaction,"5*(u - u^3)","consistent with instantiation table (5.0) -> not written",exact
+arm_8b6624,net.width/depth/activation,"A Multi-Layer Perceptron (MLP)","no numbers/activation -> not written, defaults apply",unspecified
+arm_8b6624,features.fourier,"MLP augmented with Fourier Feature Mappings (FFM)","FFM explicitly chosen, no params -> num=64 sigma=5.0 per rule #2",partial
+arm_8b6624,features.periodic_harmonics,"(no periodic input encoding mentioned)","not enabled",unspecified
+arm_8b6624,constraints.hard_ic,"Initial Condition: R_ic = u(x, 0) - u_0(x) = 0 (residual loss)","IC via residual loss -> soft (default)",unspecified
+arm_8b6624,sampling.n_pde/n_bc/n_ic,"(no counts given)","defaults apply",unspecified
+arm_8b6624,sampling.resample_every,"(none separate from RAR)","defaults apply",unspecified
+arm_8b6624,sampling.rar,"Residual-based Adaptive Refinement (RAR) combined with gradient-enhanced sampling","RAR explicit, no params -> defaults; gradient-enhanced part ignored (see out_of_menu)",partial
+arm_8b6624,weights.pde,"Weighted sum of MSE for PDE, IC, and BC residuals","mentioned, no value -> 1.0",partial
+arm_8b6624,weights.ic,"Weighted sum of MSE for PDE, IC, and BC residuals","mentioned, no value -> 1.0",partial
+arm_8b6624,weights.periodic,"Boundary Condition: R_bc = B(u) - g(x,t) = 0","BC mentioned (task BC is periodic), no value -> 1.0",partial
+arm_8b6624,optimizer.adam.lr,"Adam optimizer with gradient clipping","no lr given -> default",unspecified
+arm_8b6624,optimizer.adam.steps,"(no step count given)","default 20000",unspecified
+arm_8b6624,optimizer.lbfgs.steps,"followed by L-BFGS for fine-tuning","no steps -> 500 per rule #8",partial
+arm_8b6624,curriculum,"Causal Time-Stepping architecture ... (or sequential curriculum learning) ... resolves the dynamics at time t before attempting to fit t + dt","time-sequential training mentioned, no segments -> default [0.25,0.5,1.0] split 6667/6667/6666",partial
+arm_8b6624,pde.ac_d,"u_t = epsilon^2 * Laplacian(u) ... the interface width parameter epsilon (missing)","epsilon kept symbolic -> not written",unspecified
+arm_8b6624,pde.ac_reaction,"u - u^3","canonical symbolic double-well form, no instance rate multiplier asserted -> not written (judgment)",unspecified
+arm_8b6624,out_of_menu:adaptive_loss_balancing,"using Soft Attention or Learning Rate Annealing to dynamically balance stiff gradient terms","adaptive weighting not in menu -> ignored",out_of_menu
+arm_8b6624,out_of_menu:energy_regularizer,"free energy functional ... enforced as a soft regularization term","energy penalty not in menu -> ignored",out_of_menu
+arm_8b6624,out_of_menu:causal_time_mask,"Apply an exponential time-weighting mask to the PDE loss to enforce temporal causality","causal masking not in menu; time-sequencing intent mapped to curriculum -> mask itself ignored",out_of_menu
+arm_8b6624,out_of_menu:gradient_enhanced_sampling,"gradient-enhanced sampling","not in menu -> ignored (RAR covers the residual-based part)",out_of_menu
+arm_8b6624,out_of_menu:gradient_clipping,"Adam optimizer with gradient clipping","not in menu -> ignored",out_of_menu
+arm_b0eca9,net.width/depth,"A modified MLP with skip connections","no numbers -> defaults; skip connections ignored (see out_of_menu)",unspecified
+arm_b0eca9,net.activation,"(no activation named)","default tanh",unspecified
+arm_b0eca9,features.fourier,"multi-scale Fourier feature embeddings ... random Fourier features better represents O(epsilon) transitions","Fourier features committed (SIREN only listed as alternative), no params -> num=64 sigma=5.0",partial
+arm_b0eca9,features.periodic_harmonics,"(no periodic input encoding mentioned)","not enabled",unspecified
+arm_b0eca9,constraints.hard_ic,"Impose the initial condition u(x,0) = u_0(x) (as loss term in total loss)","soft (default); the exact-BC output transform is conditional and BC-side only (see out_of_menu)",unspecified
+arm_b0eca9,sampling.n_pde/n_bc/n_ic,"These omissions prevent finalizing sampling densities","no counts -> defaults apply",unspecified
+arm_b0eca9,sampling.resample_every,"(none separate from RAR)","defaults apply",unspecified
+arm_b0eca9,sampling.rar,"residual-based adaptive refinement (RAR) to concentrate collocation points in high-residual/interface regions","RAR explicit, no params -> defaults",partial
+arm_b0eca9,weights.pde,"The total loss comprises PDE residual, IC, BC (once specified)","mentioned, no value -> 1.0",partial
+arm_b0eca9,weights.ic,"The total loss comprises PDE residual, IC, BC","mentioned, no value -> 1.0",partial
+arm_b0eca9,weights.periodic,"Boundary conditions must be incorporated once their type is specified ... parametric Dirichlet, Neumann, or Robin penalties","BC penalties mentioned (task BC is periodic), no value -> 1.0",partial
+arm_b0eca9,optimizer.adam.lr,"Adam and decaying learning rate","no lr value; decay out of menu -> default",unspecified
+arm_b0eca9,optimizer.adam.steps,"(no step count given)","default 20000",unspecified
+arm_b0eca9,optimizer.lbfgs.steps,"followed by L-BFGS fine-tuning per window","no steps -> 500 per rule #8 (per-window variant not implementable)",partial
+arm_b0eca9,curriculum,"causal time-marching curriculum: divide [0,T] into sequential windows, training each window before advancing","time-marching explicit, no segments -> default [0.25,0.5,1.0] split 6667/6667/6666",partial
+arm_b0eca9,pde.ac_d,"generically u_t = epsilon Delta u - (1/epsilon) f'(u) ... the interface parameter epsilon (missing)","epsilon symbolic (note: epsilon*Delta u form, not epsilon^2) -> no numeric conflict computable -> not written",unspecified
+arm_b0eca9,pde.ac_reaction,"(1/epsilon)(u^3 - u)","symbolic (1/epsilon) rate, epsilon unspecified -> not written",unspecified
+arm_b0eca9,out_of_menu:adaptive_loss_weighting,"Neural Tangent Kernel (NTK) weighting or GradNorm","not in menu -> ignored",out_of_menu
+arm_b0eca9,out_of_menu:float64,"Optimize in float64","dtype not a transcribable knob (defaults float32) -> ignored",out_of_menu
+arm_b0eca9,out_of_menu:energy_penalty,"optional soft energy-dissipation penalty","not in menu -> ignored",out_of_menu
+arm_b0eca9,out_of_menu:skip_connections,"modified MLP with skip connections","not in menu -> ignored",out_of_menu
+arm_b0eca9,out_of_menu:exact_bc_transform,"If boundary conditions are known and homogeneous, enforce them exactly via an output transformation","conditional, distance-function ansatz does not fit periodic BC; not committed -> ignored",out_of_menu
+arm_b0eca9,out_of_menu:domain_decomposition,"Domain decomposition (XPINN) can be reserved for severely multi-interface cases","reserved alternative, not in menu -> ignored",out_of_menu
+arm_b3decc,net.width/depth/activation,"fully connected MLP ... 4 hidden layers of 128 units, tanh","width=128 depth=4 activation=tanh",exact
+arm_b3decc,features.fourier,"random Fourier features on the inputs (64 features, sigma = 5)","num=64 sigma=5.0",exact
+arm_b3decc,features.periodic_harmonics,"(no periodic input embedding mentioned in this plan)","not enabled",unspecified
+arm_b3decc,constraints.hard_ic,"Initial condition loss on the given phase-field profile","IC via loss -> soft (default)",unspecified
+arm_b3decc,sampling.n_pde,"Base sampling 10000 collocation points","n_pde=10000",exact
+arm_b3decc,sampling.n_bc/n_ic,"(no counts given)","defaults apply",unspecified
+arm_b3decc,sampling.resample_every,"(none separate from RAR)","defaults apply",unspecified
+arm_b3decc,sampling.rar,"every 1000 steps add the 500 highest-residual points from a 50000-point candidate pool","every=1000 pool=50000 add=500",exact
+arm_b3decc,weights.pde,"Allen-Cahn residual u_t - d*u_xx - 5*(u - u^3) = 0","mentioned, no value -> 1.0",partial
+arm_b3decc,weights.ic,"weight the initial condition loss at 10","ic=10.0",exact
+arm_b3decc,weights.periodic,"(boundary/periodic conditions never mentioned anywhere in the plan text; domain given as 'x in [-1,1)' without 'periodic')","constraint item wholly absent from plan -> weight 0.0 per rule #7",omitted
+arm_b3decc,optimizer.adam.lr,"Adam at learning rate 1e-3","lr=1e-3",exact
+arm_b3decc,optimizer.adam.steps,"20000 total steps","steps=20000",exact
+arm_b3decc,optimizer.lbfgs.steps,"(L-BFGS not mentioned)","not enabled (0)",unspecified
+arm_b3decc,curriculum,"first train on t in [0,0.25], then [0,0.5], then the full [0,1], splitting the step budget","t_frac given; equal split 6667/6667/6666 of 20000",partial
+arm_b3decc,pde.ac_d,"small known diffusion coefficient d = 1e-4 (epsilon = 1e-2, d = epsilon^2)","consistent with instantiation -> not written",exact
+arm_b3decc,pde.ac_reaction,"5*(u - u^3)","consistent with instantiation -> not written",exact
+arm_d25088,net.width/depth/activation,"physics-informed neural network (PINN)","no architecture numbers/activation -> defaults apply",unspecified
+arm_d25088,features.fourier,"Use a physics-informed neural network (PINN) with a Fourier feature embedding or a multi-scale network","one-of-two commitment; Fourier is the in-menu option -> enabled with defaults num=64 sigma=5.0 (multi-scale alternative ignored)",partial
+arm_d25088,features.periodic_harmonics,"(no periodic input encoding mentioned)","not enabled",unspecified
+arm_d25088,constraints.hard_ic,"L_ic matches initial data","IC via loss -> soft (default)",unspecified
+arm_d25088,sampling.n_pde/n_bc/n_ic,"(no counts given)","defaults apply",unspecified
+arm_d25088,sampling.resample_every,"(none separate from adaptive sampling)","defaults apply",unspecified
+arm_d25088,sampling.rar,"adaptive collocation point sampling: more points near interfaces (e.g., based on |grad u|) and at later times","gradient-based adaptive sampling is out of menu; nearest mapping = RAR with defaults (same intent: concentrate near interfaces)",out_of_menu
+arm_d25088,weights.pde,"Loss = w_pde * L_pde + w_ic * L_ic + w_bc * L_bc","mentioned, no value -> 1.0",partial
+arm_d25088,weights.ic,"Loss = w_pde * L_pde + w_ic * L_ic + w_bc * L_bc","mentioned, no value -> 1.0",partial
+arm_d25088,weights.periodic,"assume a bounded domain ... with appropriate boundary conditions (e.g., periodic or Neumann) ... w_bc * L_bc","BC mentioned, no value -> 1.0",partial
+arm_d25088,optimizer.adam.lr,"Adam optimizer with learning rate decay","no lr value; decay out of menu -> default",unspecified
+arm_d25088,optimizer.adam.steps,"(no step count given)","default 20000",unspecified
+arm_d25088,optimizer.lbfgs.steps,"followed by L-BFGS for fine-tuning","no steps -> 500 per rule #8",partial
+arm_d25088,curriculum,"a time-marching strategy (splitting the time domain into smaller windows)","time-marching explicit, no segments -> default [0.25,0.5,1.0] split 6667/6667/6666",partial
+arm_d25088,pde.ac_d,"epsilon^2 * Laplacian(u) ... Missing: specific epsilon value","epsilon symbolic -> not written",unspecified
+arm_d25088,pde.ac_reaction,"f(u) = u^3 - u (double-well potential derivative)","canonical symbolic form, no instance rate asserted -> not written (judgment)",unspecified
+arm_d25088,out_of_menu:epsilon_continuation,"curriculum learning: start with larger epsilon or smoother initial data, then gradually decrease epsilon","epsilon-continuation not in menu -> ignored (time-marching handled via curriculum row)",out_of_menu
+arm_d25088,out_of_menu:optimizer_extras,"gradient clipping, weight normalization ... learning rate decay","not in menu -> ignored",out_of_menu
+arm_e47059,net.width/depth,"A modified MLP","no numbers -> defaults apply",unspecified
+arm_e47059,net.activation,"(no activation named)","default tanh",unspecified
+arm_e47059,features.fourier,"modified MLP with Fourier feature embeddings (random Fourier features with bandwidth matched to eps^-1)","Fourier explicit; bandwidth symbolic (epsilon declared missing by plan) -> defaults num=64 sigma=5.0",partial
+arm_e47059,features.periodic_harmonics,"(no periodic input encoding mentioned)","not enabled",unspecified
+arm_e47059,constraints.hard_ic,"Initial condition: u(x, 0) = u_0(x) (constraint class at collocation points)","IC via loss -> soft (default)",unspecified
+arm_e47059,sampling.n_pde/n_bc/n_ic,"(no counts given)","defaults apply",unspecified
+arm_e47059,sampling.resample_every,"periodically re-sample collocation points","re-sampling folded into RAR mapping below -> not written separately",unspecified
+arm_e47059,sampling.rar,"periodically re-sample collocation points with density proportional to |r| or |grad u| to concentrate near interfaces","residual-based adaptive sampling explicit (|r|), no params -> RAR defaults",partial
+arm_e47059,weights.pde,"dynamically weight PDE, IC, and BC losses","mentioned, no static value -> 1.0 (dynamic balancing itself out of menu)",partial
+arm_e47059,weights.ic,"dynamically weight PDE, IC, and BC losses","mentioned, no value -> 1.0",partial
+arm_e47059,weights.periodic,"(3) Boundary conditions as specified ... BC losses","BC mentioned (task BC is periodic), no value -> 1.0",partial
+arm_e47059,optimizer.adam.lr,"use Adam with learning rate 1e-3 to 1e-4","range/decay given; menu has fixed lr -> initial value 1e-3",partial
+arm_e47059,optimizer.adam.steps,"(no step count given)","default 20000",unspecified
+arm_e47059,optimizer.lbfgs.steps,"possibly switching to L-BFGS for fine-tuning once the interface location is approximately correct","hedged Adam-then-L-BFGS, no steps -> 500 per rule #8",partial
+arm_e47059,curriculum,"a time-adaptive approach (e.g., stacking time segments...) ... (6) Time-segmented training with overlapping windows","time-segmented training explicit, no segments -> default [0.25,0.5,1.0] split 6667/6667/6666 (overlap not implementable)",partial
+arm_e47059,pde.ac_d,"epsilon^2 Delta u ... Missing specifications: (1) the interface parameter epsilon","epsilon symbolic -> not written",unspecified
+arm_e47059,pde.ac_reaction,"the nonlinear reaction term u^3 - u","canonical symbolic form, no instance rate asserted -> not written (judgment)",unspecified
+arm_e47059,out_of_menu:causal_mask,"weighting the PDE residual with an exponential mask that progressively reveals later time intervals","causal masking not in menu -> ignored (time-segmentation mapped to curriculum)",out_of_menu
+arm_e47059,out_of_menu:gradient_balancing,"Gradient balancing (e.g., GradNorm or ReLoBRaLo)","adaptive weighting not in menu -> ignored",out_of_menu
+arm_e47059,out_of_menu:epsilon_continuation,"Continuation in epsilon: start training with a larger epsilon and gradually reduce","not in menu -> ignored",out_of_menu
+arm_e47059,out_of_menu:domain_decomposition,"Alternative: a domain-decomposed PINN with separate networks per phase region","alternative, not in menu -> ignored",out_of_menu
+arm_e47059,out_of_menu:gradient_clipping,"mitigate with gradient clipping","not in menu -> ignored",out_of_menu
+arm_eac660,net.width/depth,"The architecture will map spatiotemporal coordinates (x, t) directly to the scalar field u","no numbers -> defaults apply",unspecified
+arm_eac660,net.activation,"A Sinusoidal Representation Network (SIREN) ... SIREN's periodic activations provide a better inductive bias","SIREN preferred over the Fourier alternative -> nearest menu mapping activation=sin per rule",partial
+arm_eac660,features.fourier,"A Sinusoidal Representation Network (SIREN) or a Fourier Feature Network is recommended","Fourier only as the non-preferred alternative (SIREN chosen) -> not enabled",unspecified
+arm_eac660,features.periodic_harmonics,"(no periodic input encoding mentioned)","not enabled",unspecified
+arm_eac660,constraints.hard_ic,"It must strictly adhere to the provided initial condition ... lambda_IC L_IC","'strictly adhere' but formulated as penalty term, no ansatz/hard-constraint wording -> soft (default)",unspecified
+arm_eac660,sampling.n_pde/n_bc/n_ic,"(no counts given)","defaults apply",unspecified
+arm_eac660,sampling.resample_every,"iteratively resample collocation points","folded into RAR mapping below",unspecified
+arm_eac660,sampling.rar,"adaptive residual-based sampling: iteratively resample collocation points to focus on regions with high PDE residual","residual-based adaptive sampling explicit, no params -> RAR defaults",partial
+arm_eac660,weights.pde,"composite loss function L = L_PDE + lambda_IC L_IC + lambda_BC L_BC","mentioned, no value -> 1.0",partial
+arm_eac660,weights.ic,"lambda_IC L_IC","mentioned, no value -> 1.0",partial
+arm_eac660,weights.periodic,"lambda_BC L_BC ... boundary conditions on partial Omega","BC mentioned (task BC is periodic), no value -> 1.0",partial
+arm_eac660,optimizer.adam.lr,"utilize Adam for initial phases","no lr given -> default",unspecified
+arm_eac660,optimizer.adam.steps,"(no step count given)","default 20000",unspecified
+arm_eac660,optimizer.lbfgs.steps,"Adam for initial phases followed by L-BFGS for fine-tuning","no steps -> 500 per rule #8",partial
+arm_eac660,curriculum,"curriculum learning approach where epsilon is gradually annealed to its target value","epsilon-annealing, NOT time-marching -> curriculum not enabled; ignored as out-of-menu",out_of_menu
+arm_eac660,pde.ac_d,"epsilon^2 Delta u ... the interface width parameter epsilon are not specified","epsilon symbolic -> not written",unspecified
+arm_eac660,pde.ac_reaction,"f(u) is typically a double-well potential like u^3 - u","hedged canonical form ('typically ... like') -> not written",unspecified
+arm_eac660,out_of_menu:adaptive_loss_weighting,"balanced against the nonlinear reaction term via adaptive loss weighting","not in menu -> ignored",out_of_menu
+arm_edf909,net.width/depth,"the number of layers and units can be tuned if training is slow","no numbers -> defaults apply",unspecified
+arm_edf909,net.activation,"fully connected multilayer perceptron with tanh activations","activation=tanh",exact
+arm_edf909,features.fourier,"(no Fourier/positional features mentioned)","not enabled",unspecified
+arm_edf909,features.periodic_harmonics,"(no periodic input encoding mentioned)","not enabled",unspecified
+arm_edf909,constraints.hard_ic,"Initial and boundary conditions ... enforced through penalty terms","penalty terms -> soft (default)",unspecified
+arm_edf909,sampling.n_pde/n_bc/n_ic,"Sample collocation points uniformly at random ... along with points on the boundary and on the initial slice","no counts -> defaults apply",unspecified
+arm_edf909,sampling.resample_every,"(no dynamic resampling mentioned)","defaults apply",unspecified
+arm_edf909,sampling.rar,"(no adaptive/residual-based sampling mentioned)","not enabled",unspecified
+arm_edf909,weights.pde,"L = L_pde + L_bc + L_ic with equal weights on all terms","equal weights, no numeric value -> 1.0 each",qualitative
+arm_edf909,weights.ic,"L = L_pde + L_bc + L_ic with equal weights on all terms","-> 1.0",qualitative
+arm_edf909,weights.periodic,"L = L_pde + L_bc + L_ic with equal weights (BC term; task BC is periodic)","-> 1.0",qualitative
+arm_edf909,optimizer.adam.lr,"Train with the Adam optimizer at learning rate 1e-3","lr=1e-3",exact
+arm_edf909,optimizer.adam.steps,"until the total loss plateaus","no step count -> default 20000",unspecified
+arm_edf909,optimizer.lbfgs.steps,"optionally lower the learning rate for fine-tuning","lr lowering, not L-BFGS -> not enabled (0)",unspecified
+arm_edf909,curriculum,"(no time-marching/curriculum mentioned)","not enabled",unspecified
+arm_edf909,pde.ac_d,"(equation coefficients never restated; refers to 'parameters, coefficients ... provided by the task')","no assertion -> not written",unspecified
+arm_edf909,pde.ac_reaction,"(equation coefficients never restated)","no assertion -> not written",unspecified
+arm_edf909,out_of_menu:lr_finetune,"optionally lower the learning rate for fine-tuning","optional lr decay not in menu -> ignored",out_of_menu

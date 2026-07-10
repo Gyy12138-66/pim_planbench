@@ -1,0 +1,13 @@
+# blind transcription v0.4
+task: medium_burgers_inverse_viscosity_010
+arm: arm_ddb981
+
+sampling:
+  rar:
+    every: 1000
+    pool: 50000
+    add: 500
+
+weights:
+  pde: 1.0
+  data: 1.0

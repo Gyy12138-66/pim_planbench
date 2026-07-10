@@ -1,0 +1,155 @@
+arm_code,knob,plan_quote,decision,tag
+arm_109499,net.width/depth/activation,"utilizing a Multi-Layer Perceptron (MLP)","only says MLP, no width/depth/activation values -> not written, defaults apply",unspecified
+arm_109499,features.fourier,"augmented with Random Fourier Features (RFF) or sinusoidal positional encodings","Fourier/positional features explicitly proposed, no num/sigma given -> num=64 sigma=5.0 per rule #2",partial
+arm_109499,features.periodic_harmonics,,"no periodic input embedding mentioned (positional encoding mapped to #2) -> not written",unspecified
+arm_109499,constraints.hard_bc,"weighted sum of the mean squared PDE residual (interior) and mean squared Dirichlet boundary residual","BC enforced as loss term -> soft = default, key not written",exact
+arm_109499,sampling.n_pde/n_bc,"Latin Hypercube Sampling (LHS) for interior collocation points and uniform grid sampling for boundary points","sampling scheme described but no point counts -> not written, defaults apply",unspecified
+arm_109499,sampling.resample_every,"with periodic resampling to prevent overfitting","dynamic resampling stated, no interval -> resample_every=1000 per rule #5",partial
+arm_109499,sampling.rar,,"no residual-adaptive refinement proposed -> not enabled",unspecified
+arm_109499,weights.pde,"weighted sum of the mean squared PDE residual","PDE loss present, no numeric weight -> default 1.0, not written",unspecified
+arm_109499,weights.bc,"mean squared Dirichlet boundary residual","BC loss present, no numeric weight -> default 1.0, not written",unspecified
+arm_109499,weights.ic/data/periodic,,"task 003 is stationary with no data/periodic terms; plan does not introduce them -> not applicable, nothing written",unspecified
+arm_109499,weights (adaptive),"Adaptive weighting algorithms (e.g., gradient pathologies mitigation via learning rate annealing)","adaptive loss-balancing algorithm is outside the knob menu -> not implemented, static defaults retained",out_of_menu
+arm_109499,optimizer.adam,"Adam optimizer for initial global exploration","Adam stated without lr/steps -> defaults apply, not written",unspecified
+arm_109499,optimizer.lbfgs,"followed by the L-BFGS optimizer for precise local convergence","Adam-then-L-BFGS without step count -> lbfgs.steps=500 per rule #8",partial
+arm_109499,curriculum,,"stationary task, no time-marching mentioned -> not applicable",unspecified
+arm_109499,pde.* coefficients,,"no concrete coefficient values asserted (f, g kept symbolic) -> not written",unspecified
+arm_38eab8,net.width/depth/activation,"moderate depth (4-6 layers, 64-128 neurons per layer) with tanh or sin activations","only ranges/alternatives, no single value; defaults (64/4/tanh) lie inside stated ranges -> not written",partial
+arm_38eab8,features.fourier,"no special architectures (e.g., causal weighting, Fourier features) are strictly needed","Fourier features explicitly declared unnecessary (risk facet mentions them only conditionally) -> not enabled",unspecified
+arm_38eab8,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_38eab8,constraints.hard_bc,"Hard constraints are preferred for Dirichlet problems to avoid boundary penalty tuning","plan states preference for hard BC via distance-function ansatz -> hard_bc=true",exact
+arm_38eab8,sampling.n_pde/n_bc,"N_r = 10,000-50,000 interior collocation points via Latin Hypercube Sampling; N_b = 400-1,000 boundary points","ranges only, no single value; defaults (10000/400) equal the lower bounds -> not written",partial
+arm_38eab8,sampling.resample_every,"Residual points can be resampled periodically to reduce overfitting","periodic resampling stated in training strategy, no interval -> resample_every=1000 per rule #5",partial
+arm_38eab8,sampling.rar,"mitigate by residual-based adaptive refinement","RAR appears only as conditional risk mitigation, not in the training plan -> not enabled",unspecified
+arm_38eab8,weights.pde,"L = lambda_pde * (1/N_r) Sum|r|^2 ... or L = (1/N_r) Sum|r|^2 (hard constraint)","PDE loss present, no numeric weight committed -> default 1.0, not written",unspecified
+arm_38eab8,weights.bc,"if using soft constraints, start with lambda_bc >> lambda_pde (e.g., 100:1)","conditional on soft branch; hard BC transcribed per plan preference, so soft weight branch not taken -> not written",unspecified
+arm_38eab8,weights.ic/data/periodic,,"task 003 stationary, no data/periodic terms; plan does not introduce them -> not applicable",unspecified
+arm_38eab8,weights (adaptive),"optionally use adaptive weighting (e.g., GradNorm or NeurIPS-style residual-based attention)","adaptive weighting algorithm outside knob menu, and only optional -> not implemented",out_of_menu
+arm_38eab8,optimizer.adam,"Adam (lr=1e-3) for initial convergence (~10k-50k iterations)","lr=1e-3 explicit -> written; steps given only as range (default 20000 inside range) -> steps not written",partial
+arm_38eab8,optimizer.lbfgs,"followed by L-BFGS for fine-tuning","Adam-then-L-BFGS without step count -> lbfgs.steps=500 per rule #8",partial
+arm_38eab8,curriculum,,"stationary task, no time-marching mentioned -> not applicable",unspecified
+arm_38eab8,pde.* coefficients,,"f and g kept symbolic, no concrete coefficient asserted -> not written",unspecified
+arm_47ff39,net.width/depth/activation,"4 hidden layers of 64 units with tanh activation","explicit values -> width=64 depth=4 activation=tanh",exact
+arm_47ff39,features.fourier,,"no Fourier/positional features mentioned -> not written",unspecified
+arm_47ff39,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_47ff39,constraints.hard_bc,"imposed as a hard constraint via the ansatz u(x,y) = x*(1-x)*y*(1-y)*N(x,y)","explicit hard-constraint ansatz (soft named only as alternative) -> hard_bc=true",exact
+arm_47ff39,sampling.n_pde,"Sample 10000 interior collocation points uniformly","explicit -> n_pde=10000",exact
+arm_47ff39,sampling.n_bc,"if the boundary is kept soft, additionally sample 400 boundary points","conditional on the soft branch not taken (hard BC chosen); 400 equals default anyway -> not written",unspecified
+arm_47ff39,sampling.resample_every,"monitored by the residual on resampled points","resampling mentioned only for validation monitoring, not training-set resampling -> not enabled",unspecified
+arm_47ff39,sampling.rar,,"no residual-adaptive refinement mentioned -> not enabled",unspecified
+arm_47ff39,weights.pde,"10000 interior collocation points ... for the Poisson residual loss","PDE loss present, no numeric weight -> default 1.0, not written",unspecified
+arm_47ff39,weights.bc,"enforced ... either as a boundary loss or as a hard constraint","BC addressed (hard constraint); no weight given -> default 1.0, not written",unspecified
+arm_47ff39,weights.ic/data/periodic,,"task 003 stationary, no data/periodic terms; plan explicitly excludes time/IC -> not applicable",unspecified
+arm_47ff39,optimizer.adam,"Optimize with Adam at learning rate 1e-3 for 20000 steps","explicit -> lr=1e-3 steps=20000",exact
+arm_47ff39,optimizer.lbfgs,"then refine with L-BFGS for 500 iterations","explicit -> lbfgs.steps=500",exact
+arm_47ff39,curriculum,"No time or initial conditions should be introduced for this stationary elliptic problem","plan explicitly excludes time dimension -> not applicable",unspecified
+arm_47ff39,pde.poisson_source_scale,"f(x,y) = 2*pi^2*sin(pi*x)*sin(pi*y)","asserted source matches instantiation table (scale factor 1.0) -> consistent, not written",exact
+arm_4a18e1,net.width/depth/activation,"4 hidden layers with 50-100 neurons each ... Tanh or Swish activation","depth=4 explicit -> written; width only a range (default 64 inside) -> not written; activation offered as tanh-or-Swish, Swish outside menu, tanh equals default -> not written",partial
+arm_4a18e1,net.activation (Swish),"Hyperbolic tangent (Tanh) or Swish activation functions are recommended","Swish not in activation menu {tanh,gelu,sin}; plan lists tanh as co-equal option which is the default -> no key written",out_of_menu
+arm_4a18e1,features.fourier,"Primary risks include spectral bias","spectral bias named as risk but no Fourier/positional features proposed -> not enabled",unspecified
+arm_4a18e1,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_4a18e1,constraints.hard_bc,"If boundary leakage is severe, a hard constraint approach ... should be considered","primary strategy is soft composite loss; hard BC only a conditional fallback -> soft = default, not written",exact
+arm_4a18e1,sampling.n_pde/n_bc,"N_f collocation points sampled uniformly or via Latin Hypercube Sampling ... N_b points sampled on the rectangle edges","point counts kept symbolic -> not written, defaults apply",unspecified
+arm_4a18e1,sampling.resample_every,,"no resampling mentioned -> not enabled",unspecified
+arm_4a18e1,sampling.rar,,"no residual-adaptive refinement mentioned -> not enabled",unspecified
+arm_4a18e1,weights.pde,"L = lambda_pde L_PDE + lambda_bc L_BC","PDE loss present, weight symbolic -> default 1.0, not written",unspecified
+arm_4a18e1,weights.bc,"lambda_bc L_BC","BC loss present, weight symbolic -> default 1.0, not written",unspecified
+arm_4a18e1,weights.ic/data/periodic,,"task 003 stationary, no data/periodic terms; plan does not introduce them -> not applicable",unspecified
+arm_4a18e1,weights (adaptive),"Weights lambda may be dynamically adjusted if loss scales differ significantly","conditional dynamic weight adjustment outside knob menu -> not implemented, static defaults retained",out_of_menu
+arm_4a18e1,optimizer.adam,"Adam optimizer for initial convergence","Adam stated without lr/steps -> defaults apply, not written",unspecified
+arm_4a18e1,optimizer.lbfgs,"followed by the L-BFGS optimizer for high-precision refinement","Adam-then-L-BFGS without step count -> lbfgs.steps=500 per rule #8",partial
+arm_4a18e1,curriculum,,"stationary task, no time-marching mentioned -> not applicable",unspecified
+arm_4a18e1,pde.* coefficients,,"f and g kept symbolic, no concrete coefficient asserted -> not written",unspecified
+arm_4cc1a8,net.width/depth/activation,"fully connected multilayer perceptron with tanh activations","activation=tanh explicit -> written; no width/depth values -> not written",partial
+arm_4cc1a8,features.fourier,,"no Fourier/positional features mentioned -> not written",unspecified
+arm_4cc1a8,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_4cc1a8,constraints.hard_bc,"Initial and boundary conditions ... enforced through penalty terms added to the loss","penalty terms -> soft = default, not written",exact
+arm_4cc1a8,sampling.n_pde/n_bc,"Sample collocation points uniformly at random in the interior ... along with points on the boundary","no point counts -> not written, defaults apply",unspecified
+arm_4cc1a8,sampling.resample_every,,"no resampling mentioned -> not enabled",unspecified
+arm_4cc1a8,sampling.rar,,"no residual-adaptive refinement mentioned -> not enabled",unspecified
+arm_4cc1a8,weights.pde,"L = L_pde + L_bc + L_ic with equal weights on all terms","PDE loss present, equal weights = 1.0 = default -> not written",exact
+arm_4cc1a8,weights.bc,"L = L_pde + L_bc + L_ic with equal weights on all terms","BC loss present, equal weights = 1.0 = default -> not written",exact
+arm_4cc1a8,weights.ic,"L = L_pde + L_bc + L_ic ... points ... on the initial slice","plan introduces an IC loss but task 003 is stationary with no time dimension -> unsupported, ignored per instruction",out_of_menu
+arm_4cc1a8,weights.data/periodic,,"task 003 has no data/periodic terms; plan does not introduce them -> not applicable",unspecified
+arm_4cc1a8,optimizer.adam,"Train with the Adam optimizer at learning rate 1e-3 until the total loss plateaus","lr=1e-3 explicit -> written; no step count ('until plateau') -> steps not written, default applies; 'optionally lower the learning rate' has no schedule knob -> ignored",partial
+arm_4cc1a8,optimizer.lbfgs,,"no L-BFGS mentioned -> lbfgs stays 0 (default)",unspecified
+arm_4cc1a8,curriculum,,"stationary task, no time-marching mentioned -> not applicable",unspecified
+arm_4cc1a8,pde.* coefficients,,"plan is fully generic, no coefficient values asserted -> not written",unspecified
+arm_b19ab0,net.width/depth/activation,"4-6 hidden layers and 50-100 neurons per layer ... Activation functions like tanh or Swish","ranges/alternatives only, no single value; defaults (4/64/tanh) lie inside stated options -> not written",partial
+arm_b19ab0,net.activation (Swish),"Activation functions like tanh or Swish are preferred for smoothness","Swish not in activation menu; tanh co-listed and equals default -> no key written",out_of_menu
+arm_b19ab0,features.fourier,"employ Fourier feature embeddings","Fourier features appear only as risk mitigation, not in model choice or training strategy -> not enabled",unspecified
+arm_b19ab0,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_b19ab0,constraints.hard_bc,"These are enforced as soft constraints via loss terms","explicitly soft = default -> not written",exact
+arm_b19ab0,sampling.n_pde,"random sampling for N_PDE ~ 10,000 interior points","explicit (approx) -> n_pde=10000",exact
+arm_b19ab0,sampling.n_bc,"N_BC ~ 500 boundary points","explicit (approx) -> n_bc=500",exact
+arm_b19ab0,sampling.resample_every,,"no periodic resampling in training strategy -> not enabled",unspecified
+arm_b19ab0,sampling.rar,"use adaptive sampling (e.g., residual-based refinement)","RAR appears only as conditional risk mitigation, not in the training plan -> not enabled",unspecified
+arm_b19ab0,weights.pde,"lambda_PDE and lambda_BC can be set to 1 initially","explicit 1.0 = default -> not written",exact
+arm_b19ab0,weights.bc,"lambda_PDE and lambda_BC can be set to 1 initially","explicit 1.0 = default -> not written",exact
+arm_b19ab0,weights.ic/data/periodic,,"task 003 stationary, no data/periodic terms; plan does not introduce them -> not applicable",unspecified
+arm_b19ab0,weights (adaptive),"set to 1 initially or adaptively weighted","optional adaptive weighting outside knob menu -> not implemented, static 1.0 retained",out_of_menu
+arm_b19ab0,optimizer.adam,"Adam with learning rate 1e-3 for 10,000 iterations","explicit -> lr=1e-3 steps=10000",exact
+arm_b19ab0,optimizer.lbfgs,"then L-BFGS for fine-tuning","Adam-then-L-BFGS without step count -> lbfgs.steps=500 per rule #8",partial
+arm_b19ab0,init/batching,"Use Xavier initialization and mini-batching if needed","initialization scheme and mini-batching have no knob in the menu -> ignored",out_of_menu
+arm_b19ab0,curriculum,,"stationary task, no time-marching mentioned -> not applicable",unspecified
+arm_b19ab0,pde.* coefficients,,"f and g kept symbolic, no concrete coefficient asserted -> not written",unspecified
+arm_ca8f95,net.width/depth/activation,"MLP with tanh activation","activation=tanh explicit -> written; no width/depth values -> not written",partial
+arm_ca8f95,features.fourier,,"no Fourier/positional features mentioned -> not written",unspecified
+arm_ca8f95,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_ca8f95,constraints.hard_bc,"composite loss: L = lambda_pde * L_pde + lambda_bc * L_bc","BC enforced via loss term -> soft = default, not written",exact
+arm_ca8f95,sampling.n_pde/n_bc,"Sample interior points uniformly or via Latin hypercube sampling; boundary points uniformly along each edge","no point counts -> not written, defaults apply",unspecified
+arm_ca8f95,sampling.resample_every,,"no resampling mentioned -> not enabled",unspecified
+arm_ca8f95,sampling.rar,"if present, they would require special treatment (e.g., adaptive sampling or weak-form loss)","adaptive sampling only conditional on singularities that are not asserted -> not enabled",unspecified
+arm_ca8f95,weights.pde,"lambda_pde * L_pde","PDE loss present, weight symbolic -> default 1.0, not written",unspecified
+arm_ca8f95,weights.bc,"lambda_bc * L_bc","BC loss present, weight symbolic -> default 1.0, not written",unspecified
+arm_ca8f95,weights.ic/data/periodic,,"task 003 stationary, no data/periodic terms; plan does not introduce them -> not applicable",unspecified
+arm_ca8f95,optimizer.adam/lbfgs,"Optimize with Adam or L-BFGS","either-or phrasing, not Adam-then-L-BFGS, no lr/steps given -> defaults retained (Adam only), lbfgs not enabled",unspecified
+arm_ca8f95,input normalization,"Normalize inputs to [-1,1] and scale outputs if needed","input/output scaling has no knob in the menu -> ignored",out_of_menu
+arm_ca8f95,curriculum,,"stationary task, no time-marching mentioned -> not applicable",unspecified
+arm_ca8f95,pde.* coefficients,,"f and g kept symbolic, no concrete coefficient asserted -> not written",unspecified
+arm_d3293c,net.width/depth/activation,"4 hidden layers of 64 units with tanh activation","explicit values -> width=64 depth=4 activation=tanh",exact
+arm_d3293c,features.fourier,,"no Fourier/positional features mentioned -> not written",unspecified
+arm_d3293c,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_d3293c,constraints.hard_bc,"imposed as a hard constraint via the ansatz u(x,y) = x*(1-x)*y*(1-y)*N(x,y)","explicit hard-constraint ansatz (soft named only as alternative) -> hard_bc=true",exact
+arm_d3293c,sampling.n_pde,"Sample 10000 interior collocation points uniformly","explicit -> n_pde=10000",exact
+arm_d3293c,sampling.n_bc,"if the boundary is kept soft, additionally sample 400 boundary points","conditional on the soft branch not taken (hard BC chosen); 400 equals default anyway -> not written",unspecified
+arm_d3293c,sampling.resample_every,"monitored by the residual on resampled points","resampling mentioned only for validation monitoring, not training-set resampling -> not enabled",unspecified
+arm_d3293c,sampling.rar,,"no residual-adaptive refinement mentioned -> not enabled",unspecified
+arm_d3293c,weights.pde,"10000 interior collocation points ... for the Poisson residual loss","PDE loss present, no numeric weight -> default 1.0, not written",unspecified
+arm_d3293c,weights.bc,"enforced ... either as a boundary loss or as a hard constraint","BC addressed (hard constraint); no weight given -> default 1.0, not written",unspecified
+arm_d3293c,weights.ic/data/periodic,,"task 003 stationary, no data/periodic terms; plan explicitly excludes time/IC -> not applicable",unspecified
+arm_d3293c,optimizer.adam,"Optimize with Adam at learning rate 1e-3 for 20000 steps","explicit -> lr=1e-3 steps=20000",exact
+arm_d3293c,optimizer.lbfgs,"then refine with L-BFGS for 500 iterations","explicit -> lbfgs.steps=500",exact
+arm_d3293c,curriculum,"No time or initial conditions should be introduced for this stationary elliptic problem","plan explicitly excludes time dimension -> not applicable",unspecified
+arm_d3293c,pde.poisson_source_scale,"f(x,y) = 4*pi^2*sin(pi*x)*sin(pi*y)","plan asserts source amplitude 4*pi^2 vs instantiation table 2*pi^2 -> factor 2.0, conflict -> pde.poisson_source_scale=2.0",conflict
+arm_f11cb9,net.width/depth/activation,"3-5 hidden layers of 32-64 neurons and a smooth activation (tanh or sinusoidal)","ranges/alternatives only; defaults (depth 4, width 64, tanh) lie inside stated options -> not written",partial
+arm_f11cb9,features.fourier,"Fourier feature embeddings can be added if high-frequency content in f or g is suspected","only conditional ('if suspected'), not committed -> not enabled",unspecified
+arm_f11cb9,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_f11cb9,constraints.hard_bc,"optionally multiply the network output by a smooth distance function to the boundary","hard BC only 'optionally'; training strategy is written around the soft composite loss L = L_interior + lambda L_boundary -> soft = default, not written",unspecified
+arm_f11cb9,sampling.n_pde/n_bc,"Sample interior points via Latin Hypercube Sampling or a uniform mesh, and place boundary points densely on the four edges","no point counts ('densely' is qualitative but maps to no knob value) -> not written, defaults apply",unspecified
+arm_f11cb9,sampling.resample_every,,"no resampling mentioned -> not enabled",unspecified
+arm_f11cb9,sampling.rar,,"no residual-adaptive refinement mentioned (only undersampling named as risk) -> not enabled",unspecified
+arm_f11cb9,weights.pde,"L = L_interior + lambda L_boundary","PDE loss present with implicit unit weight -> default 1.0, not written",unspecified
+arm_f11cb9,weights.bc,"Set lambda ~ 1-100","range spanning 1 to 100, no single value committed; default 1.0 is the stated lower endpoint -> not written",partial
+arm_f11cb9,weights.ic/data/periodic,,"task 003 stationary, no data/periodic terms; plan states 'there are no initial conditions' -> not applicable",unspecified
+arm_f11cb9,weights (adaptive),"adapt lambda via NTK weighting or gradient norm balancing","NTK/gradient-norm adaptive weighting outside knob menu -> not implemented, static default retained",out_of_menu
+arm_f11cb9,optimizer.adam,"Start with Adam (learning rate 1e-3, decay) for 20k-50k iterations","lr=1e-3 explicit -> written; steps only a range (default 20000 = lower bound, inside range) -> not written; lr decay schedule has no knob -> ignored (out_of_menu noted below)",partial
+arm_f11cb9,optimizer.adam (lr decay),"learning rate 1e-3, decay","lr decay schedule has no knob in the menu -> ignored",out_of_menu
+arm_f11cb9,optimizer.lbfgs,"then switch to L-BFGS to tighten the residual","Adam-then-L-BFGS without step count -> lbfgs.steps=500 per rule #8",partial
+arm_f11cb9,curriculum,,"stationary task, no time-marching mentioned -> not applicable",unspecified
+arm_f11cb9,pde.* coefficients,,"f and g kept symbolic, no concrete coefficient asserted -> not written",unspecified
+arm_f7f8b3,net.width/depth/activation,"4 hidden layers of 64 units with tanh activation","explicit values -> width=64 depth=4 activation=tanh",exact
+arm_f7f8b3,features.fourier,,"no Fourier/positional features mentioned -> not written",unspecified
+arm_f7f8b3,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_f7f8b3,constraints.hard_bc,,"no boundary condition or ansatz mentioned anywhere in the plan -> default soft retained, key not written (BC omission handled under weights.bc)",unspecified
+arm_f7f8b3,sampling.n_pde,"Sample 10000 interior collocation points uniformly","explicit -> n_pde=10000",exact
+arm_f7f8b3,sampling.n_bc,,"no boundary points or boundary loss mentioned -> not written (moot given weights.bc=0)",unspecified
+arm_f7f8b3,sampling.resample_every,"monitored by the residual on resampled points","resampling mentioned only for validation monitoring, not training-set resampling -> not enabled",unspecified
+arm_f7f8b3,sampling.rar,,"no residual-adaptive refinement mentioned -> not enabled",unspecified
+arm_f7f8b3,weights.pde,"10000 interior collocation points ... for the Poisson residual loss","PDE loss present, no numeric weight -> default 1.0, not written",unspecified
+arm_f7f8b3,weights.bc,,"boundary condition is never mentioned in any facet (formalization lists only 'the source f and the domain' as given) -> weights.bc=0.0 per rule #7",omitted
+arm_f7f8b3,weights.ic/data/periodic,,"task 003 stationary, no data/periodic terms; plan explicitly excludes time/IC -> not applicable",unspecified
+arm_f7f8b3,optimizer.adam,"Optimize with Adam at learning rate 1e-3 for 20000 steps","explicit -> lr=1e-3 steps=20000",exact
+arm_f7f8b3,optimizer.lbfgs,"then refine with L-BFGS for 500 iterations","explicit -> lbfgs.steps=500",exact
+arm_f7f8b3,curriculum,"No time or initial conditions should be introduced for this stationary elliptic problem","plan explicitly excludes time dimension -> not applicable",unspecified
+arm_f7f8b3,pde.poisson_source_scale,"f(x,y) = 2*pi^2*sin(pi*x)*sin(pi*y)","asserted source matches instantiation table (scale factor 1.0) -> consistent, not written",exact

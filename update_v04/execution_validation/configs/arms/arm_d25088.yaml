@@ -1,0 +1,23 @@
+# blind transcription v0.4
+task: hard_allen_cahn_016
+arm: arm_d25088
+features:
+  fourier:
+    num: 64          # "Fourier feature embedding or a multi-scale network"——取菜单内选项 Fourier，未给参数 -> 默认（partial）
+    sigma: 5.0
+sampling:
+  rar:
+    every: 1000      # "adaptive collocation point sampling: more points near interfaces (based on |grad u|)"——梯度自适应为菜单外，就近映射到 RAR 默认（out_of_menu）
+    pool: 50000
+    add: 500
+weights:
+  pde: 1.0           # "Loss = w_pde*L_pde + w_ic*L_ic + w_bc*L_bc" 未给数值 -> 各 1.0（partial）
+  ic: 1.0
+  periodic: 1.0      # BC 提及（"assume ... periodic or Neumann"、w_bc），未给权重 -> 1.0（partial）
+optimizer:
+  lbfgs:
+    steps: 500       # "followed by L-BFGS for fine-tuning" 未给步数 -> 500（partial）
+curriculum:          # "a time-marching strategy (splitting the time domain into smaller windows)" 未给分段 -> 默认三段均分 20000（partial）
+  - {t_frac: 0.25, steps: 6667}
+  - {t_frac: 0.5, steps: 6667}
+  - {t_frac: 1.0, steps: 6666}

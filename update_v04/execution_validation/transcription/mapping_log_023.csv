@@ -1,0 +1,183 @@
+arm_code,knob,plan_quote,decision,tag
+arm_083f2b,net.width/depth/activation,"4-6 subdomain networks, each with 4 hidden layers of 64 neurons, tanh activation","per-network spec transcribed onto the single harness net -> width=64 depth=4 activation=tanh; multi-network aspect logged separately",exact
+arm_083f2b,net (multi-network/domain decomposition),"cPINN partitions the spatiotemporal domain into subdomains ... auxiliary small network or level-set function tracks shock/contact locations","cPINN domain decomposition and level-set front tracker are outside the knob menu -> single MLP used, not implemented",out_of_menu
+arm_083f2b,features.fourier,,"no Fourier/positional features mentioned -> not enabled",unspecified
+arm_083f2b,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_083f2b,constraints.hard_bc/hard_ic,"initial-condition loss ... boundary-condition loss","all constraints via penalty/loss terms -> soft = default, keys not written",exact
+arm_083f2b,sampling.n_pde/n_bc/n_ic,"quadrature with >= 20 points per patch","only weak-form quadrature counts given (no menu equivalent); no collocation counts -> defaults apply",unspecified
+arm_083f2b,sampling.resample_every,,"no dynamic resampling mentioned (adaptive addition goes to rar) -> not written",unspecified
+arm_083f2b,sampling.rar,"use residual-based adaptive refinement (RAR)-after every N epochs, evaluate the weak residual on a fine grid and add collocation points where the residual is large","RAR explicitly in training plan, N and counts unspecified -> every=1000 pool=50000 add=500 per rule #6",partial
+arm_083f2b,weights.pde,"(i) weak-form PDE residual loss integrated over space-time patches","weak-form residual mapped to harness strong-form conservative PDE residual; no weight value -> default 1.0, not written (weak-form mapping logged below)",unspecified
+arm_083f2b,weights.bc,"(iii) boundary-condition loss (type depends on missing BC specification)","BC loss present, no weight value -> default 1.0, not written",unspecified
+arm_083f2b,weights.ic,"(ii) initial-condition loss enforcing piecewise states at t = 0","IC loss present, no weight value -> default 1.0, not written",unspecified
+arm_083f2b,loss (weak form),"the weak-form loss integrates test functions against the residual over local space-time patches","weak-form residual with test functions not in menu -> mapped to built-in strong-form conservative residual",out_of_menu
+arm_083f2b,loss (RH interface),"(iv) Rankine-Hugoniot interface loss penalizing flux-jump mismatches at subdomain boundaries","no interface/jump loss knob -> not implemented",out_of_menu
+arm_083f2b,loss (entropy penalty),"(v) entropy-residual penalty to suppress expansion shocks","no entropy penalty knob; artificial viscosity already transcribed from its own explicit mention -> entropy term itself not implemented",out_of_menu
+arm_083f2b,optimizer.adam,"use Adam for the first 5000 epochs for robust exploration","epochs read as steps -> adam.steps=5000; lr not given -> default; cosine decay schedule logged below",exact
+arm_083f2b,optimizer (lr schedule),"Learning rate scheduling with cosine decay","no lr-schedule knob -> not implemented, constant default lr",out_of_menu
+arm_083f2b,optimizer.lbfgs,"then switch to L-BFGS for fine convergence","no step count -> lbfgs.steps=500 per rule #8",partial
+arm_083f2b,curriculum,"initially train on a smoothed (slightly viscous) version of the problem ... then anneal eps -> 0","viscosity-annealing curriculum, not time-marching -> curriculum knob not enabled; annealing itself not implementable (see artificial_viscosity row)",unspecified
+arm_083f2b,euler.artificial_viscosity,"train on a smoothed (slightly viscous) version of the problem with a small artificial viscosity eps, then anneal eps -> 0","artificial viscosity explicitly proposed, no magnitude -> 0.005 per rule #11; annealing to 0 not implementable (constant knob), out_of_menu aspect noted",partial
+arm_083f2b,pde.euler_gamma,"the ratio of specific heats gamma (commonly 1.4 for air)","hedged value consistent with instantiation (1.4), listed as missing spec -> not written per rule #12",unspecified
+arm_083f2b,positivity/conservative residual,"Positivity of rho and p is enforced via softplus or exponential parameterization","harness built-in behavior, no knob -> nothing transcribed",built_in
+arm_09b0e3,net.width/depth/activation,"a fully connected multilayer perceptron with tanh activations ... the number of layers and units can be tuned","activation=tanh written (exact); width/depth not given -> defaults",exact
+arm_09b0e3,features.fourier,,"no Fourier/positional features mentioned -> not enabled",unspecified
+arm_09b0e3,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_09b0e3,constraints.hard_bc/hard_ic,"Initial and boundary conditions ... enforced through penalty terms added to the loss","soft constraints = default, keys not written",exact
+arm_09b0e3,sampling.n_pde/n_bc/n_ic,"Sample collocation points uniformly at random in the interior ... along with points on the boundary and on the initial slice","sampling scheme described, no counts -> defaults apply",unspecified
+arm_09b0e3,sampling.resample_every,,"no dynamic resampling mentioned -> not written",unspecified
+arm_09b0e3,sampling.rar,,"no residual-adaptive refinement mentioned -> not enabled",unspecified
+arm_09b0e3,weights.pde/bc/ic,"Minimize the composite loss L = L_pde + L_bc + L_ic with equal weights on all terms","all three terms present with equal weights -> defaults (1.0 each) satisfy exactly, not written",exact
+arm_09b0e3,optimizer.adam,"Train with the Adam optimizer at learning rate 1e-3 until the total loss plateaus","lr=1e-3 written (exact); steps not numeric -> default 20000; optional lr lowering for fine-tuning ignored (no schedule knob)",exact
+arm_09b0e3,optimizer.lbfgs,,"no L-BFGS mentioned -> not enabled",unspecified
+arm_09b0e3,curriculum,,"no time-marching/curriculum mentioned -> not enabled",unspecified
+arm_09b0e3,euler.artificial_viscosity,,"no artificial viscosity / diffusion regularization mentioned -> not enabled",unspecified
+arm_09b0e3,pde.euler_gamma,,"no gamma value asserted anywhere -> not written",unspecified
+arm_0c51a9,net.width/depth/activation,"a single MLP mapping (x,t) to (rho, u, p), 5 hidden layers of 128 units, tanh","width=128 depth=5 activation=tanh",exact
+arm_0c51a9,features.fourier,,"no Fourier/positional features mentioned -> not enabled",unspecified
+arm_0c51a9,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_0c51a9,constraints.hard_bc/hard_ic,"Initial condition loss on the piecewise Sod states; boundary values pinned to the initial constants","IC/BC as loss terms with weights -> soft = default, keys not written",exact
+arm_0c51a9,sampling.n_pde/n_bc/n_ic,"Base sampling 10000 space-time collocation points","n_pde=10000 written; n_bc/n_ic not given -> defaults",exact
+arm_0c51a9,sampling.resample_every,,"no base-set resampling mentioned (adaptive addition goes to rar) -> not written",unspecified
+arm_0c51a9,sampling.rar,"every 1000 steps add the 500 highest-residual points from a 50000-point pool","every=1000 pool=50000 add=500",exact
+arm_0c51a9,weights.pde,"Loss weights: ... residual 1","weights.pde=1.0",exact
+arm_0c51a9,weights.bc,"Loss weights: ... boundary 1","weights.bc=1.0",exact
+arm_0c51a9,weights.ic,"Loss weights: initial condition 10 (the piecewise data define the whole evolution)","weights.ic=10.0",exact
+arm_0c51a9,optimizer.adam,"Adam at learning rate 1e-3, 20000 steps","lr=1e-3 steps=20000",exact
+arm_0c51a9,optimizer.lbfgs,,"no L-BFGS mentioned -> not enabled",unspecified
+arm_0c51a9,curriculum,"Curriculum time-marching: train on t in [0,0.05], then [0,0.1], then the full [0,0.2], splitting the step budget across the stages","t_frac=[0.25,0.5,1.0] exact (T=0.2); split ratio unspecified -> equal thirds of 20000 (6666/6667/6667)",partial
+arm_0c51a9,euler.artificial_viscosity,,"no artificial viscosity / diffusion regularization mentioned -> not enabled (0.0 default)",unspecified
+arm_0c51a9,pde.euler_gamma,"ideal-gas equation of state, ratio of specific heats gamma = 1.4","matches instantiation table (1.4) -> not written per rule #12",exact
+arm_0c51a9,positivity/conservative residual,"softplus output transforms keeping density and pressure positive; the residual is assembled on the conservative variables","harness built-in behavior, no knob -> nothing transcribed",built_in
+arm_1ca0b1,net.width/depth/activation,"a PINN with adaptive activation functions ... using a hyperbolic tangent activation or a Fourier feature embedding can help","no width/depth values -> defaults; adaptive activations not in menu (logged below); default tanh already matches the tanh alternative -> nothing written",unspecified
+arm_1ca0b1,net (adaptive activations / multi-network),"adaptive activation functions and a multi-network architecture (separate networks for each conserved variable)","adaptive activations and per-variable networks not in menu -> single fixed-activation MLP (default tanh) used",out_of_menu
+arm_1ca0b1,net (domain decomposition),"a domain decomposition approach (e.g., XPINN or cPINN) ... is recommended","domain decomposition not in menu -> not implemented",out_of_menu
+arm_1ca0b1,features.fourier,"using a hyperbolic tangent activation or a Fourier feature embedding can help capture high-frequency features","hedged disjunctive suggestion (tanh OR Fourier, can help), no commitment to Fourier -> not enabled; UNCERTAIN - flagged for audit",unspecified
+arm_1ca0b1,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_1ca0b1,constraints.hard_bc/hard_ic,"L_IC and L_BC enforce initial and boundary conditions","penalty losses -> soft = default, keys not written",exact
+arm_1ca0b1,sampling.n_pde/n_bc/n_ic,"collocation points sampled adaptively (e.g., more points near expected discontinuities)","no counts given -> defaults apply",unspecified
+arm_1ca0b1,sampling.resample_every,"Collocation points are resampled every few epochs to focus on high-residual regions","dynamic resampling stated in training plan, no interval -> resample_every=1000 per rule #5; possible overlap with rar row flagged for audit",partial
+arm_1ca0b1,sampling.rar,"adaptive collocation point sampling (e.g., using a residual-based adaptive refinement method) is recommended","RAR named in model choice as recommended mechanism, no numbers -> defaults every=1000 pool=50000 add=500",partial
+arm_1ca0b1,weights.pde,"L = L_PDE + L_IC + L_BC + L_jump + L_entropy","PDE term present, no weight value -> default 1.0, not written",unspecified
+arm_1ca0b1,weights.bc,"L_IC and L_BC enforce initial and boundary conditions (if specified; otherwise, they are omitted)","task specifies BC -> BC term active per plan's own condition; no value -> default 1.0, not written",unspecified
+arm_1ca0b1,weights.ic,"L_IC and L_BC enforce initial and boundary conditions","IC term present, no value -> default 1.0, not written",unspecified
+arm_1ca0b1,loss (RH jump),"L_jump enforces Rankine-Hugoniot conditions at detected shock locations (e.g., using a shock sensor based on density gradient)","jump loss and shock sensor not in menu -> not implemented",out_of_menu
+arm_1ca0b1,loss (entropy),"L_entropy enforces the entropy inequality","no entropy penalty knob and no viscosity/diffusion wording -> not implemented",out_of_menu
+arm_1ca0b1,optimizer.adam,"Optimization uses Adam initially","no lr/steps given -> defaults, not written",unspecified
+arm_1ca0b1,optimizer.lbfgs,"then L-BFGS for fine-tuning","no step count -> lbfgs.steps=500 per rule #8",partial
+arm_1ca0b1,optimizer (schedule/clipping),"Learning rate scheduling and gradient clipping are used for stability","no schedule/clipping knobs -> not implemented",out_of_menu
+arm_1ca0b1,curriculum,,"no time-marching/curriculum mentioned -> not enabled",unspecified
+arm_1ca0b1,euler.artificial_viscosity,,"no artificial viscosity / diffusion regularization mentioned (entropy loss is a separate out-of-menu item) -> not enabled",unspecified
+arm_1ca0b1,pde.euler_gamma,"(e.g., ideal gas: p = (gamma-1)(E - 0.5 rho |u|^2))","gamma symbolic only -> not written",unspecified
+arm_32f50b,net.width/depth/activation,"a single MLP mapping (x,t) to (rho, u, p), 5 hidden layers of 128 units, tanh","width=128 depth=5 activation=tanh",exact
+arm_32f50b,features.fourier,,"no Fourier/positional features mentioned -> not enabled",unspecified
+arm_32f50b,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_32f50b,constraints.hard_bc/hard_ic,"Initial condition loss on the piecewise Sod states; boundary values pinned to the initial constants","IC/BC as loss terms with weights -> soft = default, keys not written",exact
+arm_32f50b,sampling.n_pde/n_bc/n_ic,"Base sampling 10000 space-time collocation points","n_pde=10000 written; n_bc/n_ic not given -> defaults",exact
+arm_32f50b,sampling.resample_every,,"no base-set resampling mentioned (adaptive addition goes to rar) -> not written",unspecified
+arm_32f50b,sampling.rar,"every 1000 steps add the 500 highest-residual points from a 50000-point pool","every=1000 pool=50000 add=500",exact
+arm_32f50b,weights.pde,"the artificial-viscosity-regularized conservative residual 1","weights.pde=1.0",exact
+arm_32f50b,weights.bc,"boundary 1","weights.bc=1.0",exact
+arm_32f50b,weights.ic,"Loss weights: initial condition 10","weights.ic=10.0",exact
+arm_32f50b,optimizer.adam,"Adam at learning rate 1e-3, 20000 steps","lr=1e-3 steps=20000",exact
+arm_32f50b,optimizer.lbfgs,,"no L-BFGS mentioned -> not enabled",unspecified
+arm_32f50b,curriculum,"Curriculum time-marching: train on t in [0,0.05], then [0,0.1], then the full [0,0.2], splitting the step budget across the stages","t_frac=[0.25,0.5,1.0] exact (T=0.2); split ratio unspecified -> equal thirds of 20000 (6666/6667/6667)",partial
+arm_32f50b,euler.artificial_viscosity,"entropy-consistent artificial-viscosity regularization with epsilon = 0.005 ... Keep the artificial viscosity at epsilon = 0.005","artificial_viscosity=0.005 as stated",exact
+arm_32f50b,pde.euler_gamma,"ideal-gas equation of state, ratio of specific heats gamma = 1.66","asserted gamma=1.66 conflicts with instantiation gamma=1.4 -> pde.euler_gamma=1.66 per rule #12",conflict
+arm_32f50b,model (weak-form/FV hybrid),"A weak-form or finite-volume/PINN hybrid (Godunov-based supervision, domain decomposition with discontinuity-aware interfaces) is the preferable family at scale; within a collocation PINN the ... regularized conservative residual above is the operative choice","hybrid family named but plan itself designates the collocation formulation as operative -> hybrid not implemented",out_of_menu
+arm_32f50b,positivity/conservative residual,"softplus output transforms keeping density and pressure positive; the residual is assembled on the conservative variables","harness built-in behavior, no knob -> nothing transcribed",built_in
+arm_84c2fc,net.width/depth/activation,"A Deep Residual Network (MLP) with Fourier Feature positional encoding is recommended ... Alternatively, a SIREN ... could be used","no width/depth/activation values -> defaults; residual (skip) connections not in menu (plain MLP used); SIREN only an alternative, not chosen",unspecified
+arm_84c2fc,net (residual connections),"A Deep Residual Network (MLP)","skip connections not in menu -> plain MLP used",out_of_menu
+arm_84c2fc,features.fourier,"Fourier features map the input coordinates to a higher-dimensional space using sinusoidal functions, enabling the network to learn high-frequency details","Fourier features are the committed primary architecture choice, no params -> num=64 sigma=5.0 per rule #2",partial
+arm_84c2fc,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_84c2fc,constraints.hard_bc/hard_ic,"weighted sum of the PDE residuals ... initial condition loss, boundary condition loss","penalty losses -> soft = default, keys not written",exact
+arm_84c2fc,sampling.n_pde/n_bc/n_ic,,"no point counts given -> defaults apply",unspecified
+arm_84c2fc,sampling.resample_every,,"no dynamic resampling mentioned (adaptive addition goes to rar) -> not written",unspecified
+arm_84c2fc,sampling.rar,"a Residual-based Adaptive Refinement (RAR) strategy is essential: collocation points should be iteratively added where the residual magnitude is highest","RAR explicitly required, no numbers -> defaults every=1000 pool=50000 add=500",partial
+arm_84c2fc,weights.pde,"weighted sum of the PDE residuals (mass, momentum, energy)","PDE term present, no value -> default 1.0, not written",unspecified
+arm_84c2fc,weights.bc,"boundary condition loss","BC term present, no value -> default 1.0, not written",unspecified
+arm_84c2fc,weights.ic,"initial condition loss","IC term present, no value -> default 1.0, not written",unspecified
+arm_84c2fc,loss (entropy penalty),"an entropy inequality penalty","no entropy penalty knob and no viscosity/diffusion wording -> not implemented",out_of_menu
+arm_84c2fc,weights (self-adaptive),"Self-adaptive loss weighting (e.g., using the gradient statistics or SoftAdapt) is necessary","adaptive weighting algorithms not in menu -> static defaults retained",out_of_menu
+arm_84c2fc,optimizer.adam,"Adam for initial training","no lr/steps -> defaults, not written",unspecified
+arm_84c2fc,optimizer.lbfgs,"followed by L-BFGS for fine-tuning","no step count -> lbfgs.steps=500 per rule #8",partial
+arm_84c2fc,curriculum,,"no time-marching/curriculum mentioned -> not enabled",unspecified
+arm_84c2fc,euler.artificial_viscosity,,"no artificial viscosity / diffusion regularization mentioned -> not enabled",unspecified
+arm_84c2fc,pde.euler_gamma,"the specific heat ratio (gamma) for the equation of state [listed as missing information]","no value asserted -> not written",unspecified
+arm_84c2fc,output parameterization,"The network should output the conserved variables (rho, rho u, E) directly","harness built-in behavior -> nothing transcribed",built_in
+arm_95b248,net.width/depth/activation,"In smooth regions, use modified MLPs or Fourier-feature networks","no width/depth/activation values -> defaults",unspecified
+arm_95b248,net (domain decomposition),"partition space-time into smooth subdomains separated by shocks/contacts, assign separate networks to each smooth region ... augment with a trainable level-set or front network","domain-decomposed weak-form architecture with front network not in menu -> single MLP used",out_of_menu
+arm_95b248,features.fourier,"use modified MLPs or Fourier-feature networks","disjunctive branch inside out-of-menu architecture; MLP branch (default) taken -> Fourier not enabled; UNCERTAIN - flagged for audit",unspecified
+arm_95b248,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_95b248,constraints.hard_bc/hard_ic,"L_positivity uses log-barrier or penalty terms","all constraints via penalties -> soft = default, keys not written",exact
+arm_95b248,sampling.n_pde/n_bc/n_ic,"space-time test functions sampled by Monte Carlo or quadrature in each subdomain","no counts given -> defaults apply",unspecified
+arm_95b248,sampling.resample_every,,"no base-set resampling mentioned (adaptive concentration goes to rar) -> not written",unspecified
+arm_95b248,sampling.rar,"Employ adaptive residual-based sampling that concentrates points near shocks and contacts","residual-adaptive sampling in training plan, no numbers -> defaults every=1000 pool=50000 add=500",partial
+arm_95b248,weights.pde,"L = lambda_weak L_weak + lambda_RH L_RH + lambda_ent L_entropy + lambda_pos L_positivity","weak conservative residual mapped to harness PDE residual; no value -> default 1.0, not written",unspecified
+arm_95b248,weights.bc,"Missing specifications ... boundary conditions [and] the constraints cannot be fully instantiated","BC appears only as a missing input, never as a loss/constraint term; composite loss has no L_BC -> weights.bc=0.0 per rule #7; UNCERTAIN - flagged for audit",omitted
+arm_95b248,weights.ic,"L = lambda_weak L_weak + lambda_RH L_RH + lambda_ent L_entropy + lambda_pos L_positivity [no IC term]","IC never enforced anywhere in constraint/loss set (mentioned only as missing spec) -> weights.ic=0.0 per rule #7; UNCERTAIN - flagged for audit",omitted
+arm_95b248,loss (weak form),"L_weak penalizes the weak residual of the conservative equations using space-time test functions","weak-form residual not in menu -> mapped to built-in strong-form conservative residual",out_of_menu
+arm_95b248,loss (RH interface),"L_RH penalizes flux-jump mismatches at interfaces","no interface/jump loss knob -> not implemented",out_of_menu
+arm_95b248,loss (entropy),"L_entropy penalizes negative entropy production","no entropy penalty knob -> not implemented (viscosity transcribed separately from its own mention)",out_of_menu
+arm_95b248,loss (positivity),"L_positivity uses log-barrier or penalty terms to keep density and pressure positive","harness enforces positivity by built-in softplus parameterization, no knob",built_in
+arm_95b248,optimizer.adam,"Optimize with Adam for initial exploration","no lr/steps -> lr default; steps=20000 written only because curriculum stage steps must sum to total per rule #9",partial
+arm_95b248,optimizer.lbfgs,"then switch to L-BFGS for refinement","no step count -> lbfgs.steps=500 per rule #8",partial
+arm_95b248,optimizer (gradient clipping),"with gradient clipping to avoid blow-up","no clipping knob -> not implemented",out_of_menu
+arm_95b248,curriculum,"Use sequential time-windowing or causal weights to respect temporal ordering","directive disjunction; time-windowing branch is in-menu -> curriculum enabled, no segments -> [0.25,0.5,1.0] equal split of 20000 per rule #9; causal-weights branch out of menu; UNCERTAIN - flagged for audit",partial
+arm_95b248,euler.artificial_viscosity,"If needed, add a small annealed artificial-viscosity regularization to guide training toward the viscous-limit solution before removing it","artificial viscosity prescribed in training strategy (conditional wording), no value -> 0.005 per rule #11; annealing/removal not implementable; UNCERTAIN - flagged for audit",partial
+arm_95b248,pde.euler_gamma,"the equation of state (e.g., ideal gas with gamma) [listed as missing]","gamma symbolic only -> not written",unspecified
+arm_cf8ac8,net.width/depth/activation,"a physics-informed neural network (PINN) with fully connected layers","no width/depth/activation values -> defaults",unspecified
+arm_cf8ac8,net (multi-head),"a multi-head architecture with separate scaling for each output","multi-head output scaling not in menu -> single-head harness net used",out_of_menu
+arm_cf8ac8,features.fourier,"the following enhancements are adopted: a) Fourier feature embedding of inputs to capture high frequencies","Fourier features explicitly adopted, no params -> num=64 sigma=5.0 per rule #2",partial
+arm_cf8ac8,features.periodic_harmonics,,"no periodic input embedding mentioned (BC-type assumption is not an input embedding) -> not written",unspecified
+arm_cf8ac8,constraints.hard_bc/hard_ic,"L(theta) = lambda_PDE ... + lambda_IC ... + lambda_BC ... + lambda_entropy ...","all constraints via penalty losses -> soft = default, keys not written",exact
+arm_cf8ac8,sampling.n_pde/n_bc/n_ic,"Collocation points are initially sampled uniformly in the interior of the space-time domain and on boundaries","no counts given -> defaults apply",unspecified
+arm_cf8ac8,sampling.resample_every,,"no base-set resampling mentioned (adaptive addition goes to rar) -> not written",unspecified
+arm_cf8ac8,sampling.rar,"Adaptive refinement is key: every N iterations, additional points are added where PDE residual magnitude is largest","RAR in training plan, N/counts unspecified -> defaults every=1000 pool=50000 add=500",partial
+arm_cf8ac8,weights.pde,"lambda_PDE Sum (PDE residuals)^2","PDE term present, no value -> default 1.0, not written",unspecified
+arm_cf8ac8,weights.bc,"lambda_BC Sum (BC mismatch)^2 ... we assume periodic or transmissive BCs","BC term present, no value -> default 1.0, not written; assumed BC type has no knob (harness pins initial constants per task)",unspecified
+arm_cf8ac8,weights.ic,"lambda_IC Sum (IC mismatch)^2","IC term present, no value -> default 1.0, not written",unspecified
+arm_cf8ac8,loss (entropy),"lambda_entropy Sum max(0, -d_t s - d_x(s u))^2","no entropy penalty knob and no viscosity/diffusion wording -> not implemented",out_of_menu
+arm_cf8ac8,weights (self-adaptive),"self-adaptive weights (e.g., learning rate annealing) to balance terms","adaptive weighting not in menu -> static defaults retained",out_of_menu
+arm_cf8ac8,optimizer.adam,"Optimization uses AdamW for initial rapid convergence","AdamW not in menu -> mapped to Adam; no lr/steps -> defaults, not written",out_of_menu
+arm_cf8ac8,optimizer.lbfgs,"followed by L-BFGS for fine-tuning","no step count -> lbfgs.steps=500 per rule #8",partial
+arm_cf8ac8,curriculum,,"no time-marching/curriculum mentioned (transfer learning from coarser solution is out of menu) -> not enabled",unspecified
+arm_cf8ac8,euler.artificial_viscosity,,"no artificial viscosity / diffusion regularization mentioned -> not enabled",unspecified
+arm_cf8ac8,pde.euler_gamma,"ideal gas law p = (gamma-1)(E - 0.5 rho u^2)","gamma symbolic only -> not written",unspecified
+arm_cf8ac8,misc (TV penalty / hybrid data / minibatch),"a total variation penalty on spatial gradients can be added, or a temperature scaling in the activation ... optional strategy is to add a small amount of high-fidelity simulation data (e.g., from a WENO solver) ... minibatch sampling and transfer learning","optional/conditional out-of-menu components -> not implemented",out_of_menu
+arm_db5c98,net.width/depth/activation,"a single MLP mapping (x,t) to (rho, u, p), 5 hidden layers of 128 units, tanh","width=128 depth=5 activation=tanh",exact
+arm_db5c98,features.fourier,,"no Fourier/positional features mentioned -> not enabled",unspecified
+arm_db5c98,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_db5c98,constraints.hard_bc/hard_ic,"Initial condition loss on the piecewise Sod states; boundary values pinned to the initial constants","IC/BC as loss terms with weights -> soft = default, keys not written",exact
+arm_db5c98,sampling.n_pde/n_bc/n_ic,"Base sampling 10000 space-time collocation points","n_pde=10000 written; n_bc/n_ic not given -> defaults",exact
+arm_db5c98,sampling.resample_every,,"no base-set resampling mentioned (adaptive addition goes to rar) -> not written",unspecified
+arm_db5c98,sampling.rar,"every 1000 steps add the 500 highest-residual points from a 50000-point pool","every=1000 pool=50000 add=500",exact
+arm_db5c98,weights.pde,"the artificial-viscosity-regularized conservative residual 1","weights.pde=1.0",exact
+arm_db5c98,weights.bc,"boundary 1","weights.bc=1.0",exact
+arm_db5c98,weights.ic,"Loss weights: initial condition 10","weights.ic=10.0",exact
+arm_db5c98,optimizer.adam,"Adam at learning rate 1e-3, 20000 steps","lr=1e-3 steps=20000",exact
+arm_db5c98,optimizer.lbfgs,,"no L-BFGS mentioned -> not enabled",unspecified
+arm_db5c98,curriculum,"Curriculum time-marching: train on t in [0,0.05], then [0,0.1], then the full [0,0.2], splitting the step budget across the stages","t_frac=[0.25,0.5,1.0] exact (T=0.2); split ratio unspecified -> equal thirds of 20000 (6666/6667/6667)",partial
+arm_db5c98,euler.artificial_viscosity,"entropy-consistent artificial-viscosity regularization with epsilon = 0.005 ... Keep the artificial viscosity at epsilon = 0.005","artificial_viscosity=0.005 as stated",exact
+arm_db5c98,pde.euler_gamma,"ideal-gas equation of state, ratio of specific heats gamma = 1.4","matches instantiation table (1.4) -> not written per rule #12",exact
+arm_db5c98,model (weak-form/FV hybrid),"A weak-form or finite-volume/PINN hybrid (Godunov-based supervision, domain decomposition with discontinuity-aware interfaces) is the preferable family at scale; within a collocation PINN the ... regularized conservative residual above is the operative choice","hybrid family named but plan itself designates the collocation formulation as operative -> hybrid not implemented",out_of_menu
+arm_db5c98,positivity/conservative residual,"softplus output transforms keeping density and pressure positive; the residual is assembled on the conservative variables","harness built-in behavior, no knob -> nothing transcribed",built_in
+arm_fdea61,net.width/depth/activation,"A fully connected network with moderate depth (6-8 layers, 64-128 neurons) and tanh/sin activations","ranges/alternatives: width default 64 inside [64,128] -> not written; activation default tanh among {tanh,sin} -> not written; depth default 4 OUTSIDE [6,8] -> lower bound depth=6 written; UNCERTAIN - flagged for audit",partial
+arm_fdea61,net (wPINN/domain decomposition),"A weak-form physics-informed neural network (wPINN) or entropy-compatible PINN is recommended ... Domain decomposition with separate networks per smooth region (separated by learned shock/contact interfaces)","weak-form formulation, entropy-variable formulation and domain decomposition not in menu -> single MLP with built-in strong-form conservative residual",out_of_menu
+arm_fdea61,features.fourier,,"no Fourier/positional features mentioned -> not enabled",unspecified
+arm_fdea61,features.periodic_harmonics,,"no periodic input embedding mentioned -> not written",unspecified
+arm_fdea61,constraints.hard_bc/hard_ic,"L = lambda_IC L_IC + lambda_BC L_BC + lambda_weak L_weak + lambda_entropy L_entropy","all constraints via penalty losses -> soft = default, keys not written",exact
+arm_fdea61,sampling.n_pde/n_bc/n_ic,"Uniform collocation initially ... integrating against compactly supported test functions via Gauss quadrature","no counts given (quadrature detail out of menu) -> defaults apply",unspecified
+arm_fdea61,sampling.resample_every,,"no base-set resampling mentioned (adaptive refinement goes to rar) -> not written",unspecified
+arm_fdea61,sampling.rar,"adaptive refinement guided by residual magnitude and gradient indicators to concentrate points near detected discontinuities","residual-adaptive refinement in training plan, no numbers -> defaults every=1000 pool=50000 add=500 (gradient-indicator criterion not implementable, residual criterion used)",partial
+arm_fdea61,weights.pde,"lambda_weak L_weak enforces the weak form over subdomains","weak-form residual mapped to harness PDE residual; no value -> default 1.0, not written",unspecified
+arm_fdea61,weights.bc,"lambda_BC L_BC ... enforce initial and boundary data","BC term present, no value -> default 1.0, not written",unspecified
+arm_fdea61,weights.ic,"lambda_IC L_IC ... enforce initial and boundary data","IC term present, no value -> default 1.0, not written",unspecified
+arm_fdea61,loss (entropy),"L_entropy penalizes entropy production in the wrong direction","entropy penalty not in menu; no artificial-viscosity/diffusion wording -> not implemented, not mapped to euler.artificial_viscosity; UNCERTAIN - flagged for audit",out_of_menu
+arm_fdea61,weights (adaptive balancing),"Adaptive loss weighting (e.g., GradNorm or neural tangent kernel-based) to balance competing loss terms","adaptive weighting not in menu -> static defaults retained",out_of_menu
+arm_fdea61,optimizer.adam,"Adam with learning rate 1e-3 decaying to 1e-4","lr=1e-3 written (exact); decay schedule not in menu; steps unspecified -> 20000 written only because curriculum stage steps must sum to total per rule #9",partial
+arm_fdea61,optimizer.lbfgs,"followed by L-BFGS for fine-tuning","no step count -> lbfgs.steps=500 per rule #8",partial
+arm_fdea61,optimizer (gradient clipping),"Gradient clipping to stabilize training near sharp fronts","no clipping knob -> not implemented",out_of_menu
+arm_fdea61,curriculum,"time-marching curriculum - train on early time windows first, then progressively extend, to respect the causal structure","curriculum enabled, no segments given -> [0.25,0.5,1.0] equal split of 20000 per rule #9",partial
+arm_fdea61,euler.artificial_viscosity,,"no artificial viscosity / viscous or diffusion regularization mentioned -> not enabled",unspecified
+arm_fdea61,pde.euler_gamma,"the ratio of specific heats gamma ... are not specified; these must be provided","no value asserted -> not written",unspecified

@@ -1,0 +1,18 @@
+# blind transcription v0.4
+task: hard_plus_euler_shock_023
+arm: arm_84c2fc
+
+features:
+  fourier:           # "MLP with Fourier Feature positional encoding is recommended" - no params -> num=64 sigma=5.0, partial
+    num: 64
+    sigma: 5.0
+
+sampling:
+  rar:               # "Residual-based Adaptive Refinement (RAR) strategy is essential" - no numbers -> defaults, partial
+    every: 1000
+    pool: 50000
+    add: 500
+
+optimizer:
+  lbfgs:
+    steps: 500       # "Adam for initial training followed by L-BFGS" - no step count -> 500, partial

@@ -1,0 +1,7 @@
+# blind transcription v0.4
+task: medium_burgers_inverse_viscosity_010
+arm: arm_cb40e9
+
+# All knobs left at preregistered defaults: plan mentions loss components
+# (data/pde/ic/bc) without values, and remaining choices are hedged
+# ("either hard or soft", "possibly L-BFGS") or out-of-menu. See mapping log.

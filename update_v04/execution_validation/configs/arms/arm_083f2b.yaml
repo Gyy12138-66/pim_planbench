@@ -1,0 +1,23 @@
+# blind transcription v0.4
+task: hard_plus_euler_shock_023
+arm: arm_083f2b
+
+net:
+  width: 64          # "4 hidden layers of 64 neurons" (per-subdomain net spec applied to single harness net)
+  depth: 4
+  activation: tanh
+
+sampling:
+  rar:               # "residual-based adaptive refinement (RAR)" - no numbers given -> defaults, partial
+    every: 1000
+    pool: 50000
+    add: 500
+
+optimizer:
+  adam:
+    steps: 5000      # "Adam for the first 5000 epochs"
+  lbfgs:
+    steps: 500       # "then switch to L-BFGS" - no step count -> 500, partial
+
+euler:
+  artificial_viscosity: 0.005   # "small artificial viscosity eps" (annealing eps->0 not implementable) - no value -> 0.005, partial

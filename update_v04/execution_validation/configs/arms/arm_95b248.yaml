@@ -1,0 +1,27 @@
+# blind transcription v0.4
+task: hard_plus_euler_shock_023
+arm: arm_95b248
+
+sampling:
+  rar:               # "adaptive residual-based sampling that concentrates points near shocks" - no numbers -> defaults, partial
+    every: 1000
+    pool: 50000
+    add: 500
+
+weights:
+  bc: 0.0            # composite loss L = weak + RH + entropy + positivity contains no BC term -> omitted
+  ic: 0.0            # no IC loss term anywhere in the plan's constraint/loss set -> omitted
+
+optimizer:
+  adam:
+    steps: 20000     # total unspecified -> default 20000; written because curriculum steps must sum to it
+  lbfgs:
+    steps: 500       # "Adam for initial exploration, then switch to L-BFGS" - no step count -> 500, partial
+
+curriculum:          # "Use sequential time-windowing ... to respect temporal ordering" - no segments -> [0.25,0.5,1.0], partial
+  - {t_frac: 0.25, steps: 6666}
+  - {t_frac: 0.5, steps: 6667}
+  - {t_frac: 1.0, steps: 6667}
+
+euler:
+  artificial_viscosity: 0.005   # "If needed, add a small annealed artificial-viscosity regularization" - no value -> 0.005, partial

@@ -1,0 +1,15 @@
+{
+ "task_id": "easy_poisson_2d_source_003",
+ "arm": "D1",
+ "kind": "ablation",
+ "parent_arm": "G",
+ "scorer_only": false,
+ "target_element": "删除 Dirichlet 边界条件的一切表述（missing-constraint cap 对应项）",
+ "facets": {
+  "Problem Formalization": "This is a forward boundary-value problem: solve a 2D elliptic Poisson equation for the scalar field u(x,y) on the unit square (x,y) in [0,1]^2. Governing PDE: -Delta u = f, i.e. -(u_xx + u_yy) = f(x,y), with the known source term f(x,y) = 2*pi^2*sin(pi*x)*sin(pi*y). Known/given: the source f and the domain; unknown/target: the field u(x,y). We state the sign convention explicitly: the negative Laplacian on the left equals the source on the right. The problem is stationary, so no time variable and no initial condition are involved. Any quantity not specified by the task statement must be stated as an explicit assumption before implementation; here all defining data are given.",
+  "Physics Constraints": "The interior Poisson residual u_xx + u_yy + f(x,y) must vanish on [0,1]^2 - the residual keeps the known source term, since this is a Poisson equation and not the homogeneous Laplace equation. The sign convention -Delta u = f is used consistently between the assembled residual and the source. No time or initial conditions should be introduced for this stationary elliptic problem. If the source term were dropped the computed field would silently solve the wrong equation, so its presence in the residual is checked explicitly.",
+  "Model Choice": "A standard physics-informed neural network (PINN, a neural field trained on the PDE residual): a fully connected MLP mapping (x,y) to u(x,y), 4 hidden layers of 64 units with tanh activation - smooth activations match the smooth elliptic solution.",
+  "Training Strategy": "Sample 10000 interior collocation points uniformly over the unit square for the Poisson residual loss. Coordinates are already normalized to [0,1], so no further input scaling is needed. Optimize with Adam at learning rate 1e-3 for 20000 steps, then refine with L-BFGS for 500 iterations to reach a low residual plateau. Keep the stated sign convention consistent between the assembled residual and the source term throughout training, and re-check it once against a manufactured test point.",
+  "Validation Failure Risks": "Validate against the analytical solution u*(x,y) = sin(pi*x)*sin(pi*y) (manufactured solution): report the relative L2 error on a dense held-out grid, plus the interior residual error. Failure risks: (1) omitting the source term and accidentally solving the Laplace equation - checked by evaluating the residual with the source on fresh test points; (2) flipping the sign convention, which silently negates the solution - checked against the manufactured solution; (3) slow convergence or overfitting to the collocation set - monitored by the residual on resampled points."
+ }
+}

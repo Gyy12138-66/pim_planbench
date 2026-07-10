@@ -1,0 +1,18 @@
+# blind transcription v0.4
+task: hard_plus_euler_shock_023
+arm: arm_cf8ac8
+
+features:
+  fourier:           # "the following enhancements are adopted: a) Fourier feature embedding of inputs" - no params -> num=64 sigma=5.0, partial
+    num: 64
+    sigma: 5.0
+
+sampling:
+  rar:               # "every N iterations, additional points are added where PDE residual magnitude is largest" - N unspecified -> defaults, partial
+    every: 1000
+    pool: 50000
+    add: 500
+
+optimizer:
+  lbfgs:
+    steps: 500       # "AdamW ... followed by L-BFGS for fine-tuning" - no step count -> 500, partial (AdamW mapped to Adam)

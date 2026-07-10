@@ -1,0 +1,6 @@
+# blind transcription v0.4
+task: easy_poisson_2d_source_003
+arm: arm_ca8f95
+
+net:
+  activation: tanh

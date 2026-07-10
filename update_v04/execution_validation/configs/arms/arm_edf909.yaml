@@ -1,0 +1,12 @@
+# blind transcription v0.4
+task: hard_allen_cahn_016
+arm: arm_edf909
+net:
+  activation: tanh   # "fully connected multilayer perceptron with tanh activations"（exact；层数/宽度 "can be tuned" 未给 -> 默认）
+weights:
+  pde: 1.0           # "L = L_pde + L_bc + L_ic with equal weights on all terms" -> 各 1.0（qualitative）
+  ic: 1.0
+  periodic: 1.0      # 本题边界即周期项；计划提及 L_bc
+optimizer:
+  adam:
+    lr: 1.0e-3       # "Adam optimizer at learning rate 1e-3"（exact；步数 "until the loss plateaus" 未给 -> 默认）

@@ -23,7 +23,7 @@ defaults_v0.4.yaml 的预注册默认值），并在 mapping_log 记 `unspecifie
 | 4 | 硬/软约束 | `constraints.hard_bc/hard_ic` | 计划明说"硬约束/ansatz/构造性满足"→ hard；说罚项/损失项→ soft（默认） |
 | 5 | 配点与采样 | `sampling.n_pde/n_bc/n_ic/resample_every` | 给了数按数；"动态重采样"→ resample_every=1000 并记 `partial` |
 | 6 | RAR/自适应加点 | `sampling.rar.*` | 计划提残差自适应采样才启用（默认 every=1000, pool=50000, add=500） |
-| 7 | 损失权重 | `weights.*` | 给数按数；只说"加大 IC 权重"这类定性→ 该项 ×10 并记 `qualitative`；提"权重退火/warmup"→ {start,end,steps} ramp，端点未给→ start=0.1·end |
+| 7 | 损失权重 | `weights.*` | **损失项集合先于权重数值**：某约束项（bc/ic/data/periodic）在计划全文（含 Physics Constraints facet）**完全未被提及** → 该项权重置 0 并记 `omitted`（计划的缺失正是实验对象，defaults 不得替计划补全约束——否则 D1 类缺失永远落不到配置层）；提及但未给权重 → 1.0；给数按数；只说"加大 IC 权重"这类定性→ 该项 ×10 并记 `qualitative`；提"权重退火/warmup"→ {start,end,steps} ramp，端点未给→ start=0.1·end |
 | 8 | 优化器 | `optimizer.adam.lr/steps`、`optimizer.lbfgs.steps` | 给数按数；提"Adam 后接 L-BFGS"未给步数→ lbfgs.steps=500 并记 `partial` |
 | 9 | 课程/时间推进 | `curriculum` | 计划提 time-marching/课程训练才启用；未给分段→ [0.25,0.5,1.0] 三段均分总步数，记 `partial` |
 | 10 | 反问题初值 | `inverse.init_nu` | 010 专用；计划给了先验/初值按其值，否则默认 |
@@ -33,6 +33,21 @@ defaults_v0.4.yaml 的预注册默认值），并在 mapping_log 记 `unspecifie
 
 **菜单外组件**（如自适应权重算法、注意力网络、域分解）：不实现；就近映射
 （说明理由）或忽略，必须在 mapping_log 记 `out_of_menu`。此日志随论文附录发布。
+
+### 1.1 仲裁澄清（v0.4 盲转写期间裁定，随协议一并冻结）
+
+- **符号形式 ≠ 数值断言（#12）**：教科书式符号写法（如 `u−u³`、`(1/ε)(u³−u)`、
+  "对流速度 c"）不构成与实例化表的系数冲突；仅当计划给出**具体数值**且与实例化表
+  换算后矛盾时记 `conflict`（ε 表述按 d=ε² 换算后再判）。
+- **区间值**：计划给区间（如 "4–8 层"、"50–100 神经元"、"lr 1e-3→1e-4"）：默认值
+  落在区间内 → 不写该键，记 `partial` 并注明；默认值在区间外 → 取最近端点，记 `partial`。
+- **对冲语气不启用**：consider / optionally / possibly / can help / if needed /
+  仅在风险缓解清单中"或"式出现 → 不启用，记 `unspecified` 附原文；use / employ /
+  implement / apply / is recommended / is preferred → 承诺，启用。条件句
+  （"if the IC is known"）的条件由实例化表满足时视为承诺。
+- **"Adam or L-BFGS" 非顺序句式**：不满足 #8 的"Adam 后接 L-BFGS"，不启用 lbfgs。
+- **构造性周期（harmonics>0）时的 `weights.periodic`**：写 0.0 或不写均可
+  （harness 在 harmonics>0 时不计算该损失项，行为等价）；审计不视为不一致。
 
 ## 2. mapping_log.csv 字段
 

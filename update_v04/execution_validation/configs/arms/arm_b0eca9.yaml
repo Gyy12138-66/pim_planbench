@@ -1,0 +1,23 @@
+# blind transcription v0.4
+task: hard_allen_cahn_016
+arm: arm_b0eca9
+features:
+  fourier:
+    num: 64          # "multi-scale Fourier feature embeddings"/"random Fourier features" 未给参数 -> 默认（partial）
+    sigma: 5.0
+sampling:
+  rar:
+    every: 1000      # "residual-based adaptive refinement (RAR)" 未给参数 -> 默认（partial）
+    pool: 50000
+    add: 500
+weights:
+  pde: 1.0           # PDE residual 提及，未给权重 -> 1.0（partial）
+  ic: 1.0            # "Impose the initial condition u(x,0) = u_0(x)"，未给权重 -> 1.0（partial）
+  periodic: 1.0      # BC 提及（"Boundary conditions must be incorporated..."），未给权重 -> 1.0（partial）
+optimizer:
+  lbfgs:
+    steps: 500       # "followed by L-BFGS fine-tuning per window" 未给步数 -> 500（partial）
+curriculum:          # "causal time-marching curriculum: divide [0,T] into sequential windows" 未给分段 -> 默认三段均分 20000（partial）
+  - {t_frac: 0.25, steps: 6667}
+  - {t_frac: 0.5, steps: 6667}
+  - {t_frac: 1.0, steps: 6666}

@@ -1,0 +1,11 @@
+{
+ "code": "arm_09b0e3",
+ "task_id": "hard_plus_euler_shock_023",
+ "facets": {
+  "Problem Formalization": "We formalize the task as solving the governing partial differential equation described in the problem statement on its given domain. The unknown is the solution field of the PDE; the known quantities are the parameters, coefficients, and any initial or boundary data provided by the task. The inputs to the model are the spatial (and, if present, temporal) coordinates, and the output is the value of the solution field at those coordinates. The objective is to approximate the solution accurately over the whole domain.",
+  "Physics Constraints": "The PDE residual should vanish at interior collocation points, and this is imposed as a mean-squared residual loss. Initial and boundary conditions given in the task are enforced through penalty terms added to the loss with appropriate weights. Together these terms encode the physics of the problem, and minimizing them drives the network toward a solution consistent with the governing equation.",
+  "Model Choice": "A standard physics-informed neural network (PINN): a fully connected multilayer perceptron with tanh activations that maps the coordinates to the solution field. The MLP is a universal approximator, so this architecture is applicable to general PDE problems without task-specific modifications; the number of layers and units can be tuned if training is slow.",
+  "Training Strategy": "Minimize the composite loss L = L_pde + L_bc + L_ic with equal weights on all terms. Sample collocation points uniformly at random in the interior of the domain, along with points on the boundary and on the initial slice. Train with the Adam optimizer at learning rate 1e-3 until the total loss plateaus, and optionally lower the learning rate for fine-tuning.",
+  "Validation Failure Risks": "Monitor the training loss over iterations and validate the final model by computing the mean squared error (MSE) against whatever reference data are available. If the loss does not decrease, tune the learning rate or increase the number of collocation points. The main risks are slow convergence and overfitting to the sampled collocation points, which can be reduced with more samples."
+ }
+}

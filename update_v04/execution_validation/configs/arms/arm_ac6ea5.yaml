@@ -1,0 +1,18 @@
+# blind transcription v0.4
+task: easy_advection_1d_periodic_005
+arm: arm_ac6ea5
+net:
+  width: 64
+  depth: 4
+  activation: tanh
+features:
+  periodic_harmonics: 4   # "encode x as harmonics (sin(2*pi*k*x), cos(2*pi*k*x)) for k = 1..4"
+sampling:
+  n_pde: 10000
+  n_ic: 400
+weights:
+  periodic: 0.0      # "With the exactly periodic feature mapping no separate boundary loss is needed"
+optimizer:
+  adam:
+    lr: 1.0e-3
+    steps: 20000

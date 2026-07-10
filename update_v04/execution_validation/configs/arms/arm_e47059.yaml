@@ -1,0 +1,25 @@
+# blind transcription v0.4
+task: hard_allen_cahn_016
+arm: arm_e47059
+features:
+  fourier:
+    num: 64          # "Fourier feature embeddings (random Fourier features with bandwidth matched to eps^-1)"，eps 计划中未定 -> 默认（partial）
+    sigma: 5.0
+sampling:
+  rar:
+    every: 1000      # "re-sample collocation points with density proportional to |r|"（residual-based）未给参数 -> 默认（partial）
+    pool: 50000
+    add: 500
+weights:
+  pde: 1.0           # "dynamically weight PDE, IC, and BC losses"——动态加权为菜单外；项集提及未给数值 -> 各 1.0（partial）
+  ic: 1.0
+  periodic: 1.0
+optimizer:
+  adam:
+    lr: 1.0e-3       # "Adam with learning rate 1e-3 to 1e-4"——区间/衰减，取初始 1e-3（partial）
+  lbfgs:
+    steps: 500       # "possibly switching to L-BFGS for fine-tuning" -> 500（partial）
+curriculum:          # "Time-segmented training with overlapping windows"/"stacking time segments" 未给分段 -> 默认三段均分 20000（partial；overlap 不实现）
+  - {t_frac: 0.25, steps: 6667}
+  - {t_frac: 0.5, steps: 6667}
+  - {t_frac: 1.0, steps: 6666}
