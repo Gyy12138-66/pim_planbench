@@ -1,0 +1,14 @@
+# blind transcription v0.4
+task: easy_advection_1d_periodic_005
+arm: arm_599aa5
+features:
+  fourier:
+    num: 64          # "Fourier feature embeddings for the spatial coordinate x" 未给参数 -> num=64 sigma=5.0（partial）
+    sigma: 5.0
+optimizer:
+  lbfgs:
+    steps: 500       # "followed by L-BFGS for precise convergence" 未给步数 -> 500（partial）
+curriculum:          # "Implement causal training (time-marching loss weighting)" -> 就近映射为时间课程，默认三段（partial）
+  - {t_frac: 0.25, steps: 6667}
+  - {t_frac: 0.5, steps: 6667}
+  - {t_frac: 1.0, steps: 6666}

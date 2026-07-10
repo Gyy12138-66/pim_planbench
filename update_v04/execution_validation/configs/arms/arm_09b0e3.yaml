@@ -1,0 +1,10 @@
+# blind transcription v0.4
+task: hard_plus_euler_shock_023
+arm: arm_09b0e3
+
+net:
+  activation: tanh   # "multilayer perceptron with tanh activations"; width/depth not given
+
+optimizer:
+  adam:
+    lr: 1.0e-3       # "Adam optimizer at learning rate 1e-3"; steps "until loss plateaus" -> default

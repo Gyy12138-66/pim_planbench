@@ -1,0 +1,20 @@
+# blind transcription v0.4
+task: medium_burgers_inverse_viscosity_010
+arm: arm_292a58
+
+net:
+  width: 64
+  depth: 6
+  activation: tanh
+
+sampling:
+  rar:
+    every: 1000
+    pool: 50000
+    add: 500
+
+optimizer:
+  adam:
+    lr: 1.0e-3
+  lbfgs:
+    steps: 500

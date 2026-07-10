@@ -1,0 +1,11 @@
+{
+ "code": "arm_45d50e",
+ "task_id": "medium_burgers_inverse_viscosity_010",
+ "facets": {
+  "Problem Formalization": "Forward problem: the viscous Burgers equation u_t + u*u_x = nu*u_xx on x in [-1,1], t in [0,1]. Unknowns/targets: the velocity field u(x,t). Known/given: the viscosity nu = 0.1 and the initial profile u(x,0) = -sin(pi*x). The boundary type is not specified by the public task, so it must be requested or an explicit assumption stated: we assume homogeneous Dirichlet boundaries u(-1,t) = u(1,t) = 0 for the executed instance and flag this assumption for confirmation.",
+  "Physics Constraints": "Burgers residual with the known viscosity nu = 0.1: u_t + u*u_x - nu*u_xx = 0, retaining the nonlinear convection term u*u_x. Initial condition loss on u(x,0) = -sin(pi*x); boundary condition loss under the stated Dirichlet assumption.",
+  "Model Choice": "A PINN with parameter inference: a fully connected MLP mapping (x,t) to u, 4 hidden layers of 64 units, tanh activation.",
+  "Training Strategy": "Train the field network with the known viscosity nu = 0.1. Balance the loss terms - PDE residual, initial and boundary - starting from equal weights 1.0. Sample 10000 collocation points; use residual-based adaptive sampling every 1000 steps (add the 500 highest-residual points from a 50000-point candidate pool) to densify near the steep gradient that develops around x = 0. Optimize with Adam at learning rate 1e-3 for 20000 steps, then L-BFGS for 500 iterations for the final refinement of the network.",
+  "Validation Failure Risks": "Report the PDE residual and a field comparison against a high-resolution numerical reference. Check boundary consistency under the stated Dirichlet assumption once boundary information is confirmed. Failure risks: (1) omitting the nonlinear term; (2) hallucinating boundary conditions as if the task specified them instead of stating assumptions."
+ }
+}

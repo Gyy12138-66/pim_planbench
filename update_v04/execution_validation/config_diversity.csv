@@ -1,0 +1,6 @@
+task,n_natural_arms,n_diff_knobs,diff_knobs,h4a_eligible
+easy_advection_1d_periodic_005,6,16,curriculum|features.fourier.num|features.fourier.sigma|features.periodic_harmonics|net.activation|net.depth|net.width|optimizer.adam.lr|optimizer.adam.steps|optimizer.lbfgs.steps|sampling.n_bc|sampling.n_ic|sampling.n_pde|weights.ic|weights.pde|weights.periodic,1
+easy_poisson_2d_source_003,6,11,constraints.hard_bc|features.fourier.num|features.fourier.sigma|net.activation|net.depth|optimizer.adam.lr|optimizer.adam.steps|optimizer.lbfgs.steps|sampling.n_bc|sampling.n_pde|sampling.resample_every,1
+hard_allen_cahn_016,6,5,curriculum|features.fourier.num|features.fourier.sigma|net.activation|optimizer.adam.lr,1
+hard_plus_euler_shock_023,6,12,curriculum|euler.artificial_viscosity|features.fourier.num|features.fourier.sigma|net.activation|net.depth|net.width|optimizer.adam.lr|optimizer.adam.steps|sampling.resample_every|weights.bc|weights.ic,1
+medium_burgers_inverse_viscosity_010,6,11,curriculum|net.activation|net.depth|net.width|optimizer.adam.lr|optimizer.lbfgs.steps|sampling.rar.add|sampling.rar.every|sampling.rar.pool|weights.data|weights.pde,1

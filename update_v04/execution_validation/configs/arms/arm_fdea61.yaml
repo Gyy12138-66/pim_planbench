@@ -1,0 +1,26 @@
+# blind transcription v0.4
+task: hard_plus_euler_shock_023
+arm: arm_fdea61
+
+net:
+  depth: 6           # "6-8 layers" - default 4 lies outside stated range -> lower bound 6, partial
+                     # width "64-128 neurons": default 64 inside range -> not written
+                     # activation "tanh/sin": default tanh among alternatives -> not written
+
+sampling:
+  rar:               # "adaptive refinement guided by residual magnitude and gradient indicators" - no numbers -> defaults, partial
+    every: 1000
+    pool: 50000
+    add: 500
+
+optimizer:
+  adam:
+    lr: 1.0e-3       # "Adam with learning rate 1e-3 decaying to 1e-4" - decay schedule not in menu, base lr transcribed
+    steps: 20000     # total unspecified -> default 20000; written because curriculum steps must sum to it
+  lbfgs:
+    steps: 500       # "followed by L-BFGS for fine-tuning" - no step count -> 500, partial
+
+curriculum:          # "time-marching curriculum - train on early time windows first, then progressively extend" - no segments -> [0.25,0.5,1.0], partial
+  - {t_frac: 0.25, steps: 6666}
+  - {t_frac: 0.5, steps: 6667}
+  - {t_frac: 1.0, steps: 6667}

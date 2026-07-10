@@ -1,0 +1,18 @@
+# blind transcription v0.4
+task: hard_allen_cahn_016
+arm: arm_eac660
+net:
+  activation: sin    # "SIREN's periodic activations provide a better inductive bias"——SIREN 就近映射为 sin（partial）
+sampling:
+  rar:
+    every: 1000      # "adaptive residual-based sampling: iteratively resample ... regions with high PDE residual" 未给参数 -> 默认（partial）
+    pool: 50000
+    add: 500
+weights:
+  pde: 1.0           # "L = L_PDE + lambda_IC L_IC + lambda_BC L_BC" 未给数值 -> 各 1.0（partial）
+  ic: 1.0
+  periodic: 1.0
+optimizer:
+  lbfgs:
+    steps: 500       # "Adam for initial phases followed by L-BFGS for fine-tuning" 未给步数 -> 500（partial）
+# curriculum: 计划的 "curriculum" 是 epsilon 退火（continuation in epsilon），非 time-marching -> 不启用（out_of_menu）

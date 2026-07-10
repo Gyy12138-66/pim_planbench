@@ -1,0 +1,213 @@
+arm_code,knob,plan_quote,decision,tag
+arm_41ef06,net.width,"A standard Fully Connected Neural Network (MLP)","only says MLP, no width value -> not written, default applies",unspecified
+arm_41ef06,net.depth,"A standard Fully Connected Neural Network (MLP)","no depth value -> not written, default applies",unspecified
+arm_41ef06,net.activation,"hyperbolic tangent (Tanh) or Swish activation functions","disjunction; tanh is in menu -> activation=tanh",partial
+arm_41ef06,features.periodic_harmonics,"While Fourier Feature Networks could explicitly encode periodicity, a standard MLP is sufficient","plan explicitly declines constructive periodic encoding -> not enabled",exact
+arm_41ef06,features.fourier,"a standard MLP is sufficient for this 'easy' classification task","Fourier features explicitly declined -> not enabled",exact
+arm_41ef06,constraints.hard_bc,"L_BC enforces periodicity by penalizing the difference u(0, t) - u(L, t)","soft penalty described -> hard_bc not written (default false)",unspecified
+arm_41ef06,constraints.hard_ic,"The initial condition constraint ... must be strictly enforced / L_IC is the Mean Squared Error (MSE) against the provided initial profile","'strictly enforced' but realized as MSE loss term -> soft, not written",unspecified
+arm_41ef06,sampling.n_pde,"collocation points sampled via Latin Hypercube Sampling (LHS)","no count given -> not written, default applies",unspecified
+arm_41ef06,sampling.n_bc,"","no boundary point count -> default",unspecified
+arm_41ef06,sampling.n_ic,"","no IC point count -> default",unspecified
+arm_41ef06,sampling.resample_every,"","dynamic resampling not mentioned -> default",unspecified
+arm_41ef06,sampling.rar,"","residual-adaptive sampling not mentioned -> not enabled",unspecified
+arm_41ef06,weights.pde,"L = lambda_IC L_IC + lambda_PDE L_PDE + lambda_BC L_BC","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_41ef06,weights.ic,"lambda_IC L_IC","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_41ef06,weights.periodic,"L_BC enforces periodicity by penalizing the difference u(0, t) - u(L, t)","periodic term mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_41ef06,optimizer.adam.lr,"The Adam optimizer will be used with a learning rate schedule","no lr value -> not written, default applies",unspecified
+arm_41ef06,optimizer.adam.steps,"","no step count -> default",unspecified
+arm_41ef06,optimizer.lbfgs.steps,"","L-BFGS not mentioned -> not enabled",unspecified
+arm_41ef06,curriculum,"","time-marching/curriculum not mentioned -> not enabled",unspecified
+arm_41ef06,pde.advection_c,"Missing parameters include the advection speed c","symbolic only, no numeric assertion -> not written",unspecified
+arm_41ef06,lr_schedule,"a learning rate schedule (e.g., cosine decay)","lr schedule not in menu -> ignored",out_of_menu
+arm_41ef06,conservation_constraint,"The system should conserve the integral of the scalar quantity over the spatial domain","integral conservation constraint not in menu; descriptive only, no loss term in Training Strategy -> ignored",out_of_menu
+arm_466893,net.width,"4-6 hidden layers of 50-100 neurons","range given -> midpoint width=75",partial
+arm_466893,net.depth,"4-6 hidden layers of 50-100 neurons","range given -> midpoint depth=5",partial
+arm_466893,net.activation,"tanh activation is suitable","activation=tanh",exact
+arm_466893,features.periodic_harmonics,"A fully connected feedforward network","no periodic input encoding mentioned -> not enabled",unspecified
+arm_466893,features.fourier,"","Fourier features not mentioned -> not enabled",unspecified
+arm_466893,constraints.hard_bc,"L_BC = mean((u(0,t) - u(L,t))^2) on boundary points","soft penalty -> not written (default false)",unspecified
+arm_466893,constraints.hard_ic,"L_IC = mean((u(x,0) - u0(x))^2) on initial points","soft penalty -> not written (default false)",unspecified
+arm_466893,sampling.n_pde,"Collocation points: 10,000-20,000 points sampled uniformly","range given -> midpoint n_pde=15000",partial
+arm_466893,sampling.n_bc,"Boundary points: 1,000 points on x=0 and x=L at random t","n_bc=1000",exact
+arm_466893,sampling.n_ic,"Initial points: 1,000 points on t=0 at random x","n_ic=1000",exact
+arm_466893,sampling.resample_every,"","dynamic resampling not mentioned -> default",unspecified
+arm_466893,sampling.rar,"Adaptive sampling (e.g., residual-based refinement) may be used if initial training shows high residual regions","conditional 'may be used', not committed -> not enabled",unspecified
+arm_466893,weights.pde,"Loss weights: lambda_PDE=1","weights.pde=1.0",exact
+arm_466893,weights.ic,"lambda_IC=10 to emphasize boundary and initial conditions","weights.ic=10.0",exact
+arm_466893,weights.periodic,"lambda_BC=10","task boundary is periodic; BC weight -> weights.periodic=10.0",exact
+arm_466893,optimizer.adam.lr,"Adam optimizer with learning rate 1e-3","lr=1.0e-3",exact
+arm_466893,optimizer.adam.steps,"for 10,000-20,000 iterations","range given -> midpoint steps=15000",partial
+arm_466893,optimizer.lbfgs.steps,"followed by L-BFGS for fine-tuning","committed, no step count -> lbfgs.steps=500 per rule #8",partial
+arm_466893,curriculum,"","time-marching/curriculum not mentioned -> not enabled",unspecified
+arm_466893,pde.advection_c,"Missing: numerical values for c, L ... are not given","symbolic only -> not written",unspecified
+arm_4aab8a,net.width,"4-6 hidden layers with 64-128 neurons each","range given -> midpoint width=96",partial
+arm_4aab8a,net.depth,"4-6 hidden layers with 64-128 neurons each","range given -> midpoint depth=5",partial
+arm_4aab8a,net.activation,"tanh or sin activations (sin activations align well with periodic solutions)","disjunction, both in menu; took tanh (default-matching) -> flag for audit",partial
+arm_4aab8a,features.periodic_harmonics,"encoding x as [sin(2*pi*x/L), cos(2*pi*x/L)] at the input layer, ensuring exact periodicity","explicit single-frequency periodic embedding -> periodic_harmonics=1",exact
+arm_4aab8a,features.fourier,"MLP with Fourier feature input encoding","the 'Fourier feature encoding' described is the explicit periodic sin/cos mapping -> transcribed as periodic_harmonics, random Fourier features not enabled",unspecified
+arm_4aab8a,constraints.hard_bc,"The periodicity constraint can alternatively be hard-encoded via input transformation ... preferred for this problem","constructive periodicity -> mapped to features.periodic_harmonics per rule; hard_bc not written",unspecified
+arm_4aab8a,constraints.hard_ic,"L_IC = (1/N_IC) Sum|u(x_j, 0) - u0(x_j)|^2","IC as loss term -> soft, not written",unspecified
+arm_4aab8a,sampling.n_pde,"Collocation points are sampled via Latin Hypercube Sampling","no count given -> default",unspecified
+arm_4aab8a,sampling.n_bc,"Periodic BC is hard-encoded ... removing the need for a separate BC loss term","no boundary points needed/given -> default (inert)",unspecified
+arm_4aab8a,sampling.n_ic,"uniformly over [0, L] at t=0 for the IC","no count given -> default",unspecified
+arm_4aab8a,sampling.resample_every,"","dynamic resampling not mentioned -> default",unspecified
+arm_4aab8a,sampling.rar,"","residual-adaptive sampling not mentioned -> not enabled",unspecified
+arm_4aab8a,weights.pde,"L = lambda_PDE . L_PDE + lambda_IC . L_IC","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_4aab8a,weights.ic,"lambda_IC . L_IC","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_4aab8a,weights.periodic,"removing the need for a separate BC loss term","periodicity handled constructively, loss set explicitly excludes BC term -> weights.periodic=0.0",exact
+arm_4aab8a,optimizer.adam.lr,"Adam optimizer with learning rate 1e-3","lr=1.0e-3",exact
+arm_4aab8a,optimizer.adam.steps,"for 10k-30k iterations","range given -> midpoint steps=20000",partial
+arm_4aab8a,optimizer.lbfgs.steps,"optionally followed by L-BFGS for fine-tuning","'optionally' = not committed -> not enabled; flag for audit",unspecified
+arm_4aab8a,curriculum,"Causal training or time-marching is recommended: progressively increase the time domain during training","time-marching committed as recommendation, no segments given -> default 3 segments [0.25,0.5,1.0], steps split of 20000",partial
+arm_4aab8a,pde.advection_c,"Missing specifications: the exact value of c","symbolic only -> not written",unspecified
+arm_54f41e,net.width,"the number of layers and units can be tuned if training is slow","no values -> not written, defaults apply",unspecified
+arm_54f41e,net.depth,"the number of layers and units can be tuned if training is slow","no values -> not written, defaults apply",unspecified
+arm_54f41e,net.activation,"a fully connected multilayer perceptron with tanh activations","activation=tanh",exact
+arm_54f41e,features.periodic_harmonics,"","no periodic input encoding mentioned -> not enabled",unspecified
+arm_54f41e,features.fourier,"","Fourier features not mentioned -> not enabled",unspecified
+arm_54f41e,constraints.hard_bc,"Initial and boundary conditions ... are enforced through penalty terms","soft penalties -> not written (default false)",unspecified
+arm_54f41e,constraints.hard_ic,"enforced through penalty terms added to the loss","soft -> not written (default false)",unspecified
+arm_54f41e,sampling.n_pde,"Sample collocation points uniformly at random in the interior","no count -> default",unspecified
+arm_54f41e,sampling.n_bc,"along with points on the boundary","no count -> default",unspecified
+arm_54f41e,sampling.n_ic,"and on the initial slice","no count -> default",unspecified
+arm_54f41e,sampling.resample_every,"","dynamic resampling not mentioned -> default",unspecified
+arm_54f41e,sampling.rar,"","residual-adaptive sampling not mentioned -> not enabled",unspecified
+arm_54f41e,weights.pde,"L = L_pde + L_bc + L_ic with equal weights on all terms","weights.pde=1.0",exact
+arm_54f41e,weights.ic,"with equal weights on all terms","weights.ic=1.0",exact
+arm_54f41e,weights.periodic,"Initial and boundary conditions given in the task are enforced through penalty terms","generic L_bc; task boundary is periodic -> weights.periodic=1.0; plan never names periodicity -> flag for audit",exact
+arm_54f41e,optimizer.adam.lr,"Train with the Adam optimizer at learning rate 1e-3","lr=1.0e-3",exact
+arm_54f41e,optimizer.adam.steps,"until the total loss plateaus","no step count -> default",unspecified
+arm_54f41e,optimizer.lbfgs.steps,"","L-BFGS not mentioned -> not enabled",unspecified
+arm_54f41e,curriculum,"","time-marching/curriculum not mentioned -> not enabled",unspecified
+arm_54f41e,pde.advection_c,"the known quantities are the parameters, coefficients ... provided by the task","no numeric assertion -> not written",unspecified
+arm_54f41e,lr_finetune,"optionally lower the learning rate for fine-tuning","lr decay not in menu, optional -> ignored",out_of_menu
+arm_55325b,net.width,"A feedforward neural network u_theta(x,t)","no width value -> default",unspecified
+arm_55325b,net.depth,"A feedforward neural network u_theta(x,t)","no depth value -> default",unspecified
+arm_55325b,net.activation,"","no activation named -> default",unspecified
+arm_55325b,features.periodic_harmonics,"transform x into Fourier features sin(2*pi*k*x/L) and cos(2*pi*k*x/L) for k=1,...,K, ensuring the network output is periodic in x","periodic harmonic embedding, K unspecified -> default 4",partial
+arm_55325b,features.fourier,"we transform x into Fourier features sin(2*pi*k*x/L) and cos(2*pi*k*x/L)","construction is periodic embedding -> transcribed as periodic_harmonics; random Fourier features not enabled",unspecified
+arm_55325b,constraints.hard_bc,"or we apply a periodic hard constraint layer","alternative not chosen (primary = feature transform, itself constructive) -> hard_bc not written",unspecified
+arm_55325b,constraints.hard_ic,"The initial condition requires u(x,0)=u0(x) ... L_IC over initial time points","soft loss -> not written",unspecified
+arm_55325b,sampling.n_pde,"(x,t) collocation points sampled via Latin hypercube for interior","no count -> default",unspecified
+arm_55325b,sampling.n_bc,"stratified sampling for boundaries","no count -> default",unspecified
+arm_55325b,sampling.n_ic,"and initial slice","no count -> default",unspecified
+arm_55325b,sampling.resample_every,"","dynamic resampling not mentioned -> default",unspecified
+arm_55325b,sampling.rar,"","residual-adaptive sampling not mentioned -> not enabled",unspecified
+arm_55325b,weights.pde,"L = lambda_PDE * L_PDE + lambda_IC * L_IC + lambda_BC * L_BC ... weights lambda are auto-tuned","mentioned, no fixed value -> not written (defaults to 1.0)",unspecified
+arm_55325b,weights.ic,"lambda_IC * L_IC","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_55325b,weights.periodic,"lambda_BC * L_BC ... enforcing u(0,t)=u(L,t)","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_55325b,optimizer.adam.lr,"Adam for initial convergence","no lr value -> default",unspecified
+arm_55325b,optimizer.adam.steps,"","no step count -> default",unspecified
+arm_55325b,optimizer.lbfgs.steps,"followed by L-BFGS for fine-tuning","committed, no step count -> lbfgs.steps=500 per rule #8",partial
+arm_55325b,curriculum,"Mitigations: use causal training (sequential time sampling), add a small L2 regularization ..., or incorporate the method of characteristics","disjunctive mitigation list in risk facet only, not committed in Training Strategy -> not enabled; flag for audit",unspecified
+arm_55325b,pde.advection_c,"constant speed c>0","symbolic only -> not written",unspecified
+arm_55325b,weights.auto_balancing,"auto-tuned using a balancing scheme (e.g., learning rate annealing or NTK-inspired weighting)","adaptive weight algorithm not in menu -> ignored, fixed defaults used",out_of_menu
+arm_55325b,artificial_viscosity,"mitigated by including a small amount of artificial viscosity or by characteristic-based sampling","artificial viscosity is 023-only knob, not in 005 menu; characteristic-based sampling also out of menu -> ignored",out_of_menu
+arm_55325b,data_loss,"introduce a small amount of supervised data (e.g., exact solution at a few points) if available","supervised data loss for forward task not in menu, conditional -> ignored",out_of_menu
+arm_55d74b,net.width,"a 4-6 layer MLP","no width value -> default",unspecified
+arm_55d74b,net.depth,"a 4-6 layer MLP","range given -> midpoint depth=5",partial
+arm_55d74b,net.activation,"with sine or tanh activations","disjunction, both in menu; took tanh (default-matching) -> flag for audit",partial
+arm_55d74b,features.periodic_harmonics,"Fourier feature embeddings ... to naturally respect spatial periodicity ... an input mapping based on the domain period L","period-based input mapping = periodic embedding, harmonic count not given -> default 4; flag for audit (could be features.fourier)",partial
+arm_55d74b,features.fourier,"(e.g., random Fourier features or a sinusoidal activation network)","disjunctive e.g.; period-based mapping transcribed as periodic_harmonics -> random Fourier features not enabled",unspecified
+arm_55d74b,constraints.hard_bc,"either architecturally or through a penalty loss","disjunction, not committed to hard -> not written; architectural route covered by periodic_harmonics",unspecified
+arm_55d74b,constraints.hard_ic,"Enforce the initial condition u(x,0) = u_0(x) strongly / L_ic is the MSE against u_0 at t = 0","'strongly' but realized as weighted MSE loss term -> soft, not written; flag for audit",unspecified
+arm_55d74b,sampling.n_pde,"N_f space-time collocation points sampled uniformly or via Latin Hypercube Sampling","no count -> default",unspecified
+arm_55d74b,sampling.n_bc,"L_bc penalizes periodic mismatch at the boundaries","no count -> default",unspecified
+arm_55d74b,sampling.n_ic,"L_ic is the MSE against u_0 at t = 0","no count -> default",unspecified
+arm_55d74b,sampling.resample_every,"","dynamic resampling not mentioned -> default",unspecified
+arm_55d74b,sampling.rar,"","residual-adaptive sampling not mentioned -> not enabled",unspecified
+arm_55d74b,weights.pde,"L = L_pde + lambda_bc L_bc + lambda_ic L_ic","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_55d74b,weights.ic,"lambda_ic L_ic","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_55d74b,weights.periodic,"lambda_bc L_bc ... penalizes periodic mismatch at the boundaries","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_55d74b,optimizer.adam.lr,"Optimize with Adam (learning rate 1e-3)","lr=1.0e-3",exact
+arm_55d74b,optimizer.adam.steps,"for initial exploration","no step count -> default",unspecified
+arm_55d74b,optimizer.lbfgs.steps,"then refine with L-BFGS for high accuracy","committed, no step count -> lbfgs.steps=500 per rule #8",partial
+arm_55d74b,curriculum,"Employ causal training along the time axis (e.g., time-marching or causal weights)","committed; time-marching in menu -> default 3 segments [0.25,0.5,1.0] over default 20000 steps",partial
+arm_55d74b,pde.advection_c,"the numerical values ... of c, L, T ... are not provided","symbolic only -> not written",unspecified
+arm_55d74b,conservation_constraint,"enforce global mass conservation Int u dx = Int u_0 dx","integral constraint not in menu -> ignored",out_of_menu
+arm_55d74b,weights.adaptive,"Use adaptive loss weighting (NTK or GradNorm)","adaptive weighting not in menu -> ignored, fixed defaults used",out_of_menu
+arm_55d74b,sampling.characteristics,"Increase collocation density along characteristics if c is large","characteristic-aligned density not in menu, conditional -> ignored",out_of_menu
+arm_599aa5,net.width,"A Physics-Informed Neural Network (PINN)","no width value -> default",unspecified
+arm_599aa5,net.depth,"A Physics-Informed Neural Network (PINN)","no depth value -> default",unspecified
+arm_599aa5,net.activation,"","no activation named -> default",unspecified
+arm_599aa5,features.periodic_harmonics,"Fourier features naturally encode periodicity and high-frequency spatial components","named component is 'Fourier feature embeddings' (standard RFF term, no period-based construction) -> transcribed as features.fourier, periodic_harmonics not enabled; flag for audit",unspecified
+arm_599aa5,features.fourier,"PINN augmented with Fourier feature embeddings for the spatial coordinate x","Fourier features explicit, no params -> num=64 sigma=5.0 per rule #2",partial
+arm_599aa5,constraints.hard_bc,"Periodic Boundary Conditions: u(0,t) - u(L,t) = 0 ... enforced ... Weighted sum of MSE losses","soft loss terms -> not written",unspecified
+arm_599aa5,constraints.hard_ic,"Initial Condition: u(x,0) - u_0(x) = 0 enforced at t=0","loss-based -> soft, not written",unspecified
+arm_599aa5,sampling.n_pde,"Uniform or Latin Hypercube sampling for interior points","no count -> default",unspecified
+arm_599aa5,sampling.n_bc,"","no count -> default",unspecified
+arm_599aa5,sampling.n_ic,"","no count -> default",unspecified
+arm_599aa5,sampling.resample_every,"","dynamic resampling not mentioned -> default",unspecified
+arm_599aa5,sampling.rar,"","residual-adaptive sampling not mentioned -> not enabled",unspecified
+arm_599aa5,weights.pde,"Weighted sum of MSE losses for PDE residual, IC, and BCs","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_599aa5,weights.ic,"Weighted sum of MSE losses for PDE residual, IC, and BCs","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_599aa5,weights.periodic,"Periodic Boundary Conditions: u(0,t) - u(L,t) = 0 and d_x u(0,t) - d_x u(L,t) = 0","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_599aa5,optimizer.adam.lr,"Adam optimizer for initial loss landscape exploration","no lr value -> default",unspecified
+arm_599aa5,optimizer.adam.steps,"","no step count -> default",unspecified
+arm_599aa5,optimizer.lbfgs.steps,"followed by L-BFGS for precise convergence","committed, no step count -> lbfgs.steps=500 per rule #8",partial
+arm_599aa5,curriculum,"Implement causal training (time-marching loss weighting) to ensure the network learns the solution chronologically","committed; causal weighting itself out of menu, nearest-mapped to time-marching curriculum -> default 3 segments [0.25,0.5,1.0] over default 20000 steps",partial
+arm_599aa5,pde.advection_c,"Missing explicit values for domain length L, time horizon T, wave speed c","symbolic only -> not written",unspecified
+arm_599aa5,conservation_constraint,"Global Conservation: The spatial integral of u(x,t) must remain constant ... optional integral constraint","integral constraint not in menu, also 'optional' -> ignored",out_of_menu
+arm_599aa5,weights.adaptive,"Use adaptive loss balancing to handle gradient pathologies","adaptive weighting not in menu -> ignored, fixed defaults used",out_of_menu
+arm_599aa5,sampling.dense_t0,"with denser sampling near t=0","non-uniform density scheme not in menu -> ignored, uniform default",out_of_menu
+arm_78f64b,net.width,"fully connected MLP, 4 hidden layers of 64 units","width=64",exact
+arm_78f64b,net.depth,"4 hidden layers of 64 units","depth=4",exact
+arm_78f64b,net.activation,"tanh activation","activation=tanh",exact
+arm_78f64b,features.periodic_harmonics,"","no periodic input encoding mentioned -> not enabled",unspecified
+arm_78f64b,features.fourier,"","Fourier features not mentioned -> not enabled",unspecified
+arm_78f64b,constraints.hard_bc,"","no boundary treatment mentioned at all -> not written",unspecified
+arm_78f64b,constraints.hard_ic,"The initial condition loss pins u(x,0) = sin(2*pi*x)","IC as loss term -> soft, not written",unspecified
+arm_78f64b,sampling.n_pde,"Sample 10000 collocation points uniformly across space-time","n_pde=10000",exact
+arm_78f64b,sampling.n_bc,"","no boundary points mentioned -> default (inert, periodic weight 0)",unspecified
+arm_78f64b,sampling.n_ic,"sample 400 points on the initial line","n_ic=400",exact
+arm_78f64b,sampling.resample_every,"","dynamic resampling not mentioned -> default",unspecified
+arm_78f64b,sampling.rar,"","residual-adaptive sampling not mentioned -> not enabled",unspecified
+arm_78f64b,weights.pde,"the advection residual u_t + c*u_x must vanish","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_78f64b,weights.ic,"The initial condition loss pins u(x,0) = sin(2*pi*x)","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_78f64b,weights.periodic,"(no mention anywhere in plan)","periodic/boundary constraint completely absent from all five facets -> weights.periodic=0.0",omitted
+arm_78f64b,optimizer.adam.lr,"Optimize with Adam at learning rate 1e-3","lr=1.0e-3",exact
+arm_78f64b,optimizer.adam.steps,"for 20000 steps","steps=20000",exact
+arm_78f64b,optimizer.lbfgs.steps,"","L-BFGS not mentioned -> not enabled",unspecified
+arm_78f64b,curriculum,"","time-marching/curriculum not mentioned -> not enabled",unspecified
+arm_78f64b,pde.advection_c,"constant known speed c = 1.0","asserted value matches instantiation (c=1.0) -> not written",exact
+arm_ac6ea5,net.width,"fully connected MLP, 4 hidden layers of 64 units","width=64",exact
+arm_ac6ea5,net.depth,"4 hidden layers of 64 units","depth=4",exact
+arm_ac6ea5,net.activation,"tanh activation","activation=tanh",exact
+arm_ac6ea5,features.periodic_harmonics,"encode x as harmonics (sin(2*pi*k*x), cos(2*pi*k*x)) for k = 1..4 so the network is exactly periodic in x by construction","periodic_harmonics=4",exact
+arm_ac6ea5,features.fourier,"Alternative: a Fourier neural network or transport-aware neural solver","alternative not taken -> not enabled",unspecified
+arm_ac6ea5,constraints.hard_bc,"exactly periodic in x by construction","constructive periodicity -> mapped to features.periodic_harmonics per rule; hard_bc not written",unspecified
+arm_ac6ea5,constraints.hard_ic,"The initial condition loss pins u(x,0) = sin(2*pi*x)","IC as loss term -> soft, not written",unspecified
+arm_ac6ea5,sampling.n_pde,"Sample 10000 collocation points uniformly across space-time","n_pde=10000",exact
+arm_ac6ea5,sampling.n_bc,"With the exactly periodic feature mapping no separate boundary loss is needed","no boundary points needed/given -> default (inert)",unspecified
+arm_ac6ea5,sampling.n_ic,"sample 400 points on the initial line","n_ic=400",exact
+arm_ac6ea5,sampling.resample_every,"","dynamic resampling not mentioned -> default",unspecified
+arm_ac6ea5,sampling.rar,"","residual-adaptive sampling not mentioned -> not enabled",unspecified
+arm_ac6ea5,weights.pde,"the advection residual u_t + c*u_x must vanish","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_ac6ea5,weights.ic,"The initial condition loss pins u(x,0) = sin(2*pi*x)","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_ac6ea5,weights.periodic,"With the exactly periodic feature mapping no separate boundary loss is needed","periodicity hard-encoded, plan explicitly drops BC loss term -> weights.periodic=0.0",exact
+arm_ac6ea5,optimizer.adam.lr,"Optimize with Adam at learning rate 1e-3","lr=1.0e-3",exact
+arm_ac6ea5,optimizer.adam.steps,"for 20000 steps","steps=20000",exact
+arm_ac6ea5,optimizer.lbfgs.steps,"","L-BFGS not mentioned -> not enabled",unspecified
+arm_ac6ea5,curriculum,"","time-marching/curriculum not mentioned -> not enabled",unspecified
+arm_ac6ea5,pde.advection_c,"constant known speed c = 1.0","asserted value matches instantiation (c=1.0) -> not written",exact
+arm_c6e893,net.width,"fully connected MLP, 4 hidden layers of 64 units","width=64",exact
+arm_c6e893,net.depth,"4 hidden layers of 64 units","depth=4",exact
+arm_c6e893,net.activation,"tanh activation","activation=tanh",exact
+arm_c6e893,features.periodic_harmonics,"encode x as harmonics (sin(2*pi*k*x), cos(2*pi*k*x)) for k = 1..4 so the network is exactly periodic in x by construction","periodic_harmonics=4",exact
+arm_c6e893,features.fourier,"Alternative: a Fourier neural network or transport-aware neural solver","alternative not taken -> not enabled",unspecified
+arm_c6e893,constraints.hard_bc,"exactly periodic in x by construction","constructive periodicity -> mapped to features.periodic_harmonics per rule; hard_bc not written",unspecified
+arm_c6e893,constraints.hard_ic,"The initial condition loss pins u(x,0) = sin(2*pi*x)","IC as loss term -> soft, not written",unspecified
+arm_c6e893,sampling.n_pde,"Sample 10000 collocation points uniformly across space-time","n_pde=10000",exact
+arm_c6e893,sampling.n_bc,"With the exactly periodic feature mapping no separate boundary loss is needed","no boundary points needed/given -> default (inert)",unspecified
+arm_c6e893,sampling.n_ic,"sample 400 points on the initial line","n_ic=400",exact
+arm_c6e893,sampling.resample_every,"","dynamic resampling not mentioned -> default",unspecified
+arm_c6e893,sampling.rar,"","residual-adaptive sampling not mentioned -> not enabled",unspecified
+arm_c6e893,weights.pde,"the advection residual u_t + c*u_x must vanish","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_c6e893,weights.ic,"The initial condition loss pins u(x,0) = sin(2*pi*x)","mentioned, no value -> not written (defaults to 1.0)",unspecified
+arm_c6e893,weights.periodic,"With the exactly periodic feature mapping no separate boundary loss is needed","periodicity hard-encoded, plan explicitly drops BC loss term -> weights.periodic=0.0",exact
+arm_c6e893,optimizer.adam.lr,"Optimize with Adam at learning rate 1e-3","lr=1.0e-3",exact
+arm_c6e893,optimizer.adam.steps,"for 20000 steps","steps=20000",exact
+arm_c6e893,optimizer.lbfgs.steps,"","L-BFGS not mentioned -> not enabled",unspecified
+arm_c6e893,curriculum,"","time-marching/curriculum not mentioned -> not enabled",unspecified
+arm_c6e893,pde.advection_c,"constant known speed c = 2.0","asserted numeric value conflicts with instantiation c=1.0 -> pde.advection_c=2.0",conflict

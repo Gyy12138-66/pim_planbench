@@ -1,0 +1,33 @@
+# blind transcription v0.4
+task: hard_plus_euler_shock_023
+arm: arm_db5c98
+
+net:
+  width: 128         # "5 hidden layers of 128 units, tanh"
+  depth: 5
+  activation: tanh
+
+sampling:
+  n_pde: 10000       # "Base sampling 10000 space-time collocation points"
+  rar:               # "every 1000 steps add the 500 highest-residual points from a 50000-point pool"
+    every: 1000
+    pool: 50000
+    add: 500
+
+weights:
+  pde: 1.0           # "artificial-viscosity-regularized conservative residual 1"
+  bc: 1.0            # "boundary 1"
+  ic: 10.0           # "initial condition 10"
+
+optimizer:
+  adam:
+    lr: 1.0e-3       # "Adam at learning rate 1e-3, 20000 steps"
+    steps: 20000
+
+curriculum:          # "train on t in [0,0.05], then [0,0.1], then the full [0,0.2]" (T=0.2)
+  - {t_frac: 0.25, steps: 6666}   # step split "across the stages" unspecified -> equal split of 20000, partial
+  - {t_frac: 0.5, steps: 6667}
+  - {t_frac: 1.0, steps: 6667}
+
+euler:
+  artificial_viscosity: 0.005    # "entropy-consistent artificial-viscosity regularization with epsilon = 0.005"

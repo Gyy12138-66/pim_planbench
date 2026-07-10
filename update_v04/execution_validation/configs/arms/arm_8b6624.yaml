@@ -1,0 +1,23 @@
+# blind transcription v0.4
+task: hard_allen_cahn_016
+arm: arm_8b6624
+features:
+  fourier:
+    num: 64          # "MLP augmented with Fourier Feature Mappings (FFM)" 未给参数 -> 默认（partial）
+    sigma: 5.0
+sampling:
+  rar:
+    every: 1000      # "Residual-based Adaptive Refinement (RAR)" 未给参数 -> 默认（partial）
+    pool: 50000
+    add: 500
+weights:
+  pde: 1.0           # "Weighted sum of MSE for PDE, IC, and BC residuals" 未给数值 -> 各 1.0（partial）
+  ic: 1.0
+  periodic: 1.0      # BC residual 提及（R_bc = B(u) - g），未给权重 -> 1.0（partial）
+optimizer:
+  lbfgs:
+    steps: 500       # "followed by L-BFGS for fine-tuning" 未给步数 -> 500（partial）
+curriculum:          # "Causal Time-Stepping (or sequential curriculum learning)" 未给分段 -> 默认三段均分 20000（partial）
+  - {t_frac: 0.25, steps: 6667}
+  - {t_frac: 0.5, steps: 6667}
+  - {t_frac: 1.0, steps: 6666}

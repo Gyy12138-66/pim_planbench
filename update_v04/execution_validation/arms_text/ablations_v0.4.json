@@ -1,0 +1,229 @@
+{
+  "_note": "消融臂规范：每臂为对该题金计划 G 的有序 find/replace 操作序列（replace 为空串即删除）。build_arms.py 断言每个 find 在当时文本中恰好出现一次，diff 存 ablation_diffs/。scorer_only=true 的臂只进评分器侧检验，不执行、不进 H4b（见协议 §4 可执行性边界）。expected_config 是预期转写结果，供转写审计对照，不喂给转写者。",
+  "ablations": [
+    {
+      "task_id": "easy_poisson_2d_source_003",
+      "arm": "D1",
+      "kind": "ablation",
+      "parent_arm": "G",
+      "scorer_only": false,
+      "target_element": "删除 Dirichlet 边界条件的一切表述（missing-constraint cap 对应项）",
+      "expected_config": {"constraints.hard_bc": false, "weights.bc": 0},
+      "ops": [
+        {"facet": "Problem Formalization", "find": "Known/given: the source f, the domain, and homogeneous Dirichlet boundary data; unknown/target", "replace": "Known/given: the source f and the domain; unknown/target"},
+        {"facet": "Physics Constraints", "find": " The homogeneous Dirichlet boundary condition u = 0 must be enforced on all four sides of the boundary, either as a boundary loss or as a hard constraint.", "replace": ""},
+        {"facet": "Model Choice", "find": " The homogeneous Dirichlet condition is imposed as a hard constraint via the ansatz u(x,y) = x*(1-x)*y*(1-y)*N(x,y), which satisfies the boundary exactly by construction and removes the need for a boundary penalty; the alternative is the same MLP with a soft Dirichlet boundary loss.", "replace": ""},
+        {"facet": "Training Strategy", "find": "; if the boundary is kept soft, additionally sample 400 boundary points on all four sides for the Dirichlet boundary loss", "replace": ""},
+        {"facet": "Validation Failure Risks", "find": ", plus the interior residual error and the boundary error.", "replace": ", plus the interior residual error."},
+        {"facet": "Validation Failure Risks", "find": " (3) omitting or under-weighting boundary enforcement, causing drift by an arbitrary harmonic function - monitored via the boundary error; (4) slow convergence", "replace": " (3) slow convergence"}
+      ]
+    },
+    {
+      "task_id": "easy_poisson_2d_source_003",
+      "arm": "D2",
+      "kind": "ablation",
+      "parent_arm": "G",
+      "scorer_only": true,
+      "target_element": "任务类型改错：正问题 → 源项反演（wrong-task-type cap；无 harness 对应，仅评分器侧）",
+      "expected_config": null,
+      "ops": [
+        {"facet": "Problem Formalization", "find": "This is a forward boundary-value problem: solve a 2D elliptic Poisson equation for the scalar field u(x,y)", "replace": "This is an inverse source-recovery problem: recover the unknown source term from observations of the field u(x,y)"},
+        {"facet": "Problem Formalization", "find": "Known/given: the source f, the domain, and homogeneous Dirichlet boundary data; unknown/target: the field u(x,y).", "replace": "Known/given: observations of u on a sensor grid, the domain, and homogeneous Dirichlet boundary data; unknown/target: the source term f(x,y)."}
+      ]
+    },
+    {
+      "task_id": "easy_poisson_2d_source_003",
+      "arm": "D3",
+      "kind": "ablation",
+      "parent_arm": "G",
+      "scorer_only": false,
+      "target_element": "系数篡改：源项幅值 2*pi^2 → 4*pi^2（hallucination cap；转写为 pde.poisson_source_scale=2.0）",
+      "expected_config": {"pde.poisson_source_scale": 2.0},
+      "ops": [
+        {"facet": "Problem Formalization", "find": "f(x,y) = 2*pi^2*sin(pi*x)*sin(pi*y)", "replace": "f(x,y) = 4*pi^2*sin(pi*x)*sin(pi*y)"}
+      ]
+    },
+    {
+      "task_id": "easy_advection_1d_periodic_005",
+      "arm": "D1",
+      "kind": "ablation",
+      "parent_arm": "G",
+      "scorer_only": false,
+      "target_element": "删除周期性处理的一切表述：值/导数周期损失 + 周期嵌入（missing-constraint cap）",
+      "expected_config": {"features.periodic_harmonics": 0, "weights.periodic": 0},
+      "ops": [
+        {"facet": "Problem Formalization", "find": "on the periodic domain x in [0,1), t in [0,1]", "replace": "on the domain x in [0,1), t in [0,1]"},
+        {"facet": "Problem Formalization", "find": " The boundary is periodic - the endpoints are topologically identified: u(0,t) = u(1,t).", "replace": ""},
+        {"facet": "Physics Constraints", "find": " Periodicity must be enforced in both value, u(0,t) = u(1,t), and spatial derivative, u_x(0,t) = u_x(1,t); imposing value periodicity alone leaves a derivative mismatch at the seam, so a periodic derivative loss or an exactly periodic representation is required.", "replace": ""},
+        {"facet": "Model Choice", "find": "A PINN on inputs (x,t) with a periodic feature mapping: encode x as harmonics (sin(2*pi*k*x), cos(2*pi*k*x)) for k = 1..4 so the network is exactly periodic in x by construction - this enforces both value and derivative periodicity and eliminates seam error. Backbone: fully connected MLP", "replace": "A PINN on inputs (x,t): a fully connected MLP"},
+        {"facet": "Model Choice", "find": " Alternative: a Fourier neural network or transport-aware neural solver; a plain MLP with soft periodic penalties is acceptable but weaker on derivative periodicity.", "replace": ""},
+        {"facet": "Training Strategy", "find": " With the exactly periodic feature mapping no separate boundary loss is needed; otherwise sample matched periodic point pairs at x = 0 and x = 1 and penalize both value and derivative mismatch.", "replace": ""},
+        {"facet": "Validation Failure Risks", "find": ", the PDE residual error, and the periodicity error in both value and derivative at the seam.", "replace": ", and the PDE residual error."},
+        {"facet": "Validation Failure Risks", "find": " (2) enforcing only value periodicity and ignoring derivative periodicity - checked at x = 0,1; (3) ignoring phase-shift validation", "replace": " (2) ignoring phase-shift validation"},
+        {"facet": "Validation Failure Risks", "find": "; (4) hallucinating non-periodic boundary values that contradict the task's periodic topology.", "replace": "."}
+      ]
+    },
+    {
+      "task_id": "easy_advection_1d_periodic_005",
+      "arm": "D2",
+      "kind": "ablation",
+      "parent_arm": "G",
+      "scorer_only": true,
+      "target_element": "任务类型改错：正问题 → 估计输运速度 c 的反问题（仅评分器侧）",
+      "expected_config": null,
+      "ops": [
+        {"facet": "Problem Formalization", "find": "Forward linear transport problem: solve the 1D advection equation u_t + c*u_x = 0 with constant known speed c = 1.0", "replace": "Inverse transport problem: estimate the unknown constant transport speed c from observed snapshots of the field, governed by the 1D advection equation u_t + c*u_x = 0"},
+        {"facet": "Problem Formalization", "find": "Known/given: the transport speed c and the initial condition u(x,0) = sin(2*pi*x); unknown/target: the scalar field u(x,t).", "replace": "Known/given: observed snapshots of the field and the initial condition u(x,0) = sin(2*pi*x); unknown/target: the transport speed c together with the field u(x,t)."}
+      ]
+    },
+    {
+      "task_id": "easy_advection_1d_periodic_005",
+      "arm": "D3",
+      "kind": "ablation",
+      "parent_arm": "G",
+      "scorer_only": false,
+      "target_element": "系数篡改：c = 1.0 → 2.0（转写为 pde.advection_c=2.0）",
+      "expected_config": {"pde.advection_c": 2.0},
+      "ops": [
+        {"facet": "Problem Formalization", "find": "with constant known speed c = 1.0", "replace": "with constant known speed c = 2.0"}
+      ]
+    },
+    {
+      "task_id": "medium_burgers_inverse_viscosity_010",
+      "arm": "D1",
+      "kind": "ablation",
+      "parent_arm": "G",
+      "scorer_only": false,
+      "target_element": "删除观测数据损失的一切表述（missing-constraint cap；ν 失去可辨识性）",
+      "expected_config": {"weights.data": 0},
+      "ops": [
+        {"facet": "Problem Formalization", "find": "Known/given: sparse noisy velocity observations (about 1 percent Gaussian noise) scattered in space-time, and the initial profile", "replace": "Known/given: the initial profile"},
+        {"facet": "Physics Constraints", "find": " Measurement data loss on the sparse noisy observations - without the observation data term the viscosity is not identifiable.", "replace": ""},
+        {"facet": "Training Strategy", "find": "Balance the loss terms - data, PDE residual, initial and boundary - starting from equal weights 1.0; the weighted data loss anchors identifiability under noise.", "replace": "Balance the loss terms - PDE residual, initial and boundary - starting from equal weights 1.0."},
+        {"facet": "Validation Failure Risks", "find": ", together with the held-out data error, the PDE residual", "replace": ", together with the PDE residual"},
+        {"facet": "Validation Failure Risks", "find": " (3) leaving the measurement data loss out, which makes nu unidentifiable and lets it drift; (4) hallucinating", "replace": " (3) hallucinating"},
+        {"facet": "Validation Failure Risks", "find": "; (5) noise overfitting - mitigated by the weighted data loss and held-out validation.", "replace": "; (4) noise overfitting."}
+      ]
+    },
+    {
+      "task_id": "medium_burgers_inverse_viscosity_010",
+      "arm": "D2",
+      "kind": "ablation",
+      "parent_arm": "G",
+      "scorer_only": false,
+      "target_element": "任务类型改错：反问题 → ν=0.1 已知的正问题，删数据损失（wrong-task-type cap；唯一可执行的 D2）",
+      "expected_config": {"pde.burgers_nu_fixed": 0.1, "weights.data": 0},
+      "ops": [
+        {"facet": "Problem Formalization", "find": "Inverse parameter-estimation problem (parameter inference / data assimilation): the viscous Burgers", "replace": "Forward problem: the viscous Burgers"},
+        {"facet": "Problem Formalization", "find": "Unknowns/targets: the velocity field u(x,t) and the scalar viscosity nu, to be inferred jointly. Known/given: sparse noisy velocity observations (about 1 percent Gaussian noise) scattered in space-time, and the initial profile", "replace": "Unknowns/targets: the velocity field u(x,t). Known/given: the viscosity nu = 0.1 and the initial profile"},
+        {"facet": "Physics Constraints", "find": "Burgers residual with trainable viscosity: u_t + u*u_x - nu*u_xx = 0, retaining the nonlinear convection term u*u_x (dropping it linearizes the physics and invalidates the inference). Measurement data loss on the sparse noisy observations - without the observation data term the viscosity is not identifiable. ", "replace": "Burgers residual with the known viscosity nu = 0.1: u_t + u*u_x - nu*u_xx = 0, retaining the nonlinear convection term u*u_x. "},
+        {"facet": "Physics Constraints", "find": " The viscosity must remain positive: use a positive parameterization nu = exp(theta) rather than an unconstrained scalar.", "replace": ""},
+        {"facet": "Model Choice", "find": ", augmented with a single trainable scalar theta = log(nu) optimized jointly with the network weights - the log parameterization enforces positivity by construction and equalizes gradient scales across magnitudes of nu.", "replace": "."},
+        {"facet": "Training Strategy", "find": "Jointly train the field network and the viscosity parameter theta = log(nu), initialized at nu = 0.01. Balance the loss terms - data, PDE residual, initial and boundary - starting from equal weights 1.0; the weighted data loss anchors identifiability under noise.", "replace": "Train the field network with the known viscosity nu = 0.1. Balance the loss terms - PDE residual, initial and boundary - starting from equal weights 1.0."},
+        {"facet": "Training Strategy", "find": "then L-BFGS for 500 iterations for the final refinement of both the network and nu.", "replace": "then L-BFGS for 500 iterations for the final refinement of the network."},
+        {"facet": "Validation Failure Risks", "find": "Report the viscosity estimation error |nu_hat - nu_true|/nu_true as the primary metric, together with the held-out data error, the PDE residual, and a field comparison", "replace": "Report the PDE residual and a field comparison"},
+        {"facet": "Validation Failure Risks", "find": " Failure risks: (1) treating the viscosity as known - it is the inference target; (2) omitting the nonlinear term; (3) leaving the measurement data loss out, which makes nu unidentifiable and lets it drift; (4) hallucinating boundary conditions as if the task specified them instead of stating assumptions; (5) noise overfitting - mitigated by the weighted data loss and held-out validation.", "replace": " Failure risks: (1) omitting the nonlinear term; (2) hallucinating boundary conditions as if the task specified them instead of stating assumptions."}
+      ]
+    },
+    {
+      "task_id": "medium_burgers_inverse_viscosity_010",
+      "arm": "D3",
+      "kind": "ablation",
+      "parent_arm": "G",
+      "scorer_only": true,
+      "target_element": "幻觉规格：编造损失组件 L_sec（hallucination cap；ν 为待估未知量、无可篡改已知系数，故 010 的 D3 仅评分器侧）",
+      "expected_config": null,
+      "ops": [
+        {"facet": "Physics Constraints", "find": "The viscosity must remain positive: use a positive parameterization nu = exp(theta) rather than an unconstrained scalar.", "replace": "The viscosity must remain positive: use a positive parameterization nu = exp(theta) rather than an unconstrained scalar. We additionally include the standard spectral-entropy consistency loss L_sec (Kolmogorov-regularized), which is known to guarantee viscosity identifiability for Burgers-type systems."}
+      ]
+    },
+    {
+      "task_id": "hard_allen_cahn_016",
+      "arm": "D1",
+      "kind": "ablation",
+      "parent_arm": "G",
+      "scorer_only": false,
+      "target_element": "删除周期约束（值+导数）与周期嵌入的一切表述（missing-constraint cap）",
+      "expected_config": {"features.periodic_harmonics": 0, "weights.periodic": 0},
+      "ops": [
+        {"facet": "Problem Formalization", "find": "on the periodic domain x in [-1,1), t in [0,1]", "replace": "on the domain x in [-1,1), t in [0,1]"},
+        {"facet": "Physics Constraints", "find": " Periodic boundary conditions in both value, u(-1,t) = u(1,t), and spatial derivative, u_x(-1,t) = u_x(1,t) - the derivative constraint is required, value periodicity alone is insufficient.", "replace": ""},
+        {"facet": "Model Choice", "find": "; a periodic input embedding (harmonics k = 1..4 in x) makes the representation exactly periodic in value and derivative", "replace": ""},
+        {"facet": "Validation Failure Risks", "find": ", the periodicity error in value and derivative, and the sensitivity", "replace": ", and the sensitivity"},
+        {"facet": "Validation Failure Risks", "find": " (3) enforcing only value periodicity; (4) a network without high-frequency capacity", "replace": " (3) a network without high-frequency capacity"},
+        {"facet": "Validation Failure Risks", "find": "(5) under-sampling near the interfaces", "replace": "(4) under-sampling near the interfaces"}
+      ]
+    },
+    {
+      "task_id": "hard_allen_cahn_016",
+      "arm": "D2",
+      "kind": "ablation",
+      "parent_arm": "G",
+      "scorer_only": true,
+      "target_element": "任务类型改错：正问题 → 反演扩散系数 d（仅评分器侧）",
+      "expected_config": null,
+      "ops": [
+        {"facet": "Problem Formalization", "find": "Forward stiff phase-field problem: the 1D Allen-Cahn equation", "replace": "Inverse stiff phase-field problem: infer the unknown diffusion coefficient d from observed snapshots of the phase field, governed by the 1D Allen-Cahn equation"},
+        {"facet": "Problem Formalization", "find": "with small known diffusion coefficient d = 1e-4 (interface parameter epsilon = 1e-2, d = epsilon^2)", "replace": "with small unknown diffusion coefficient d"},
+        {"facet": "Problem Formalization", "find": "Known/given: d, the reaction strength, and the phase-field initial condition u(x,0) = x^2*cos(pi*x); unknown/target: the field u(x,t).", "replace": "Known/given: observed snapshots, the reaction strength, and the phase-field initial condition u(x,0) = x^2*cos(pi*x); unknown/target: the diffusion coefficient d and the field u(x,t)."}
+      ]
+    },
+    {
+      "task_id": "hard_allen_cahn_016",
+      "arm": "D3",
+      "kind": "ablation",
+      "parent_arm": "G",
+      "scorer_only": false,
+      "target_element": "系数篡改：d = 1e-4 → 1e-2（转写为 pde.ac_d=0.01）",
+      "expected_config": {"pde.ac_d": 0.01},
+      "ops": [
+        {"facet": "Problem Formalization", "find": "d = 1e-4 (interface parameter epsilon = 1e-2, d = epsilon^2)", "replace": "d = 1e-2 (interface parameter epsilon = 1e-1, d = epsilon^2)"}
+      ]
+    },
+    {
+      "task_id": "hard_plus_euler_shock_023",
+      "arm": "D1",
+      "kind": "ablation",
+      "parent_arm": "G",
+      "scorer_only": false,
+      "target_element": "删除激波/熵处理的一切表述：人工粘性 + 强形式失效警示 + RH 一致性（missing-constraint cap，正中该题陷阱）",
+      "expected_config": {"euler.artificial_viscosity": 0.0},
+      "ops": [
+        {"facet": "Problem Formalization", "find": "form from the broken initial data, so a physically admissible entropy solution is required; boundary data", "replace": "form from the broken initial data; boundary data"},
+        {"facet": "Physics Constraints", "find": " Across discontinuities a smooth pointwise strong-form residual alone is not reliable: we add an entropy-consistent artificial-viscosity regularization with epsilon = 0.005 to the conservative residual so the network selects the admissible solution, and we verify Rankine-Hugoniot consistency as a diagnostic rather than assuming it.", "replace": ""},
+        {"facet": "Model Choice", "find": "A conservative-form, shock-aware PINN:", "replace": "A conservative-form PINN:"},
+        {"facet": "Model Choice", "find": " A weak-form or finite-volume/PINN hybrid (Godunov-based supervision, domain decomposition with discontinuity-aware interfaces) is the preferable family at scale; within a collocation PINN the artificial-viscosity-regularized conservative residual above is the operative choice.", "replace": ""},
+        {"facet": "Training Strategy", "find": " Keep the artificial viscosity at epsilon = 0.005 as stated in the constraints; do not increase it to hide oscillations.", "replace": ""},
+        {"facet": "Training Strategy", "find": "boundary 1, and the artificial-viscosity-regularized conservative residual 1 - the training loss operates on the conservative variables, not a smooth primitive-variable strong form.", "replace": "boundary 1, residual 1."},
+        {"facet": "Validation Failure Risks", "find": "shock and contact location error, shock speed and Rankine-Hugoniot consistency, global and local conservation error", "replace": "shock and contact location error, global and local conservation error"},
+        {"facet": "Validation Failure Risks", "find": "; (4) entropy-violating expansion-shock solutions - screened by the admissibility check; (5) smeared or oscillatory shocks from badly tuned artificial viscosity - monitored via the location and Rankine-Hugoniot diagnostics.", "replace": "; (4) smeared or oscillatory shocks near the discontinuities."}
+      ]
+    },
+    {
+      "task_id": "hard_plus_euler_shock_023",
+      "arm": "D2",
+      "kind": "ablation",
+      "parent_arm": "G",
+      "scorer_only": true,
+      "target_element": "任务类型改错：正问题 → 反演 γ（仅评分器侧）",
+      "expected_config": null,
+      "ops": [
+        {"facet": "Problem Formalization", "find": "Forward shock-tube problem for the 1D compressible Euler conservation laws", "replace": "Inverse calibration problem: recover the unknown ratio of specific heats gamma from observed density snapshots, for the 1D compressible Euler conservation laws"},
+        {"facet": "Problem Formalization", "find": "with an ideal-gas equation of state, ratio of specific heats gamma = 1.4.", "replace": "with an ideal-gas equation of state."},
+        {"facet": "Problem Formalization", "find": "Known/given: the equation of state, gamma, and the piecewise initial states; unknowns/targets: the density, velocity, and pressure fields", "replace": "Known/given: the equation-of-state family, density snapshots, and the piecewise initial states; unknowns/targets: gamma together with the density, velocity, and pressure fields"}
+      ]
+    },
+    {
+      "task_id": "hard_plus_euler_shock_023",
+      "arm": "D3",
+      "kind": "ablation",
+      "parent_arm": "G",
+      "scorer_only": false,
+      "target_element": "系数篡改：gamma = 1.4 → 1.66（转写为 pde.euler_gamma=1.66）",
+      "expected_config": {"pde.euler_gamma": 1.66},
+      "ops": [
+        {"facet": "Problem Formalization", "find": "ratio of specific heats gamma = 1.4", "replace": "ratio of specific heats gamma = 1.66"}
+      ]
+    }
+  ]
+}

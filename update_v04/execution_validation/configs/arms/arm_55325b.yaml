@@ -1,0 +1,8 @@
+# blind transcription v0.4
+task: easy_advection_1d_periodic_005
+arm: arm_55325b
+features:
+  periodic_harmonics: 4   # "Fourier features sin(2*pi*k*x/L), cos(2*pi*k*x/L) for k=1..K", K 未给 -> 默认 4（partial）
+optimizer:
+  lbfgs:
+    steps: 500       # "followed by L-BFGS for fine-tuning" 未给步数 -> 500（partial）

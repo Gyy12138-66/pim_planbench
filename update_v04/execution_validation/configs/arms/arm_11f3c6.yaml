@@ -1,0 +1,31 @@
+# blind transcription v0.4
+task: hard_allen_cahn_016
+arm: arm_11f3c6
+net:
+  width: 128         # "4 hidden layers of 128 units, tanh"（exact）
+  depth: 4
+  activation: tanh
+features:
+  periodic_harmonics: 4   # "periodic input embedding (harmonics k = 1..4 in x)"（exact）
+  fourier:
+    num: 64          # "random Fourier features on the inputs (64 features, sigma = 5)"（exact）
+    sigma: 5.0
+sampling:
+  n_pde: 10000       # "Base sampling 10000 collocation points"（exact）
+  rar:
+    every: 1000      # "every 1000 steps add the 500 highest-residual points from a 50000-point candidate pool"（exact）
+    pool: 50000
+    add: 500
+weights:
+  pde: 1.0           # residual loss 提及，未给权重 -> 1.0（partial）
+  ic: 10.0           # "weight the initial condition loss at 10"（exact）
+  periodic: 1.0      # 周期 BC（值+导数）明示，未给权重 -> 1.0（partial）
+optimizer:
+  adam:
+    lr: 1.0e-3       # "Adam at learning rate 1e-3, 20000 total steps"（exact）
+    steps: 20000
+curriculum:          # 分段 [0,0.25]/[0,0.5]/[0,1] 已给；"splitting the step budget" 未给比例 -> 均分 20000（partial）
+  - {t_frac: 0.25, steps: 6667}
+  - {t_frac: 0.5, steps: 6667}
+  - {t_frac: 1.0, steps: 6666}
+# pde.ac_d / ac_reaction: 计划断言 d=1e-4、反应强度 5 与实例化表一致 -> 不写

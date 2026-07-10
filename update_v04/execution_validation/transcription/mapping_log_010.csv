@@ -1,0 +1,217 @@
+arm_code,knob,plan_quote,decision,tag
+arm_152442,net.width,"The network depth and width should be chosen to handle potential sharp gradients or shocks",no numeric value -> not written (default 64),unspecified
+arm_152442,net.depth,"The network depth and width should be chosen...",no numeric value -> not written (default 4),unspecified
+arm_152442,net.activation,,not mentioned -> default tanh,unspecified
+arm_152442,features.fourier,,not mentioned -> disabled,unspecified
+arm_152442,constraints.hard_bc/hard_ic,"L_BC and L_IC enforce boundary and initial constraints (loss terms)",penalty/loss terms -> soft (default false; not written),exact
+arm_152442,sampling.n_pde,"PDE residual evaluated on random collocation points",no count given -> default 10000,unspecified
+arm_152442,sampling.n_bc/n_ic,,not given -> defaults,unspecified
+arm_152442,sampling.resample_every,,not mentioned -> 0,unspecified
+arm_152442,sampling.rar,,residual-adaptive sampling not mentioned -> disabled,unspecified
+arm_152442,weights.pde,"L = lambda_data L_data + lambda_PDE L_PDE + lambda_BC L_BC + lambda_IC L_IC",mentioned without value -> 1.0 (default; not written),partial
+arm_152442,weights.bc,"...lambda_BC L_BC...",mentioned without value -> 1.0 (default; not written),partial
+arm_152442,weights.ic,"...lambda_IC L_IC...",mentioned without value -> 1.0 (default; not written),partial
+arm_152442,weights.data,"lambda_data L_data ... MSE between network predictions and sparse measurements",mentioned without value -> 1.0 (default; not written),partial
+arm_152442,optimizer.adam,"Optimization uses Adam for initial training",Adam named without lr/steps -> defaults (1e-3 / 20000),partial
+arm_152442,optimizer.lbfgs.steps,"followed by L-BFGS for fine-tuning",committed but no step count -> 500 per rule #8,partial
+arm_152442,curriculum,,not mentioned -> none,unspecified
+arm_152442,inverse.init_nu,"the trainable variable is parameterized as nu = exp(alpha)",trainable nu but no initial value -> default 0.1,unspecified
+arm_152442,pde.*(#12),,no conflicting numeric coefficient asserted -> not written,unspecified
+arm_152442,data.enabled(#13),"infer the unknown constant viscosity ... from sparse noisy observations",inverse problem with data loss -> #13 not triggered; default true,exact
+arm_152442,out_of_menu:adaptive_weighting,"Adaptive loss weighting or careful tuning of lambda terms is required",not implemented -> ignored; static weights per menu,out_of_menu
+arm_292a58,net.width,"(e.g. 6-8 hidden layers, 64-128 neurons, tanh or sine activations)",range given as example -> lower endpoint 64,partial
+arm_292a58,net.depth,"(e.g. 6-8 hidden layers...)",range -> lower endpoint 6,partial
+arm_292a58,net.activation,"tanh or sine activations",two menu options offered -> first listed (tanh),partial
+arm_292a58,features.fourier,"For small nu (near-shock regimes), consider: (a) adaptive activation functions or Fourier feature embeddings",conditional/hedged ('consider') -> not enabled,unspecified
+arm_292a58,constraints.hard_bc/hard_ic,"lambda_ic L_IC + lambda_bc L_BC ... initial condition loss ... boundary condition loss",penalty/loss terms -> soft (default false; not written),exact
+arm_292a58,sampling.n_pde,"N_r collocation points via Latin Hypercube Sampling",no count -> default 10000,unspecified
+arm_292a58,sampling.n_bc/n_ic,,not given -> defaults,unspecified
+arm_292a58,sampling.resample_every,,not mentioned -> 0,unspecified
+arm_292a58,sampling.rar,"with adaptive residual-based refinement concentrating points near steep gradients",committed mention without params -> defaults every=1000 pool=50000 add=500,partial
+arm_292a58,weights.pde,"L = lambda_d L_data + lambda_r L_residual + lambda_ic L_IC + lambda_bc L_BC",mentioned without value -> 1.0 (default; not written),partial
+arm_292a58,weights.bc,"...lambda_bc L_BC...",mentioned without value -> 1.0 (default; not written),partial
+arm_292a58,weights.ic,"...lambda_ic L_IC...",mentioned without value -> 1.0 (default; not written),partial
+arm_292a58,weights.data,"L_data = (1/N_d) Sum(u_theta - u_obs)^2",mentioned without value -> 1.0 (default; not written),partial
+arm_292a58,optimizer.adam.lr,"Adam optimizer (lr ~ 1e-3) for initial convergence",approximate value -> 1.0e-3; steps not given -> default,partial
+arm_292a58,optimizer.lbfgs.steps,"then L-BFGS for fine-tuning",committed but no step count -> 500 per rule #8,partial
+arm_292a58,curriculum,"Curriculum: optionally start with a larger effective viscosity and anneal, or train in sequential time windows (time-marching)",hedged ('optionally') and one variant out-of-menu -> not enabled,unspecified
+arm_292a58,inverse.init_nu,"nu = exp(theta_nu) to enforce positivity",trainable nu but no initial value -> default 0.1,unspecified
+arm_292a58,pde.*(#12),,no conflicting numeric coefficient asserted -> not written,unspecified
+arm_292a58,data.enabled(#13),"estimate the scalar parameter nu ... from sparse noisy pointwise velocity observations",inverse with data loss -> #13 not triggered; default true,exact
+arm_292a58,out_of_menu:lhs_sampling,"N_r collocation points via Latin Hypercube Sampling",sampling scheme not in menu -> harness default sampler,out_of_menu
+arm_292a58,out_of_menu:adaptive_weighting,"use adaptive weighting (e.g. learning rate annealing or NTK-based gradient balancing)",not implemented -> ignored; static weights,out_of_menu
+arm_292a58,out_of_menu:mass_conservation,"optional mass-conservation integral constraint for periodic domains",optional and no such loss in menu (domain is Dirichlet) -> ignored,out_of_menu
+arm_292a58,out_of_menu:bayesian_uq,"a Bayesian PINN with variational inference or ensemble methods should be used",conditional on extreme sparsity; not in menu -> ignored,out_of_menu
+arm_2cf742,net.width,"4 hidden layers of 64 units, tanh activation",width 64,exact
+arm_2cf742,net.depth,"4 hidden layers of 64 units",depth 4,exact
+arm_2cf742,net.activation,"tanh activation",tanh,exact
+arm_2cf742,features.fourier,,not mentioned -> disabled,unspecified
+arm_2cf742,constraints.hard_bc/hard_ic,"Initial condition loss ... boundary condition loss under the stated Dirichlet assumption",penalty/loss terms -> soft (default false; not written),exact
+arm_2cf742,sampling.n_pde,"Sample 10000 collocation points",n_pde 10000,exact
+arm_2cf742,sampling.n_bc/n_ic,,not given -> defaults,unspecified
+arm_2cf742,sampling.resample_every,,not mentioned (adaptivity handled by RAR) -> 0,unspecified
+arm_2cf742,sampling.rar,"residual-based adaptive sampling every 1000 steps (add the 500 highest-residual points from a 50000-point candidate pool)",every=1000 pool=50000 add=500,exact
+arm_2cf742,weights.pde,"Balance the loss terms - data, PDE residual, initial and boundary - starting from equal weights 1.0",1.0,exact
+arm_2cf742,weights.bc,"...starting from equal weights 1.0",1.0,exact
+arm_2cf742,weights.ic,"...starting from equal weights 1.0",1.0,exact
+arm_2cf742,weights.data,"the weighted data loss anchors identifiability under noise ... equal weights 1.0",1.0,exact
+arm_2cf742,optimizer.adam,"Adam at learning rate 1e-3 for 20000 steps",lr 1.0e-3 / steps 20000,exact
+arm_2cf742,optimizer.lbfgs.steps,"then L-BFGS for 500 iterations",500,exact
+arm_2cf742,curriculum,,not mentioned -> none,unspecified
+arm_2cf742,inverse.init_nu,"theta = log(nu) ... initialized at nu = 0.01",init_nu 0.01,exact
+arm_2cf742,pde.*(#12),"about 1 percent Gaussian noise ... u(x,0) = -sin(pi*x) ... Dirichlet",all assertions match instantiation table -> not written,unspecified
+arm_2cf742,data.enabled(#13),"Measurement data loss on the sparse noisy observations - without the observation data term the viscosity is not identifiable",inverse with explicit data loss -> #13 not triggered; default true,exact
+arm_2df574,net.width,"the number of layers and units can be tuned if training is slow",no numeric value -> default 64,unspecified
+arm_2df574,net.depth,"the number of layers and units can be tuned...",no numeric value -> default 4,unspecified
+arm_2df574,net.activation,"a fully connected multilayer perceptron with tanh activations",tanh,exact
+arm_2df574,features.fourier,,not mentioned -> disabled,unspecified
+arm_2df574,constraints.hard_bc/hard_ic,"Initial and boundary conditions ... enforced through penalty terms added to the loss",penalty terms -> soft (default false; not written),exact
+arm_2df574,sampling.n_pde,"Sample collocation points uniformly at random in the interior",no count -> default 10000,unspecified
+arm_2df574,sampling.n_bc/n_ic,"along with points on the boundary and on the initial slice",no counts -> defaults,unspecified
+arm_2df574,sampling.resample_every,,not mentioned -> 0,unspecified
+arm_2df574,sampling.rar,,not mentioned -> disabled,unspecified
+arm_2df574,weights.pde,"L = L_pde + L_bc + L_ic with equal weights on all terms",1.0,exact
+arm_2df574,weights.bc,"...with equal weights on all terms",1.0,exact
+arm_2df574,weights.ic,"...with equal weights on all terms",1.0,exact
+arm_2df574,weights.data,,observation-data loss term never mentioned anywhere in plan full text (validation MSE against reference is post-hoc only) -> weight 0.0 per rule #7,omitted
+arm_2df574,optimizer.adam.lr,"Adam optimizer at learning rate 1e-3",lr 1.0e-3; steps ('until the total loss plateaus') not numeric -> default 20000,partial
+arm_2df574,optimizer.lbfgs,,L-BFGS not mentioned -> disabled (0),unspecified
+arm_2df574,curriculum,,not mentioned -> none,unspecified
+arm_2df574,inverse.init_nu,,nu / inverse estimation never mentioned -> default 0.1,unspecified
+arm_2df574,pde.*(#12),"the known quantities are the parameters, coefficients ... provided by the task",generic statement; no concrete coefficient value asserted -> not written,unspecified
+arm_2df574,data.enabled(#13),"the known quantities are the parameters, coefficients, and any initial or boundary data provided by the task",no explicit 'nu known / forward problem / no observation data' assertion -> #13 not triggered; default true (data loss suppressed via weights.data=0 by rule #7),unspecified
+arm_2df574,out_of_menu:lr_decay,"optionally lower the learning rate for fine-tuning",lr schedule not in menu -> ignored,out_of_menu
+arm_45d50e,net.width,"4 hidden layers of 64 units, tanh activation",width 64,exact
+arm_45d50e,net.depth,"4 hidden layers of 64 units",depth 4,exact
+arm_45d50e,net.activation,"tanh activation",tanh,exact
+arm_45d50e,features.fourier,,not mentioned -> disabled,unspecified
+arm_45d50e,constraints.hard_bc/hard_ic,"Initial condition loss ... boundary condition loss under the stated Dirichlet assumption",penalty/loss terms -> soft (default false; not written),exact
+arm_45d50e,sampling.n_pde,"Sample 10000 collocation points",n_pde 10000,exact
+arm_45d50e,sampling.n_bc/n_ic,,not given -> defaults,unspecified
+arm_45d50e,sampling.resample_every,,not mentioned -> 0,unspecified
+arm_45d50e,sampling.rar,"residual-based adaptive sampling every 1000 steps (add the 500 highest-residual points from a 50000-point candidate pool)",every=1000 pool=50000 add=500,exact
+arm_45d50e,weights.pde,"Balance the loss terms - PDE residual, initial and boundary - starting from equal weights 1.0",1.0,exact
+arm_45d50e,weights.bc,"...starting from equal weights 1.0",1.0,exact
+arm_45d50e,weights.ic,"...starting from equal weights 1.0",1.0,exact
+arm_45d50e,weights.data,,observation-data loss never mentioned in plan full text -> 0.0 per rule #7 (consistent with #13 below),omitted
+arm_45d50e,optimizer.adam,"Adam at learning rate 1e-3 for 20000 steps",lr 1.0e-3 / steps 20000,exact
+arm_45d50e,optimizer.lbfgs.steps,"then L-BFGS for 500 iterations",500,exact
+arm_45d50e,curriculum,,not mentioned -> none,unspecified
+arm_45d50e,inverse.init_nu,,nu asserted known/fixed; no trainable nu -> key not applicable / not written,unspecified
+arm_45d50e,pde.burgers_nu_fixed(#12/#13),"Known/given: the viscosity nu = 0.1",#13: plan asserts nu known with value 0.1 -> burgers_nu_fixed 0.1 (contradicts instantiation where nu is the inverse target; faithfully transcribed),exact
+arm_45d50e,data.enabled(#13),"Forward problem ... Known/given: the viscosity nu = 0.1 ... Train the field network with the known viscosity nu = 0.1",explicit forward-problem / nu-known statement -> data.enabled false per rule #13. Note: Model Choice retains stray phrase 'A PINN with parameter inference' but describes no trainable nu; dominant explicit statements govern,exact
+arm_8fddde,net.width,"a fully connected network with tanh activations and 4-8 hidden layers of 50-100 neurons",range -> lower endpoint 50,partial
+arm_8fddde,net.depth,"4-8 hidden layers",range -> lower endpoint 4,partial
+arm_8fddde,net.activation,"tanh activations",tanh,exact
+arm_8fddde,features.fourier,"use adaptive collocation, curriculum learning, or Fourier features",risk-mitigation option only ('3) Poor convergence ... use') -> not enabled,unspecified
+arm_8fddde,constraints.hard_bc/hard_ic,"lambda_bc * L_bc (if BCs are enforced)",penalty/loss terms -> soft (default false; not written),exact
+arm_8fddde,sampling.n_pde,"Collocation points are sampled via Latin hypercube or random sampling",no count -> default 10000,unspecified
+arm_8fddde,sampling.n_bc/n_ic,,not given -> defaults,unspecified
+arm_8fddde,sampling.resample_every,,not mentioned -> 0,unspecified
+arm_8fddde,sampling.rar,"adaptive sampling or gradient-enhanced training can mitigate",hedged mitigation mention only -> not enabled,unspecified
+arm_8fddde,weights.pde,"L = lambda_data * L_data + lambda_pde * L_pde + lambda_bc * L_bc",mentioned without value -> 1.0 (default; not written),partial
+arm_8fddde,weights.bc,"lambda_bc * L_bc (if BCs are enforced)",mentioned without value (BCs available per instantiation) -> 1.0 (default; not written),partial
+arm_8fddde,weights.ic,"IC must be inferred or assumed ... If BCs/IC are unknown they must be treated as additional unknowns",IC discussed in full text though absent from loss formula -> not 'completely unmentioned' so rule #7 zeroing does not apply -> 1.0 (default; not written),partial
+arm_8fddde,weights.data,"data misfit (MSE on measurements)",mentioned without value -> 1.0 (default; not written),partial
+arm_8fddde,optimizer.adam,"gradient-based optimization (Adam then L-BFGS)",Adam named without lr/steps -> defaults,partial
+arm_8fddde,optimizer.lbfgs.steps,"(Adam then L-BFGS)",committed but no step count -> 500 per rule #8,partial
+arm_8fddde,curriculum,"use adaptive collocation, curriculum learning, or Fourier features",risk-mitigation option only -> not enabled,unspecified
+arm_8fddde,inverse.init_nu,"a separate scalar nu is learned",trainable nu but no initial value -> default 0.1,unspecified
+arm_8fddde,pde.*(#12),,no conflicting numeric coefficient asserted -> not written,unspecified
+arm_8fddde,data.enabled(#13),"estimate the unknown viscosity coefficient nu ... from sparse noisy measurements",inverse with data loss -> #13 not triggered; default true,exact
+arm_8fddde,out_of_menu:lhs_and_density,"Latin hypercube or random sampling, with higher density near boundaries and initial time",sampler / non-uniform density not in menu -> harness default sampler,out_of_menu
+arm_8fddde,out_of_menu:bc_network_branch,"treat them as additional outputs or use a separate network branch",separate BC network not in menu -> ignored (IC/BC given by instantiation),out_of_menu
+arm_8fddde,out_of_menu:bayesian_uq,"uncertainty quantification via ensemble or Bayesian PINNs",not in menu -> ignored,out_of_menu
+arm_8fddde,out_of_menu:gradient_enhanced,"gradient-enhanced training can mitigate",not in menu -> ignored,out_of_menu
+arm_cb40e9,net.width,,architecture size not given -> default 64,unspecified
+arm_cb40e9,net.depth,,not given -> default 4,unspecified
+arm_cb40e9,net.activation,,not given -> default tanh,unspecified
+arm_cb40e9,features.fourier,,not mentioned -> disabled,unspecified
+arm_cb40e9,constraints.hard_bc/hard_ic,"satisfied either via hard constraints in the model or soft penalty terms",both options offered without a choice -> default soft (not written),unspecified
+arm_cb40e9,sampling.n_pde,"Sample collocation points in the interior for PDE residual",no count -> default 10000,unspecified
+arm_cb40e9,sampling.n_bc/n_ic,"points on initial/boundary segments",no counts -> defaults,unspecified
+arm_cb40e9,sampling.resample_every,,not mentioned -> 0,unspecified
+arm_cb40e9,sampling.rar,"standard PINNs may struggle without adaptive sampling or specialized architectures",risk mention only -> not enabled,unspecified
+arm_cb40e9,weights.pde,"(2) PDE residual loss at collocation points",mentioned without value -> 1.0 (default; not written),partial
+arm_cb40e9,weights.bc,"(4) boundary condition loss",mentioned without value -> 1.0 (default; not written),partial
+arm_cb40e9,weights.ic,"(3) initial condition loss",mentioned without value -> 1.0 (default; not written),partial
+arm_cb40e9,weights.data,"(1) data loss on sparse observations ... weight data loss (e.g. 1/sigma^2)","mentioned; 1/sigma^2 formula yields no concrete constant (relative noise, solution scale unknown) -> 1.0 (default; not written); formula logged out_of_menu",partial
+arm_cb40e9,optimizer.adam,"Optimize network weights and nu jointly using Adam",Adam named without lr/steps -> defaults,partial
+arm_cb40e9,optimizer.lbfgs,"possibly followed by L-BFGS",hedged ('possibly') -> not enabled (0),unspecified
+arm_cb40e9,curriculum,,not mentioned -> none,unspecified
+arm_cb40e9,inverse.init_nu,"positivity is ensured via softplus",trainable nu but no initial value -> default 0.1,unspecified
+arm_cb40e9,pde.*(#12),,no conflicting numeric coefficient asserted -> not written,unspecified
+arm_cb40e9,data.enabled(#13),"estimate the unknown viscosity coefficient nu > 0 ... from sparse noisy observations",inverse with data loss -> #13 not triggered; default true,exact
+arm_cb40e9,out_of_menu:noise_weighting,"weight data loss (e.g. 1/sigma^2)",noise-based weighting formula not reducible to a menu value -> ignored,out_of_menu
+arm_cb40e9,out_of_menu:self_adaptive_weights,"Use self-adaptive weights or learning rate annealing to balance loss terms",not in menu -> ignored; static weights,out_of_menu
+arm_cb40e9,out_of_menu:trainable_icbc,"initial/boundary conditions ... treated as additional trainable parameters",not in menu (IC/BC given by instantiation) -> ignored,out_of_menu
+arm_cb40e9,out_of_menu:ensemble_uq,"ensemble of runs ... or Bayesian methods to assess confidence",not in menu -> ignored,out_of_menu
+arm_cb40e9,out_of_menu:softplus_param,"ensured via softplus",harness uses log parameterization for nu -> nearest mapping (positivity preserved),out_of_menu
+arm_d0e246,net.width,"4 hidden layers of 64 units, tanh activation",width 64,exact
+arm_d0e246,net.depth,"4 hidden layers of 64 units",depth 4,exact
+arm_d0e246,net.activation,"tanh activation",tanh,exact
+arm_d0e246,features.fourier,,not mentioned -> disabled,unspecified
+arm_d0e246,constraints.hard_bc/hard_ic,"Initial condition loss ... boundary condition loss under the stated Dirichlet assumption",penalty/loss terms -> soft (default false; not written),exact
+arm_d0e246,sampling.n_pde,"Sample 10000 collocation points",n_pde 10000,exact
+arm_d0e246,sampling.n_bc/n_ic,,not given -> defaults,unspecified
+arm_d0e246,sampling.resample_every,,not mentioned (adaptivity handled by RAR) -> 0,unspecified
+arm_d0e246,sampling.rar,"residual-based adaptive sampling every 1000 steps (add the 500 highest-residual points from a 50000-point candidate pool)",every=1000 pool=50000 add=500,exact
+arm_d0e246,weights.pde,"Balance the loss terms - PDE residual, initial and boundary - starting from equal weights 1.0",1.0,exact
+arm_d0e246,weights.bc,"...starting from equal weights 1.0",1.0,exact
+arm_d0e246,weights.ic,"...starting from equal weights 1.0",1.0,exact
+arm_d0e246,weights.data,,"measurement/observation data loss never mentioned in plan full text (loss list is 'PDE residual, initial and boundary'; risks mention 'noise overfitting' but no data loss term) -> 0.0 per rule #7",omitted
+arm_d0e246,optimizer.adam,"Adam at learning rate 1e-3 for 20000 steps",lr 1.0e-3 / steps 20000,exact
+arm_d0e246,optimizer.lbfgs.steps,"then L-BFGS for 500 iterations",500,exact
+arm_d0e246,curriculum,,not mentioned -> none,unspecified
+arm_d0e246,inverse.init_nu,"theta = log(nu) ... initialized at nu = 0.01",init_nu 0.01,exact
+arm_d0e246,pde.*(#12),,no conflicting numeric coefficient asserted; nu remains trainable -> not written,unspecified
+arm_d0e246,data.enabled(#13),"the scalar viscosity nu, to be inferred jointly",plan states inverse problem (no 'nu known / forward' claim) -> #13 not triggered; default true. Note: nu trainable while data weight = 0 (faithful to plan omission),exact
+arm_ddb981,net.width,"A fully-connected neural network u_theta(x,t)",no size given -> default 64,unspecified
+arm_ddb981,net.depth,,not given -> default 4,unspecified
+arm_ddb981,net.activation,,not given -> default tanh,unspecified
+arm_ddb981,features.fourier,,not mentioned -> disabled,unspecified
+arm_ddb981,constraints.hard_bc/hard_ic,"L_bc and L_ic enforce boundary and initial conditions",penalty/loss terms -> soft (default false; not written),exact
+arm_ddb981,sampling.n_pde,"collocation points sampled uniformly",no count -> default 10000,unspecified
+arm_ddb981,sampling.n_bc/n_ic,,not given -> defaults,unspecified
+arm_ddb981,sampling.resample_every,,adaptivity mapped to rar (below) -> 0,unspecified
+arm_ddb981,sampling.rar,"begin with uniform collocation sampling; after warm-up, resample adaptively where |R| is large",committed residual-adaptive refinement without params -> defaults every=1000 pool=50000 add=500,partial
+arm_ddb981,weights.pde,"start with lambda_pde = 1, lambda_data = 1",1.0. Hedged 'consider increasing lambda_pde relative to lambda_data' for noisy data not applied (conditional suggestion),exact
+arm_ddb981,weights.bc,"L_bc and L_ic enforce boundary and initial conditions if available",mentioned without value -> 1.0 (default; not written),partial
+arm_ddb981,weights.ic,"...L_ic...",mentioned without value -> 1.0 (default; not written),partial
+arm_ddb981,weights.data,"start with lambda_pde = 1, lambda_data = 1",1.0,exact
+arm_ddb981,optimizer.adam,"Adam optimizer for initial convergence",Adam named without lr/steps -> defaults,partial
+arm_ddb981,optimizer.lbfgs,"optionally switching to L-BFGS for fine-tuning",hedged ('optionally') -> not enabled (0),unspecified
+arm_ddb981,curriculum,,not mentioned -> none,unspecified
+arm_ddb981,inverse.init_nu,"nu = softplus(nu_raw) or exp(nu_raw)",trainable nu but no initial value -> default 0.1,unspecified
+arm_ddb981,pde.*(#12),,no conflicting numeric coefficient asserted -> not written,unspecified
+arm_ddb981,data.enabled(#13),"L_data = (1/N_data) Sum(u_hat_i - u_theta(x_i,t_i))^2 over observed points",inverse with data loss -> #13 not triggered; default true,exact
+arm_ddb981,out_of_menu:gradient_balancing,"adjust via gradient magnitude balancing (e.g. the learning rate annealing scheme of Wang et al. 2021)",adaptive weighting not in menu -> ignored; static 1.0 weights,out_of_menu
+arm_ddb981,out_of_menu:huber_loss,"use robust loss functions (e.g. Huber loss)",robust losses not in menu -> MSE used,out_of_menu
+arm_ddb981,out_of_menu:ensemble_uq,"train an ensemble of PINNs with different initializations",not in menu -> single seeded run,out_of_menu
+arm_ddb981,out_of_menu:weak_form,"if nu is suspected to be very small, switch to a weak-form or variational PINN formulation",conditional; not in menu -> ignored,out_of_menu
+arm_ddb981,out_of_menu:icbc_coestimation,"they can be parameterized (e.g. as separate networks or basis expansions) and co-estimated",not in menu (IC/BC given by instantiation) -> ignored,out_of_menu
+arm_e98e3c,net.width,"a fully-connected neural network u_theta(x,t)",no size given -> default 64,unspecified
+arm_e98e3c,net.depth,,not given -> default 4,unspecified
+arm_e98e3c,net.activation,,not given (adaptive activations only as conditional shock mitigation) -> default tanh,unspecified
+arm_e98e3c,features.fourier,"If nu is very small and shocks form, augment with Fourier feature embeddings",conditional ('if ... shocks form') -> not enabled,unspecified
+arm_e98e3c,constraints.hard_bc/hard_ic,"L_ic/L_bc are active only after the missing initial and boundary conditions are provided",IC/BC are loss terms -> soft (default false; not written). Note: plan's 'Hard constraints' phrase refers to PDE residual and nu positivity not to BC/IC ansatz,exact
+arm_e98e3c,sampling.n_pde,"generate collocation points via Sobol or Latin Hypercube Sampling",no count -> default 10000,unspecified
+arm_e98e3c,sampling.n_bc/n_ic,,not given -> defaults,unspecified
+arm_e98e3c,sampling.resample_every,,adaptivity mapped to rar -> 0,unspecified
+arm_e98e3c,sampling.rar,"apply Residual-based Adaptive Refinement (RAR) to add points where |R| is large",committed RAR without params -> defaults every=1000 pool=50000 add=500,partial
+arm_e98e3c,weights.pde,"L = lambda_d L_data + lambda_pde L_pde + lambda_ic L_ic + lambda_bc L_bc",mentioned without value -> 1.0 (default; not written),partial
+arm_e98e3c,weights.bc,"...lambda_bc L_bc",mentioned without value; IC/BC provided by instantiation so term active -> 1.0 (default; not written),partial
+arm_e98e3c,weights.ic,"...lambda_ic L_ic",mentioned without value -> 1.0 (default; not written),partial
+arm_e98e3c,weights.data,"L_data uses MSE or Huber loss against sparse observations",mentioned without value -> 1.0 (default; not written),partial
+arm_e98e3c,optimizer.adam.lr,"train with Adam (lr ~1e-3)",approximate value -> 1.0e-3; steps not given -> default,partial
+arm_e98e3c,optimizer.lbfgs.steps,"followed by L-BFGS fine-tuning",committed but no step count -> 500 per rule #8,partial
+arm_e98e3c,curriculum,"Apply causal time-marching or temporal weighting if the IC is known",IC is given by instantiation -> condition met; time-marching (in-menu variant) enabled with default 3 segments [0.25 0.5 1.0] splitting 20000 default steps,partial
+arm_e98e3c,inverse.init_nu,"a trainable scalar xi mapped to nu = exp(xi)",trainable nu but no initial value -> default 0.1,unspecified
+arm_e98e3c,pde.*(#12),,no conflicting numeric coefficient asserted -> not written,unspecified
+arm_e98e3c,data.enabled(#13),"simultaneously infer nu and reconstruct u(x,t) by minimizing observation mismatch",inverse with data loss -> #13 not triggered; default true,exact
+arm_e98e3c,out_of_menu:sobol_lhs,"via Sobol or Latin Hypercube Sampling",sampler not in menu -> harness default sampler,out_of_menu
+arm_e98e3c,out_of_menu:ntk_weighting,"Use adaptive loss weighting (e.g. NTK balancing)",not in menu -> ignored; static weights,out_of_menu
+arm_e98e3c,out_of_menu:clip_xavier,"use gradient clipping and Xavier initialization",not in menu -> harness defaults,out_of_menu
+arm_e98e3c,out_of_menu:huber_loss,"MSE or Huber loss against sparse observations",Huber not in menu -> MSE used,out_of_menu
+arm_e98e3c,out_of_menu:temporal_weighting,"causal time-marching or temporal weighting",causal/temporal weighting variant not in menu -> in-menu time-marching (curriculum) used instead,out_of_menu
+arm_e98e3c,out_of_menu:adaptive_activations,"augment with Fourier feature embeddings or adaptive activations",conditional and not in menu -> ignored,out_of_menu

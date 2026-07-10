@@ -1,0 +1,14 @@
+# blind transcription v0.4
+task: hard_plus_euler_shock_023
+arm: arm_1ca0b1
+
+sampling:
+  resample_every: 1000   # "Collocation points are resampled every few epochs" - no interval -> 1000, partial
+  rar:                   # "residual-based adaptive refinement method" recommended - no numbers -> defaults, partial
+    every: 1000
+    pool: 50000
+    add: 500
+
+optimizer:
+  lbfgs:
+    steps: 500           # "Adam initially, then L-BFGS for fine-tuning" - no step count -> 500, partial

@@ -1,0 +1,56 @@
+﻿task_id,difficulty,domain,task_type,pde_system,model,task_score_out_of_25,avg_facet_score
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,ARM/D1,19.0,3.800
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,ARM/D2,24.0,4.800
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,ARM/D3,25.0,5.000
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,ARM/G,25.0,5.000
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,ARM/T,17.0,3.400
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,Pro/moonshotai/Kimi-K2.6,24.0,4.800
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,Pro/zai-org/GLM-4.7,19.0,3.800
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,Pro/zai-org/GLM-5.1,19.0,3.800
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,deepseek-ai/DeepSeek-V4-Flash,20.0,4.000
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,deepseek/deepseek-v4-pro,22.0,4.400
+easy_advection_1d_periodic_005,easy,transport,forward_pde_solving,1D linear advection equation,qwen/qwen3.7-max,20.0,4.000
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,ARM/D1,22.0,4.400
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,ARM/D2,25.0,5.000
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,ARM/D3,25.0,5.000
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,ARM/G,25.0,5.000
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,ARM/T,19.0,3.800
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,Pro/moonshotai/Kimi-K2.6,24.0,4.800
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,Pro/zai-org/GLM-4.7,18.0,3.600
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,Pro/zai-org/GLM-5.1,22.0,4.400
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,deepseek-ai/DeepSeek-V4-Flash,21.0,4.200
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,deepseek/deepseek-v4-pro,20.0,4.000
+easy_poisson_2d_source_003,easy,potential_fields,forward_pde_solving,2D Poisson equation,qwen/qwen3.7-max,23.0,4.600
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,ARM/D1,24.0,4.800
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,ARM/D2,24.0,4.800
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,ARM/D3,25.0,5.000
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,ARM/G,25.0,5.000
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,ARM/T,17.0,3.400
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,Pro/moonshotai/Kimi-K2.6,22.0,4.400
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,Pro/zai-org/GLM-4.7,19.0,3.800
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,Pro/zai-org/GLM-5.1,22.0,4.400
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,deepseek-ai/DeepSeek-V4-Flash,23.0,4.600
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,deepseek/deepseek-v4-pro,22.0,4.400
+hard_allen_cahn_016,hard,phase_field,stiff_phase_field_modeling,Allen-Cahn equation,qwen/qwen3.7-max,18.0,3.600
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,ARM/D1,20.0,4.000
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,ARM/D2,23.0,4.600
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,ARM/D3,23.0,4.600
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,ARM/G,23.0,4.600
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,ARM/T,10.0,2.000
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,Pro/moonshotai/Kimi-K2.6,23.0,4.600
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,Pro/zai-org/GLM-4.7,15.0,3.000
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,Pro/zai-org/GLM-5.1,23.0,4.600
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,deepseek-ai/DeepSeek-V4-Flash,22.0,4.400
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,deepseek/deepseek-v4-pro,19.0,3.800
+hard_plus_euler_shock_023,hard_plus,compressible_flow,discontinuous_solution_modeling,Compressible Euler equations with shocks,qwen/qwen3.7-max,23.0,4.600
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,ARM/D1,20.0,4.000
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,ARM/D2,17.0,3.400
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,ARM/D3,23.0,4.600
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,ARM/G,23.0,4.600
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,ARM/T,15.0,3.000
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,Pro/moonshotai/Kimi-K2.6,21.0,4.200
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,Pro/zai-org/GLM-4.7,22.0,4.400
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,Pro/zai-org/GLM-5.1,23.0,4.600
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,deepseek-ai/DeepSeek-V4-Flash,19.0,3.800
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,deepseek/deepseek-v4-pro,22.0,4.400
+medium_burgers_inverse_viscosity_010,medium,fluid_dynamics,inverse_parameter_estimation,1D viscous Burgers equation,qwen/qwen3.7-max,24.0,4.800

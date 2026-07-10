@@ -1,0 +1,24 @@
+# blind transcription v0.4
+task: easy_poisson_2d_source_003
+arm: arm_d3293c
+
+net:
+  width: 64
+  depth: 4
+  activation: tanh
+
+constraints:
+  hard_bc: true
+
+sampling:
+  n_pde: 10000
+
+optimizer:
+  adam:
+    lr: 1.0e-3
+    steps: 20000
+  lbfgs:
+    steps: 500
+
+pde:
+  poisson_source_scale: 2.0
