@@ -53,6 +53,17 @@
 
 规则：
 - 消融臂的文本改动**最小化**——只动目标元素，其余逐字保留；改动 diff 存档。
+- **消融臂可执行性（预注册边界）**：harness 提供 `pde.*` 系数覆盖旋钮
+  （`poisson_source_scale / advection_c / burgers_nu_fixed / ac_d / ac_reaction / euler_gamma`，
+  见 `defaults_v0.4.yaml`），因此 D3 的"篡改方程系数"在全部 5 题可执行；
+  D3 的"编造损失组件名"仍按 `out_of_menu` 忽略，**该变体只进评分器侧检验（cap 触发），
+  不进 H4b 配对**——config ≡ G 的臂纳入配对会把 Δ 钉在 0，人为做空 H4b。
+  D2（任务类型改错）只有 010 存在 harness 可表达的正/反问题之分
+  （`burgers_nu_fixed` + `data.enabled: false`）；其余 4 题的 D2 臂照常撰写并过评分器
+  （验证 wrong-task-type cap 触发），但**不执行、不进 H4b**。
+  总结：H4b 配对检验覆盖 D1（5 题）+ D3-系数篡改（5 题）+ D2（仅 010），
+  预注册配对数 = 11 组 × 3 种子；凡转写后 config 与 parent 逐键相同的消融臂，
+  自动从 H4b 剔除并在论文附录列明。
 - **全部臂都过一遍现行自动评分器**得到 plan_score 与 capped 标志（含 N1–N6 重新确认），写入 `arms_v0.4.csv`（列：task,arm,plan_score,capped,kind,parent_arm）。
 - Validation/Failure Risks facet 不影响训练轨迹，**不做训练消融**。单独做"故障检出"小实验：每题诱导两个经典失败（损失失衡塌缩到平凡解；激波/界面欠分辨），盲评者按各计划 validation 清单判断能否检出，报告检出率与该 facet 分的相关。若不做，则论文明确声明 H4b 仅覆盖前四个 facet。
 
@@ -63,13 +74,25 @@
 3. **默认值冻结**：defaults 由作者批准后 commit，之后不得改动；若必须改（如发现 bug），重跑全部臂并在论文注明。
 4. **审计**：第二人独立重转写 ≥20% 随机臂；不一致处仲裁并全量复查该旋钮。
 5. **随机性**：自然臂/G/T 每臂 2 种子，消融臂与其 parent 3 种子（配对检验）；Adam 步数封顶（defaults 中冻结）。
+6. **转写多样性检查（防"旋钮塌缩"，跑前执行）**：公开题面刻意无具体数值，
+   自然计划可能大部分旋钮 `unspecified` 而落到 defaults。转写冻结后、正式运行前，
+   产出 `config_diversity.csv`：每题统计 N1–N6 间取值互异的旋钮数。
+   预注册处理规则：某题自然臂 YAML **逐键全同** → 该题从 H4a 剔除（零方差不可检验），
+   并如实报告为独立发现（"该题上计划文本差异未落到配置层"——这本身是对
+   PlanScore 测量对象的刻画，不是失败）；差异旋钮数随主表发布。
 
 ## 6. 结果指标与统计分析（预注册）
 
 指标：相对 L2（对参考解，held-out 网格；Euler 取 ρ,u,p 平均、跳过 t=0）；010 另报 |ν̂−ν|/ν；发散/NaN 记 diverged=1 且 **rel_l2 := 10**（log10=1，比任何收敛结果差）。
 
 - **主分析 1（H4b）**：D 臂 vs parent 同种子配对，Δlog10 relL2 的 Wilcoxon 符号秩（单侧 greater），按算子分列 + 合并；报中位 Δ 与 n。
-- **主分析 2（H4a）**：臂级（种子中位数）任务内 Spearman ρ(plan_score, log10 relL2)；跨任务平均 ρ + 任务内 bootstrap（B=10⁴）95% CI。**不做跨任务混合相关**（Simpson 悖论）。
+- **主分析 2（H4a）**：臂级（种子中位数）任务内 Spearman ρ(plan_score, log10 relL2)。
+  **主检验只用自然臂 N1–N6 + G + T（每题 n=8）**——D 臂是人为构造的低分计划，
+  混入相关会人为拉高 |ρ|（循环论证）；含 D 臂的全臂版本仅作次要报告并明确标注。
+  跨任务平均 ρ + 任务内 bootstrap（B=10⁴）95% CI。**不做跨任务混合相关**（Simpson 悖论）。
+  **预注册判定规则**：支持 H4a 当且仅当跨任务平均 ρ 的 bootstrap 95% CI 上界 < 0；
+  同时报告方向一致（ρ<0）的任务数 / 纳入任务数。CI 含 0 → 如实报告为"未证实"，
+  不做事后子集挑选。
 - **辅助 1（H4c）**：capped vs uncapped 臂的 log10 relL2，Mann-Whitney U（单侧）。
 - **辅助 2**：facet 级相关（预期 Physics Constraints、Training Strategy 最强——独立的可写发现）。
 - 全部由 `analyze_validity.py` 产出（`validity_summary.md` + `validity_scatter.png` + `per_task_spearman.csv`）。
@@ -102,3 +125,7 @@ python3 analyze_validity.py --results results_v0.4.csv --arms arms_v0.4.csv --ou
 - 参考解自检通过：Sod 星区 p*=0.30313/u*=0.92745 命中理论值；Burgers 奇对称 2.6e-9；AC 值域正常。
 - 5 题 harness 300 步冒烟全部收敛路径正常（diverged=0；Poisson relL2 0.13、Burgers ν̂ 已到正确量级）。
 - 分析管线合成数据自检：ρ=−0.906、CI 正常、图表产出正常。
+- （2026-07-10）harness 新增 `pde.*` 系数覆盖旋钮与 `data.enabled`，D2/D3 消融可真实执行；
+  冒烟验证：Poisson 基线 relL2 0.127 无回归；源项 ×2 臂 relL2 0.361（同步数下显著劣化）；
+  010 的 D2 臂数据损失项消失、ν 钉死 0.1 不训练（nu_rel_err ≈ 30）；
+  覆盖项写入结果 CSV 的 `pde_override` 列备审计。

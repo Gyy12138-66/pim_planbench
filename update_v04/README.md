@@ -35,9 +35,11 @@ python3 analyze_validity.py --demo --outdir /tmp/demo  # 分析管线自检
 
 依赖：python3 + torch / numpy / scipy / pandas / matplotlib / pyyaml（本机已验证可用）。
 
-## 当前状态（2026-07-09）
+## 当前状态（2026-07-10）
 
 - [x] 代码全部就绪并通过冒烟（参考解自检、5 题训练管线、分析管线）
+- [x] harness 增加 `pde.*` 系数覆盖与 `data.enabled` 旋钮（D2/D3 消融可真实执行，已冒烟）；
+      协议补预注册条款：H4a 只用自然臂 + CI 判定规则、消融可执行性边界、旋钮塌缩预案
 - [ ] 撰写 T 臂与 D1–D3 消融臂文本，全部臂过自动评分器 → `arms_v0.4.csv`
 - [ ] 按清单盲转写 → `configs/arms/`，冻结 defaults + 协议（git commit 预注册）
 - [ ] Euler 题可行性门 → 全量运行（1–2 GPU·天）→ `analyze_validity.py` 出图表
