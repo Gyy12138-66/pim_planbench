@@ -8,7 +8,8 @@ __pycache__/
 
 node_modules
 node_modules/
-
+/paper
+/Official Review
 .env
 *.tmp
 ~$*
