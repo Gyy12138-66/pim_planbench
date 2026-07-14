@@ -9,6 +9,7 @@
 | 01 | 参考解自检（Sod 星区/Burgers 奇对称/AC 值域） | `01_references_selftest.sh` | `bash update_v04/run/01_references_selftest.sh` | 5–15 分钟 | 终端 PASS/FAIL |
 | 05 | 评分器 v0.4 回归套件（R1–R5 发布门） | `05_scorer_regression.sh` | `bash update_v04/run/05_scorer_regression.sh` | <1 分钟 | `scorer_v04/regression_report.md` |
 | 06 | Item 区分度指标（26 题 spread/ρ/饱和率，可复现版） | `06_item_metrics.py` | `python3 update_v04/run/06_item_metrics.py` | <1 分钟 | `docs/item_metrics_v0.4.csv` + 终端表 |
+| 08 | 修订项 #2 基线与消融：T/S1/S2/GOLD 全题投放 + cap 开/关 + Eq.5 敏感性 | `08_baselines_v04.sh` | `bash update_v04/run/08_baselines_v04.sh` | 2–3 分钟 | `baselines_v04/baselines_report.md` + 4 个 CSV |
 
 ## B 阶段：全量执行运行（等你选路启动，唯一的重计算）
 
