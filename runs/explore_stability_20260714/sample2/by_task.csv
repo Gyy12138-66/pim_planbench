@@ -1,0 +1,11 @@
+﻿task_id,difficulty,domain,task_type,pde_system,model,task_score_out_of_25,avg_facet_score
+easy_wave_1d_icbc_002,easy,wave_propagation,forward_pde_solving,1D wave equation,deepseek-v4-flash,22.0,4.400
+easy_wave_1d_icbc_002,easy,wave_propagation,forward_pde_solving,1D wave equation,deepseek-v4-pro,23.0,4.600
+hard_navier_stokes_2d_018,hard,fluid_dynamics,forward_or_data_assimilation,2D incompressible Navier-Stokes equations,deepseek-v4-flash,20.0,4.000
+hard_navier_stokes_2d_018,hard,fluid_dynamics,forward_or_data_assimilation,2D incompressible Navier-Stokes equations,deepseek-v4-pro,21.0,4.200
+medium_heat_inverse_alpha_009,medium,heat_transfer,inverse_parameter_estimation,1D heat equation,deepseek-v4-flash,19.0,3.800
+medium_heat_inverse_alpha_009,medium,heat_transfer,inverse_parameter_estimation,1D heat equation,deepseek-v4-pro,17.0,3.400
+medium_laplace_L_corner_007r,medium,potential_fields,boundary_value_problem,2D Laplace equation on an L-shaped domain,deepseek-v4-flash,21.0,4.200
+medium_laplace_L_corner_007r,medium,potential_fields,boundary_value_problem,2D Laplace equation on an L-shaped domain,deepseek-v4-pro,16.0,3.200
+medium_poisson_source_recovery_011,medium,potential_fields,unknown_source_recovery,2D Poisson equation,deepseek-v4-flash,20.0,4.000
+medium_poisson_source_recovery_011,medium,potential_fields,unknown_source_recovery,2D Poisson equation,deepseek-v4-pro,17.0,3.400

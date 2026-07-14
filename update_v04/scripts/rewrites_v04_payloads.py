@@ -32,13 +32,18 @@ def _corner_exponent_claim(cap_id):
         "true_value": 0.6667,
         "rtol": 0.03,
         "patterns": [
-            r"r\^\{?\(?([0-9]+\s*/\s*[0-9]+)\)?\}?",
-            r"(?:singular\w*|corner)[^.]{0,80}r\^\{?\(?([0-9]+(?:\.[0-9]+)?(?:\s*/\s*[0-9]+)?)\)?\}?",
+            # 2026-07-14 修订：原第一模式匹配全文任意 r 幂次，把合法的残差加权
+            # ω=r^{4/3}（抵消 Δ(r^{2/3}·NN)~r^{-4/3}）误判为奇异指数断言（批次 1
+            # deepseek-v4-pro/007r 误伤实录）。改为全部模式要求奇异性或解行为上下文。
+            r"(?:singular\w*|corner|re-?entrant)[^.]{0,80}r\^\{?\(?([0-9]+(?:\.[0-9]+)?(?:\s*/\s*[0-9]+)?)\)?\}?",
+            r"(?:behaves?\s+like|scales?\s+(?:as|like)|asymptotic\w*)[^.]{0,40}r\^\{?\(?([0-9]+(?:\.[0-9]+)?(?:\s*/\s*[0-9]+)?)\)?\}?",
             r"(?:singularity\s+)?exponent\s*(?:of|is|=|:)\s*(?:about\s+|approximately\s+)?([0-9]+(?:\.[0-9]+)?(?:\s*/\s*[0-9]+)?)",
         ],
         "on_contradiction": cap_id,
         "selftest": {
-            "gold": "Near the re-entrant corner the solution behaves like r^(2/3)*sin(2*theta/3), so the gradient is unbounded there.",
+            # gold 第一句复刻误伤句式且置于句首：若贪婪模式回归，first-match 先咬
+            # 到 4/3，selftest 即红（防回归锚点）。
+            "gold": "A residual weight w(x) = r^{4/3} tames the r^{-4/3} blow-up of the Laplacian of the enriched term. Near the re-entrant corner the solution behaves like r^(2/3)*sin(2*theta/3), so the gradient is unbounded there.",
             "tamper": "The corner singularity has exponent 1/2, matching the u ~ r^(1/2) behaviour we expect at the re-entrant corner.",
         },
     }
@@ -659,8 +664,11 @@ REWRITES = {
                 "true_value": 1.0,
                 "rtol": 0.01,
                 "patterns": [
+                    # 2026-07-14 精确率手术：裸 alpha= 撞学习率/损失权重命名
+                    # （批次 1 贪婪模式审计，同 corner_exponent 类），改为须带热学上下文。
                     r"(?:thermal\s+)?diffusivity\s+(?:alpha\s+)?(?:=|of|:)\s*" + NUM,
-                    r"\balpha\s*(?:=|:)\s*" + NUM,
+                    r"(?:thermal\s+)?diffusivity[^.]{0,40}?\balpha\s*(?:=|:)\s*" + NUM,
+                    r"\balpha\s*(?:=|:)\s*" + NUM + r"[^.]{0,40}?(?:thermal|diffusivity)",
                 ],
                 "on_contradiction": "cap_hallucinated_value",
                 "selftest": {
@@ -1557,9 +1565,11 @@ EXEC_SUBSET_CLAIMS = {
         "description": "声称的传输速度 c 与冻结实例 c=1.0 对账（协议 §3）",
         "param": "c", "true_value": 1.0, "rtol": 0.01,
         "patterns": [
+            # 2026-07-14 精确率手术：裸 c= 撞损失权重/CFL 系数命名，删除；
+            # 补后置命名变体（"c = 2, the advection speed"句式）。
             r"(?:transport|advection)\s+speed\s+c\s*=\s*" + NUM,
             r"\bspeed\s+c\s*=\s*" + NUM,
-            r"\bc\s*=\s*" + NUM,
+            r"\bc\s*=\s*" + NUM + r"[^.]{0,40}?(?:advection|transport|wave)\s+speed",
         ],
         "on_contradiction": "cap_hallucinated_value",
         "selftest": {
@@ -1603,8 +1613,11 @@ EXEC_SUBSET_CLAIMS = {
         "description": "声称的扩散系数 d 与冻结实例 1e-4 对账（协议 §3）",
         "param": "d", "true_value": 1e-4, "rtol": 0.01,
         "patterns": [
+            # 2026-07-14 精确率手术：裸 d= 撞 "d = 2 dimensions" 等维度用法，
+            # 改为须带扩散/界面上下文（前置带窗或后置命名）。
             r"diffusion\s+coefficient\s+d\s*=\s*" + NUM,
-            r"\bd\s*=\s*" + NUM,
+            r"(?:diffusion|interface|mobility)[^.]{0,40}?\bd\s*=\s*" + NUM,
+            r"\bd\s*=\s*" + NUM + r"[^.]{0,40}?(?:diffusion|interface\s+width)",
         ],
         "on_contradiction": "cap_hallucinated_value",
         "selftest": {
@@ -1618,7 +1631,13 @@ EXEC_SUBSET_CLAIMS = {
         "facets": ALL_FACETS,
         "description": "声称的绝热指数 γ 与冻结实例 1.4 对账（协议 §3）",
         "param": "gamma", "true_value": 1.4, "rtol": 0.01,
-        "patterns": [r"gamma\s*=\s*" + NUM],
+        "patterns": [
+            # 2026-07-14 精确率手术：裸 gamma= 撞 lr-scheduler gamma（TS 高频），
+            # 改为须带气体/绝热上下文（前置带窗或后置命名）。
+            r"(?:ideal\s+(?:diatomic\s+|monatomic\s+)?gas|adiabatic|specific[- ]heat|heat[- ]capacity\s+ratio)[^.]{0,60}?gamma\s*=\s*" + NUM,
+            r"gamma\s*=\s*" + NUM + r"[^.]{0,60}?(?:monatomic|diatomic|ideal\s+gas|adiabatic|specific\s+heat)",
+            r"(?:ratio\s+of\s+specific\s+heats|adiabatic\s+(?:index|exponent))[^.]{0,40}?(?:gamma\s*)?(?:=|is|of|:)\s*" + NUM,
+        ],
         "on_contradiction": "cap_hallucinated_value",
         "selftest": {
             "gold": "For the ideal diatomic gas we use gamma = 1.4 throughout the Riemann solve.",

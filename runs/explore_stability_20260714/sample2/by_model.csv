@@ -1,0 +1,3 @@
+﻿model,scored_facets,total_points,avg_facet_score,avg_task_score_out_of_25,avg_Model Choice,avg_Physics Constraints,avg_Problem Formalization,avg_Training Strategy,avg_Validation Failure Risks
+deepseek-v4-flash,25,102.0,4.080,20.400,4.800,4.000,4.000,4.000,3.600
+deepseek-v4-pro,25,94.0,3.760,18.800,3.200,3.600,4.200,4.200,3.600

@@ -117,3 +117,58 @@
   总量 ~30 题，论文口径"适度扩容 + 选题方法论"；不追 ~40。
 - 其余决议（IAA 双轨、H4a 诚实降级、面板两批制）见
   `update_v04/revision_plan_v0.4.md` 状态列。
+
+## corner_exponent 模式修正（2026-07-14，批次 1 误伤实录驱动）
+
+- **误伤实录**：deepseek-v4-pro/007r 明文给出正确 α=2/3，另在 Training Strategy
+  写出数学自洽的残差加权 ω=r^{4/3}（抵消 Δ(r^{2/3}·NN)~r^{-4/3}）；原第一模式
+  `r\^{?(\d+/\d+)` 无上下文要求，将该权重误判为奇异指数断言 1.333 vs 0.667，
+  cap_wrong_exponent 误触（PF/PC ×2 facets）。违反"精确率优先"设计约束。
+- **修正**（`rewrites_v04_payloads.py::_corner_exponent_claim`，007r/021 共用）：
+  删除无上下文模式；改为①奇异性词前置（singular*/corner/re-entrant +80 字符窗）
+  ②解行为句式（behaves like/scales as/asymptotic +40 字符窗）③exponent 陈述句
+  （原样保留）。负幂 r^{-4/3} 因捕获组不含负号本就不匹配。
+- **防回归锚点**：gold selftest 首句复刻误伤句式（r^{4/3} 权重置于 2/3 之前）——
+  贪婪模式若回归，first-match 先咬 4/3，selftest 即红。
+- 核验：56 selftest 全绿；回归套件 R1–R6 PASS（篡改检出无损失、55 臂零误伤保持、
+  tamper 1/2 仍由上下文模式检出）；3 模型部分面板重评 claim_capped_rows 2→0，
+  pro/007r 15→18（PF 2→4、PC 2→3）。
+
+## 贪婪模式全量审计 + 4 条同类手术（2026-07-14，corner_exponent 后续）
+
+- **审计**：28 claims 全量模式复查，发现 4 条 param_value 存在与 corner_exponent
+  同类的"无上下文裸模式 × ALL_FACETS"风险，均撞 ML 超参命名惯例：
+  005 `\bc=`（损失权重/CFL）、014 `\balpha=`（学习率）、016 `\bd=`（"d = 2
+  dimensions"）、023 `gamma=`（lr-scheduler gamma，TS 高频）。现有 3 模型
+  答案裸模式 0 命中（未爆弹），GLM/qwen 待跑存在真实触雷面。
+- **手术**（精确率优先原则背书，预注册约束内的 bug 修复而非调参）：
+  裸模式删除或替换为物理上下文变体（前置带窗 / 后置命名，如
+  "c = 2, the advection speed"、"gamma = 1.66, the monatomic value"）。
+- **核验**：56 selftest 全绿；R1 篡改检出（003/005/016/023 D3 臂）无损失；
+  R4 55 臂零误伤保持；3 模型部分面板重评分数零扰动（avg 4.211、capped 0）。
+- **同日附带**：09_panel_batch1.sh DeepSeek 两行改官方渠道（与实跑一致，防同
+  模型双名入库）、重试参数加固（timeout 360/retries 5/retry-sleep 30）、新增
+  跑后体检门（schema_valid 全真 + finish_reason 全 stop 方可进评分）。
+
+## 批次 1 回炉修订启动（2026-07-14 深夜，09b FAIL 后的预注册修订路径）
+
+- 验收结果：C1 满分率 33.5%/C2 重写题 spread 中位 3.5/C3 难度轴非单调/
+  C4 九题 claim 零触发，四判据全 FAIL，题集不冻结、批次 2 暂停。
+- 方案文档：`update_v04/docs/rework_batch1_v0.4.md`（草案待作者逐题裁决）。
+  根因：C1=冻结 v0.3 raw_score 对前沿模型饱和（cue 0.45 饱和+长度短语白送，
+  specificity≥0.55 即满分）；C2=评分侧无解（θ 扫描证明）；C4 二分=保险型
+  （011/015/018/024 正确不触发，保留）vs 死亡型（002/004/014/017/019/020，
+  回炉规格=知识性支点→强制数值承诺，套用 022/007r/013 成功模式）。
+- 已实现（提案 P-A）：score_v04 新增 `--strict-five-threshold`（默认 0=关，
+  批次 1 校准值 0.80→满分率 14.3%、榜序不变、strict5 触发 148 行）；回归
+  套件默认关闭态 PASS；探索产物 scores/pilot_v0.4/rework_explore/。
+- 待作者裁决：P-A 是否启用、P-C 难度轴三选一、§2 六题回炉规格
+  （涉公开题面→6 题 × 6 模型重跑）。
+
+## P-A 定稿 θ=0.85（2026-07-14，作者裁决）
+
+- 0.80 档距 C1 门槛仅 0.7pp 且 59% 被压行在边缘带，重采样回弹风险高；
+  0.85 档 C1=9.3%（余量 5.7pp）、185 行 5→4、无 ≥0.85 误伤。
+- 榜序唯一变化为原并列对 GLM-5.1/pro 以 0.04 分易位（无实质意义，如实注记）。
+- 生效时点：与六题回炉重跑一起开启（一次量纲切换）；批次 2 复核通过前
+  视为暂定校准。两档完整对照见 scores/pilot_v0.4/rework_explore/。

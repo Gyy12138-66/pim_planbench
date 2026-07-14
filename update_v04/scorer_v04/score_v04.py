@@ -88,8 +88,14 @@ def drift_guard(rows, refs_v04):
     return checked
 
 
-def score_rows(rows, refs):
-    """逐行打分；返回 scored rows（新增 score/score_rationale/cue_rules_pending/claim_findings 列）。"""
+def score_rows(rows, refs, strict_five=0.0):
+    """逐行打分；返回 scored rows（新增 score/score_rationale/cue_rules_pending/claim_findings 列）。
+
+    strict_five>0 时启用 v0.4 量程重标定（rework_batch1 提案 P-A）：5 分要求
+    specificity ≥ 阈值，否则封到 4。这是全局重标定而非 claim cap——冻结 v0.3
+    raw_score 的 cue/长度/短语项对前沿模型饱和（白送 ≈3.65 分），specificity≥0.55
+    即可凑满 5（批次 1 满分率 33.5%）。默认关闭；回归套件在关闭态运行。
+    """
     groups = defaultdict(dict)   # (task, model) -> {facet_display: row}
     for row in rows:
         groups[(row["task_id"], row["model"])][row["facet"]] = row
@@ -119,6 +125,14 @@ def score_rows(rows, refs):
             fid = row["facet_id"] or FROZEN.FACET_IDS[fname]
             score, rationale = FROZEN.raw_score(row, ref)
             notes = []
+
+            if strict_five > 0 and score == 5:
+                sp, _m, _t = FROZEN.specificity_ratio(
+                    FROZEN.norm(row["model_answer"]), ref, fid)
+                if sp < strict_five:
+                    score = 4
+                    notes.append(
+                        f"strict5<=4: specificity {sp:.2f} < {strict_five:.2f} [strict_five_v04]")
 
             answer = FROZEN.norm(row["model_answer"])
             g_cap, g_reason = FROZEN.generic_cap(answer, fid)
@@ -156,6 +170,9 @@ def main() -> int:
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--summary", type=Path, default=None)
     ap.add_argument("--task-summary", type=Path, default=None)
+    ap.add_argument(
+        "--strict-five-threshold", type=float, default=0.0,
+        help="v0.4 量程重标定（提案 P-A）：5 分要求 specificity≥该值，0=关闭（默认）。批次 1 校准值 0.80。")
     args = ap.parse_args()
 
     refs = cv4.load_references(args.references)
@@ -167,7 +184,7 @@ def main() -> int:
         raise SystemExit(f"输入缺列: {sorted(missing)}")
 
     n_guard = drift_guard(rows, refs)
-    scored = score_rows(rows, refs)
+    scored = score_rows(rows, refs, strict_five=args.strict_five_threshold)
 
     fieldnames = list(scored[0].keys())
     args.output.parent.mkdir(parents=True, exist_ok=True)

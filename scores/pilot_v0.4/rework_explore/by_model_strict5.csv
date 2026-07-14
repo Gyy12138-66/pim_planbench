@@ -1,0 +1,7 @@
+﻿model,scored_facets,total_points,avg_facet_score,avg_task_score_out_of_25,avg_Model Choice,avg_Physics Constraints,avg_Problem Formalization,avg_Training Strategy,avg_Validation Failure Risks
+Pro/moonshotai/Kimi-K2.6,125,509.0,4.072,20.360,4.120,4.000,4.200,4.040,4.000
+Pro/zai-org/GLM-5.1,125,496.0,3.968,19.840,4.120,3.760,3.920,4.000,4.040
+deepseek-v4-flash,125,499.0,3.992,19.960,4.160,3.880,4.000,4.120,3.800
+deepseek-v4-pro,125,493.0,3.944,19.720,3.880,3.880,4.040,4.040,3.880
+qwen/qwen3.7-max,125,487.0,3.896,19.480,4.120,3.720,3.960,3.840,3.840
+z-ai/glm-4.7,125,477.0,3.816,19.080,3.800,3.680,4.080,3.880,3.640

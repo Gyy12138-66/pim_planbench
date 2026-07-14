@@ -1,0 +1,4 @@
+﻿model,normalized_file,total_rows,valid_rows,invalid_rows,missing_task_count,duplicate_task_count,extra_task_count,include_in_scoring,prompt_settings,providers,invalid_task_ids,missing_task_ids,duplicate_task_ids,extra_task_ids
+Pro/moonshotai/Kimi-K2.6,runs/pilot_v0.4/normalized/Pro_moonshotai_Kimi-K2.6__canonical_v0.4.jsonl,26,26,0,0,0,0,yes,canonical_v0.4,siliconflow,,,,
+deepseek-v4-flash,runs/pilot_v0.4/normalized/deepseek-v4-flash__canonical_v0.4.jsonl,26,26,0,0,0,0,yes,canonical_v0.4,deepseek,,,,
+deepseek-v4-pro,runs/pilot_v0.4/normalized/deepseek-v4-pro__canonical_v0.4.jsonl,26,26,0,0,0,0,yes,canonical_v0.4,deepseek,,,,
