@@ -30,14 +30,17 @@
 | 07 | IAA 一致性分析（加权 κ / Krippendorff α / 排名 τ + 判定） | `07_analyze_iaa.sh`（调 `scripts/analyze_iaa.py`，已含 `--demo` 自检） | `bash update_v04/run/07_analyze_iaa.sh --demo`（现在）/ `bash update_v04/run/07_analyze_iaa.sh <iaa_scores_raw.csv>`（数据到位后） | 外部标注者完成打分 | `iaa_report_v0.4.md` |
 | 06 复跑 | 重写题验收（满分率<15%、spread≥4、难度梯度、trap 复活） | 同 06 | 同 06（换新评分 CSV：`--scored-csv <path>`） | ③ 重写定稿 + 6 模型重新作答与打分 | 验收对照表 |
 
-## D 阶段：需要 API key 的计算（暂无脚本，待设计）
+## D 阶段：需要 API key 的计算
 
-| 计算内容 | 依赖 | 归属 |
-|---|---|---|
-| 6 模型对重写题重新作答（06 复跑的前置） | 模型 API（复用 `scripts/run_llm_planner.py`） | #1 验收 |
-| 每模型 ×5 采样 + 前沿闭源锚点 + 温度敏感性 | 模型 API，几美元级 | #3 |
-| canonical vs colloquial 口语化变体重打分 | 模型 API（同一参考,仅换题面） | 效度框架新增项 |
-| LLM 辅助断言抽取（scorer v0.4 泛化） | 模型 API | #2 待你拍板 |
+| # | 计算内容 | 脚本 | 命令 | 依赖 | 归属 |
+|---|---|---|---|---|---|
+| 09 | **批次 1 验收**：6 模型 ×1、T=0.2、v0.4 题集 → score_v04 评分 → 06 指标 → 预注册验收判据（09b 自动判 PASS/FAIL） | `09_panel_batch1.sh`（含 `09b_acceptance_batch1.py`） | `SILICONFLOW_API_KEY=... OPENROUTER_API_KEY=... bash update_v04/run/09_panel_batch1.sh`（断点续跑：重复同一命令） | 两个 API key，<$5，~1–2 小时 | #1 验收（决议 2026-07-14 两批制） |
+| — | 批次 2 主表：9 模型 ×5 + 闭源锚点 + T=0.7 敏感性 | 待批次 1 PASS 后编写 | — | 模型 API，几美元级 | #3 |
+| — | canonical vs colloquial 口语化变体重打分 | 待设计 | — | 模型 API（同一参考,仅换题面） | 效度框架新增项 |
+| — | LLM 辅助断言抽取（scorer v0.4 泛化）/ cue 层 LLM-judge | 待设计 | — | 模型 API | #2/#4 |
+
+批次 1 的评分管线：`update_v04/scorer_v04/score_v04.py`（coverage + claim/generic
+cap 机器执行,cue 规则挂起输出）,迁移核验 `check_score_v04.py` 已 PASS。
 
 ## 当前状态速览
 
