@@ -15,6 +15,7 @@
 NUM = r"([0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?)"
 BIGNUM = r"([0-9][0-9,]{2,})"   # ≥3 位（含千分逗号），避免误捕 "10 points per wavelength"
 DRAFT_HR = "DRAFT v0.4: instance values pending author finalization"
+RESOLVED_HR = "RESOLVED v0.4 (2026-07-14): instance values finalized with author"
 ALL_FACETS = ["problem_formalization", "physics_constraints", "model_choice",
               "training_strategy", "validation_failure_risks"]
 
@@ -91,7 +92,7 @@ REWRITES = {
     },
     "private": {
         "task_type_decl": "forward",
-        "human_review": DRAFT_HR,
+        "human_review": RESOLVED_HR,
         "verifiable_claims": [],   # 全 cue 题：能量阈值/导数级 IC 的高精确率 patterns 写不出（§3.2 政策）
         "cap_rules_mode": "replace",
         "cap_rules": [
@@ -152,7 +153,7 @@ REWRITES = {
     },
     "private": {
         "task_type_decl": "forward",
-        "human_review": DRAFT_HR,
+        "human_review": RESOLVED_HR,
         "verifiable_claims": [
             _budget_claim(
                 "budget_points", POINTS_PATTERNS, 20000, "cap_budget_violation",
@@ -218,7 +219,7 @@ REWRITES = {
     },
     "private": {
         "task_type_decl": "forward",
-        "human_review": DRAFT_HR,
+        "human_review": RESOLVED_HR,
         "verifiable_claims": [],   # 前沿尺度公式的自洽核验留 v0.5（高精确率 patterns 难写）
         "cap_rules_mode": "add",
         "cap_rules": [
@@ -245,6 +246,7 @@ REWRITES = {
                                  "front_speed_theory": "2*sqrt(d*r) = 0.2",
                                  "front_width_scale": "sqrt(d/r) = 0.1"},
         },
+        "remove": ["parameter_values.D"],
     },
 },
 
@@ -272,7 +274,7 @@ REWRITES = {
     },
     "private": {
         "task_type_decl": "forward",
-        "human_review": DRAFT_HR,
+        "human_review": RESOLVED_HR,
         "supersedes": ["easy_laplace_2d_boundary_007"],
         "verifiable_claims": [_corner_exponent_claim("cap_wrong_exponent")],
         "cap_rules_mode": "replace",
@@ -353,7 +355,7 @@ REWRITES = {
     },
     "private": {
         "task_type_decl": "inverse",
-        "human_review": DRAFT_HR,
+        "human_review": RESOLVED_HR,
         "verifiable_claims": [
             {
                 "claim_id": "unique_recovery_without_regularization",
@@ -402,11 +404,19 @@ REWRITES = {
         },
         "set": {
             "parameter_values": {
-                "source_instance": "two-lobe Gaussian mixture (private)",
-                "n_observations": "24 interior points",
+                "source_instance": ("two-lobe Gaussian mixture (private): "
+                                    "f = A1*exp(-|x-c1|^2/(2*sigma^2)) + A2*exp(-|x-c2|^2/(2*sigma^2)), "
+                                    "c1=(0.35,0.60), c2=(0.70,0.30), sigma=0.08, A1=+1.0, A2=-0.8 "
+                                    "(opposite-sign lobes: near-dipole configurations weakly identifiable)"),
+                "n_observations": "24 interior points (6x4 jittered grid, fixed seed 20260714)",
+                "noise": "1 percent Gaussian noise",
                 "underdetermination_note": "source dof >> observation count in the unrestricted class",
             },
+            "reference_conditions": {
+                "observations": "24 interior u observations with 1 percent Gaussian noise (6x4 jittered grid, fixed seed)",
+            },
         },
+        "remove": ["parameter_values.observation_count"],
     },
 },
 
@@ -431,7 +441,7 @@ REWRITES = {
     },
     "private": {
         "task_type_decl": "inverse",
-        "human_review": DRAFT_HR,
+        "human_review": RESOLVED_HR,
         "verifiable_claims": [],   # 全 cue 题：锥覆盖对账需要几何推理，v0.4 正则做不到高精确率
         "cap_rules_mode": "replace",
         "cap_rules": [
@@ -460,11 +470,22 @@ REWRITES = {
             ],
         },
         "set": {
-            "parameter_values": {"c": "1.0", "sensors": "4 equally spaced interior sensors (private layout)",
-                                 "window": "T = 2.0"},
+            "parameter_values": {
+                "c": "1.0",
+                "sensors": ("4 interior sensors at x = 0.2, 0.4, 0.6, 0.8, each recording "
+                            "25 equispaced times in [0, T] (private layout; "
+                            "100 space-time observations total)"),
+                "window": "T = 2.0",
+                "noise": "1 percent Gaussian noise",
+            },
             "reference_conditions": {
-                "recoverable_region": "computed union of sensor influence cones for the private layout (reference computation, private)"},
+                "observations": "100 space-time observations = 4 sensor worldlines x 25 equispaced times, 1 percent Gaussian noise",
+                "recoverable_region": ("union of sensor influence cones for x in {0.2,0.4,0.6,0.8}, "
+                                       "c=1, T=2 (covers the full domain: c*T = 2 > domain length 1; "
+                                       "the required deliverable is the sufficiency argument itself)"),
+            },
         },
+        "remove": ["parameter_values.sensor_count"],
     },
 },
 
@@ -487,7 +508,7 @@ REWRITES = {
         "tags_add": ["heteroscedastic_noise", "unobserved_species", "coupled_system"],
     },
     "private": {
-        "human_review": DRAFT_HR,
+        "human_review": RESOLVED_HR,
         "verifiable_claims": [
             {
                 "claim_id": "unweighted_mse_under_stated_noise",
@@ -559,9 +580,16 @@ REWRITES = {
             "constraints": {
                 "observations": "species A: scattered space-time observations, noise magnitude proportional to local concentration (coefficient private); species B: completely unobserved",
             },
-            "parameter_values": {"noise_coefficient": "0.1 (proportional, private instance)",
-                                 "coupling": "Schnakenberg-type, moderate strength (private instance)"},
+            "parameter_values": {
+                "noise_coefficient": "0.1 (proportional: sigma(x,t) = 0.1*u(x,t), private instance)",
+                "coupling": ("Gray-Scott (private instance): u_t = D_u*lap(u) - u*v^2 + F*(1-u); "
+                             "v_t = D_v*lap(v) + u*v^2 - (F+k)*v; classic spots regime"),
+            },
+            "reference_conditions": {
+                "observations": "sparse noisy observations of u only (species A); v (species B) completely unobserved",
+            },
         },
+        "remove": ["parameter_values.noise"],
     },
 },
 
@@ -586,7 +614,7 @@ REWRITES = {
     "private": {
         "task_type_decl": "forward",
         "supersedes": ["easy_heat_1d_dirichlet_001"],
-        "human_review": "RESOLVED v0.4: sign convention k*u_x(1,t)=+q_in confirmed (outward normal, injection positive); instance values q_in/alpha/IC pending author finalization",
+        "human_review": "RESOLVED v0.4: sign convention k*u_x(1,t)=+q_in confirmed (outward normal, injection positive); instance values q_in=0.5, alpha=k=1.0, u(x,0)=0 finalized 2026-07-14",
         "verifiable_claims": [
             {
                 "claim_id": "flux_sign",
@@ -741,7 +769,7 @@ REWRITES = {
     },
     "private": {
         "task_type_decl": "forward",
-        "human_review": DRAFT_HR,
+        "human_review": RESOLVED_HR,
         "verifiable_claims": [
             {
                 "claim_id": "value_only_periodicity",
@@ -806,7 +834,7 @@ REWRITES = {
     },
     "private": {
         "task_type_decl": "forward",
-        "human_review": DRAFT_HR,
+        "human_review": RESOLVED_HR,
         "verifiable_claims": [
             {
                 "claim_id": "nominal_chemical_potential",
@@ -899,7 +927,7 @@ REWRITES = {
         "tags_add": ["pressure_gauge", "identifiability", "divergence_control"],
     },
     "private": {
-        "human_review": DRAFT_HR,
+        "human_review": RESOLVED_HR,
         "verifiable_claims": [
             {
                 "claim_id": "absolute_pressure_from_velocity",
@@ -992,7 +1020,7 @@ REWRITES = {
     },
     "private": {
         "task_type_decl": "forward",
-        "human_review": DRAFT_HR,
+        "human_review": RESOLVED_HR,
         "verifiable_claims": [
             {
                 "claim_id": "expanded_form_without_smoothing",
@@ -1060,8 +1088,18 @@ REWRITES = {
         },
         "set": {
             "canonical_pde": "steady Darcy, conservative form: div(kappa(x)*grad(h)) = 0 with kappa piecewise constant (sharp channel-like contrasts)",
-            "parameter_values": {"kappa_contrast": "100:1 (private instance)",
-                                 "geometry": "two-zone layered medium (private instance; piecewise analytic reference exists)"},
+            "parameter_values": {
+                "kappa_contrast": "100:1 (private instance)",
+                "geometry": ("two-zone layered medium on [0,1]^2 (private): interface y=0.5, "
+                             "kappa=1.0 for y>0.5, kappa=0.01 for y<0.5"),
+                "bc": "h(x,1)=1, h(x,0)=0, zero-flux lateral sides, f=0",
+                "analytic_reference": ("piecewise-linear h(y): constant vertical flux, slopes "
+                                       "inversely proportional to kappa; interface flux jump "
+                                       "identically zero (exact interface check)"),
+            },
+            "reference_conditions": {
+                "boundary": "h=1 on top (y=1), h=0 on bottom (y=0), zero-flux on lateral sides",
+            },
         },
     },
 },
@@ -1085,7 +1123,7 @@ REWRITES = {
     },
     "private": {
         "task_type_decl": "forward",
-        "human_review": DRAFT_HR,
+        "human_review": RESOLVED_HR,
         "verifiable_claims": [
             {
                 "claim_id": "ppw_arithmetic",
@@ -1170,6 +1208,7 @@ REWRITES = {
                 "k_exact": "private: k = 40*pi on the unit square (20 wavelengths per direction)",
             },
         },
+        "remove": ["parameter_values.k"],
     },
 },
 
@@ -1195,7 +1234,7 @@ REWRITES = {
     },
     "private": {
         "task_type_decl": "forward",
-        "human_review": DRAFT_HR,
+        "human_review": RESOLVED_HR,
         "verifiable_claims": [
             _corner_exponent_claim("cap_wrong_exponent"),
             _budget_claim(
@@ -1261,8 +1300,14 @@ REWRITES = {
             "domain_spec": {"space": "staircase polygon (private exact layout; public magnitude: multiple re-entrant corners, ~10 wavelengths across)"},
             "parameter_values": {
                 "n_corners": "4 re-entrant corners (private instance)",
-                "n_wavelengths_public": "approximately 10 (public magnitude); exact k private",
-                "reference": "offline domain-decomposition spectral / boundary-integral reference (private)",
+                "geometry": ("descending staircase polygon in the unit square (private), vertex chain "
+                             "(0,0)-(1,0)-(1,0.2)-(0.8,0.2)-(0.8,0.4)-(0.6,0.4)-(0.6,0.6)-(0.4,0.6)-"
+                             "(0.4,0.8)-(0.2,0.8)-(0.2,1)-(0,1); re-entrant corners at "
+                             "(0.8,0.2),(0.6,0.4),(0.4,0.6),(0.2,0.8)"),
+                "n_wavelengths_public": "approximately 10 (public magnitude)",
+                "k_exact": "private: k = 20*pi (about 10 wavelengths per direction)",
+                "source": "Gaussian source exp(-|x-(0.3,0.3)|^2/(2*0.05^2)), u=0 on the boundary",
+                "reference": "corner-refined high-order FEM reference (offline, private)",
             },
         },
     },
@@ -1289,7 +1334,7 @@ REWRITES = {
     },
     "private": {
         "task_type_decl": "forward",
-        "human_review": DRAFT_HR,
+        "human_review": RESOLVED_HR,
         "verifiable_claims": [
             {
                 "claim_id": "reflecting_truncation_boundary",
@@ -1368,12 +1413,16 @@ REWRITES = {
             "constraints": {
                 "boundary_conditions": [
                     "obstacle surfaces (sound-hard): du/dn = 0 for the total field, i.e. du_s/dn = -du_inc/dn",
-                    "truncation boundary: absorbing/radiation treatment (reference uses PML)",
+                    "truncation boundary: absorbing/radiation treatment (reference: boundary-integral solution, exact radiation condition)",
                 ],
             },
             "parameter_values": {
-                "degenerate_check": "single-cylinder Mie series solution (private)",
-                "maze_layout": "private exact geometry; public magnitude only",
+                "degenerate_check": "single sound-hard cylinder, radius a=0.5, same k: Mie series solution (private)",
+                "maze_layout": ("three concentric square C-shaped sound-hard walls (private exact "
+                                "geometry; public magnitude only): half-widths 0.4/0.7/1.0, wall "
+                                "thickness 0.1, opening width 0.3, openings alternating left/right"),
+                "incident": "plane wave along +x, k = 4*pi (wavelength 0.5)",
+                "reference": "boundary-element (BIE) solution (offline, private)",
             },
         },
     },
@@ -1400,7 +1449,7 @@ REWRITES = {
     },
     "private": {
         "task_type_decl": "forward",
-        "human_review": DRAFT_HR,
+        "human_review": RESOLVED_HR,
         "verifiable_claims": [
             {
                 "claim_id": "momentum_without_buoyancy",

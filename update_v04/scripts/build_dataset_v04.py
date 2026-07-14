@@ -135,6 +135,12 @@ def apply_payload(pub, priv, payload):
     priv["id"] = pub["id"]
     if "set" in p_priv:
         deep_set(priv, p_priv["set"])
+    for path in p_priv.get("remove", []):  # 单一真值：删除被新值取代的 v0.3 遗留键
+        node = priv
+        parts = path.split(".")
+        for part in parts[:-1]:
+            node = node.get(part, {})
+        node.pop(parts[-1], None)
     if "failure_traps_replace" in p_priv:
         priv["failure_traps"] = list(p_priv["failure_traps_replace"])
     if "failure_traps_add" in p_priv:

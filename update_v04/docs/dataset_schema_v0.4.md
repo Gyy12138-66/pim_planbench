@@ -394,7 +394,10 @@ final    = apply_caps(scores, caps ∪ cue_caps ∪ generic_caps)
 1. 重写规格 MD 审定 → `problem` 终稿、claims、cap 规则、私有实例值确定
 2. 写公开条目（§2）+ 私有条目（§3）——落地为
    `update_v04/scripts/rewrites_v04_payloads.py`（逐题 payload）+
-   `build_dataset_v04.py`（v0.3 基线合成，可复现构建）
+   `build_dataset_v04.py`（v0.3 基线合成，可复现构建）。
+   payload 私有侧指令：`set`（dict 合并）、`remove`（路径式删除，单一真值
+   纪律——被新值取代的 v0.3 遗留键必须删除，如 020 的 `k=20`）、
+   `critical_points_set/add`、`failure_traps_replace/add`、`cap_rules(_mode)` 等
 3. 每条 claim 配一对回归文本：金表述（不许误伤）+ 篡改（必须检出），
    以 `selftest` 字段随 claim 同址存放
 4. 过校验脚本（§6）+ selftest 全绿 → 该题标记"转写完成"
