@@ -13,6 +13,7 @@ claim 类型 → finding kind：
   co_occurrence          → structural_contradiction
   claim_without_support  → unsupported_claim
   forbidden_assertion    → spec_contradiction
+  required_deliverable   → missing_deliverable（回炉 §2：数值承诺全域缺席即触发）
 全局：task_type_decl → wrong_task_type；fabrication → fabricated_component。
 
 设计约束沿 v0.3：精确率优先，cap 只在断言无歧义矛盾时触发；每参数/每 claim
@@ -112,6 +113,17 @@ def _scope_text(claim, facet_texts_norm):
 def _check_claim(task, claim, facet_texts_norm):
     ctype = claim["type"]
     out = []
+    if ctype == "required_deliverable":
+        # 回炉修订 §2（2026-07-15）：强制数值承诺——作用域内任一 facet 命中
+        # 任一模式即视为交付；全域缺席则触发 finding（挂 home_facet）。
+        scoped = _scope_text(claim, facet_texts_norm)
+        delivered = any(_first_match(claim["patterns"], text)
+                        for _, text in scoped if text.strip())
+        if not delivered:
+            home = claim.get("home_facet") or claim["facets"][0]
+            out.append(Finding(task, home, claim["claim_id"], "missing_deliverable",
+                               claim["on_contradiction"], claim["description"], ""))
+        return out
     for facet_id, text in _scope_text(claim, facet_texts_norm):
         if not text.strip():
             continue

@@ -24,7 +24,7 @@ CANONICAL_OUTPUT_SCHEMA = [FACET_DISPLAY[f] for f in FACET_ORDER]
 REVISIONS = {"rewritten", "light_edit", "relocated", "new", "unchanged"}
 CLAIM_TYPES = {"param_value", "asserted_known_unknown", "sign_relation",
                "arithmetic_consistency", "co_occurrence", "claim_without_support",
-               "forbidden_assertion"}
+               "forbidden_assertion", "required_deliverable"}
 TRIGGERS = {"claim", "cue", "generic"}
 # 由 verifier 内建检查触发、无需 claim 显式引用的标准规则
 IMPLICIT_CLAIM_RULES = {"cap_wrong_task_type", "cap_fabricated_component"}
@@ -101,6 +101,12 @@ def check_claim(tid, claim, rule_ids):
     elif ctype == "forbidden_assertion":
         for p in claim["patterns"]:
             check_regex(tid, cid, p, None, "patterns")
+    elif ctype == "required_deliverable":
+        for p in claim["patterns"]:
+            check_regex(tid, cid, p, None, "patterns")
+        hf = claim.get("home_facet")
+        if hf is not None and hf not in claim["facets"]:
+            err(f"{tid}/{cid}: home_facet 不在 facets 作用域内")
 
 
 def main():

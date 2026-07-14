@@ -3,7 +3,7 @@
 
   C1  facet 满分率 < 15%（全库非 canary；v0.3 现状 38.1%）
   C2  重写题（revision != unchanged）spread 中位数 ≥ 4
-  C3  难度层均分单调：easy > medium > hard > hard_plus
+  C3  [已废除 2026-07-15 修正案] 难度层均分仅作描述性报告（脱钩=论文发现）
   C4  每道 claim-capable 重写题至少 1 个模型触发任务特异 cap
       （claim_findings 非空；全 cue 题 002/006/012 无 claims，记 N/A）
 
@@ -63,8 +63,12 @@ def main() -> int:
     c2 = bool(revised) and c2_med >= 4
     layer_mean = {d: mean(v for t, m in totals.items() if diff_of[t] == d
                           for v in m.values()) for d in DIFF_ORDER}
-    c3 = all(layer_mean[a] > layer_mean[b]
-             for a, b in zip(DIFF_ORDER, DIFF_ORDER[1:]))
+    # C3 已废除（预注册修正案，作者裁决 2026-07-15，rework_batch1_v0.4.md P-C）：
+    # 难度标签沿承数值执行难度，对规划得分无预测力——V 型倒挂跨版本（v0.3 item_analysis）
+    # 跨量纲（原始/strict-five）复现。降级为描述性报告，不再计入验收判定；
+    # "规划难度与执行难度脱钩"作为论文实证发现报告，支点密度 tier 另行入元数据。
+    c3_monotone = all(layer_mean[a] > layer_mean[b]
+                      for a, b in zip(DIFF_ORDER, DIFF_ORDER[1:]))
     c4_applicable = [t for t in revised if t not in ALL_CUE_TASKS]
     c4_missing = [t for t in c4_applicable if not claim_hits.get(t)]
     c4 = not c4_missing
@@ -72,8 +76,9 @@ def main() -> int:
     print("== 批次 1 预注册验收（item_analysis §6）==")
     print(f"C1 facet 满分率 <15%:   {'PASS' if c1 else 'FAIL'}  ({c1_rate:.1%})")
     print(f"C2 重写题 spread 中位≥4: {'PASS' if c2 else 'FAIL'}  (中位 {c2_med:g}, n={len(revised)})")
-    print(f"C3 难度层均分单调:      {'PASS' if c3 else 'FAIL'}  ("
-          + " > ".join(f"{d} {layer_mean[d]:.1f}" for d in DIFF_ORDER) + ")")
+    print(f"C3 难度层均分[已废除,仅报告]: {'单调' if c3_monotone else '非单调'}  ("
+          + " > ".join(f"{d} {layer_mean[d]:.1f}" for d in DIFF_ORDER)
+          + ")  修正案 2026-07-15：脱钩转论文发现")
     print(f"C4 重写题 claim cap≥1:  {'PASS' if c4 else 'FAIL'}"
           + (f"  未触发: {sorted(c4_missing)}" if c4_missing else "")
           + f"  (适用 {len(c4_applicable)} 题, 全 cue 题 {len(ALL_CUE_TASKS)} 记 N/A)")
@@ -83,7 +88,7 @@ def main() -> int:
         print(f"  {t} | {spread[t]:g} | {sum(1 for s in sub if s == 5)/len(sub):.0%}"
               f" | {len(claim_hits.get(t, set()))}")
 
-    ok = c1 and c2 and c3 and c4
+    ok = c1 and c2 and c4
     print(f"\n结论: {'PASS —— 题集可冻结,进批次 2' if ok else 'FAIL —— 不达标题回炉修订'}")
     return 0 if ok else 2
 

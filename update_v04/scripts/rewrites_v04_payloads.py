@@ -81,26 +81,81 @@ REWRITES = {
     "public": {
         "problem": (
             "A scientist needs to approximate the displacement of a one-dimensional "
-            "vibrating string over a fixed time window. The wave speed is known. Both the "
-            "initial displacement profile and the initial velocity profile are provided "
-            "as measured data, and the endpoints are held fixed. Because the initial data "
-            "come from measurements, they may fail to satisfy the endpoint conditions "
-            "exactly at the corners of the space-time domain. Design a physics-informed "
-            "modeling workflow for the displacement field. State explicitly (i) how each "
-            "of the two initial conditions is enforced, including any derivative-level "
-            "treatment the second one requires, (ii) how compatibility between initial "
-            "and boundary data is checked and what the workflow does if it fails, and "
-            "(iii) which physical invariants of the ideal system you will monitor during "
-            "validation and with what tolerance."
+            "vibrating string on the unit interval over a fixed time window. The wave "
+            "speed is known. The measured initial displacement is well approximated by "
+            "u(x,0) = sin(pi*x) and the measured initial velocity by "
+            "u_t(x,0) = 0.1*cos(pi*x); both endpoints are held at zero displacement for "
+            "all time. Because the initial data come from measurements, they may fail to "
+            "satisfy the endpoint conditions exactly at the corners of the space-time "
+            "domain. Design a physics-informed modeling workflow for the displacement "
+            "field. State explicitly (i) how each of the two initial conditions is "
+            "enforced, including any derivative-level treatment the second one requires, "
+            "(ii) the two numeric values that decide corner compatibility at "
+            "(x,t) = (0,0) — the initial-velocity value at the endpoint and the time "
+            "derivative of the boundary condition — whether they match, and what the "
+            "workflow does about any mismatch, and (iii) which physical invariants of "
+            "the ideal system you will monitor during validation and with what tolerance."
         ),
         "tags_add": ["derivative_ic", "corner_compatibility", "energy_conservation"],
     },
     "private": {
         "task_type_decl": "forward",
         "human_review": RESOLVED_HR,
-        "verifiable_claims": [],   # 全 cue 题：能量阈值/导数级 IC 的高精确率 patterns 写不出（§3.2 政策）
+        # 回炉 §2（2026-07-15）：全 cue 政策解除——角点相容性实例化后，
+        # 数值承诺（v(0)=0.1 vs g'(0)=0）可高精确率核验。
+        "verifiable_claims": [
+            {
+                "claim_id": "corner_values_stated",
+                "type": "required_deliverable",
+                "basis": "spec",
+                "facets": ALL_FACETS,
+                "home_facet": "problem_formalization",
+                "description": "题面要求写出 (0,0) 角点相容性的两个数值（IC 速度端点值 0.1 与 BC 时间导数 0）；全文缺席即触发",
+                "patterns": [
+                    r"(?:corner|compatib\w*|x\s*=\s*0|endpoint)[^.]{0,140}?0\.1\b",
+                    r"0\.1\b[^.]{0,100}?(?:mismatch|incompatib\w*|does\s+not\s+match|differs|vs\.?\s*(?:the\s+)?0\b|≠|!=)",
+                    r"u_t\s*\(\s*0\s*,\s*0\s*\)\s*=\s*0\.1",
+                    r"v\s*\(\s*0\s*\)\s*=\s*0\.1",
+                ],
+                "on_contradiction": "cap_no_corner_arithmetic",
+                "selftest": {
+                    "gold": "At the corner (0,0) the initial velocity gives u_t(0,0) = 0.1 while the fixed endpoint implies a boundary time derivative of 0, so the data are incompatible by 0.1 and we relax the corner residual.",
+                    "tamper": "We check compatibility between the initial and boundary data at the corners and add a remedy if the check fails.",
+                },
+            },
+            {
+                "claim_id": "corner_mismatch_value",
+                "type": "param_value",
+                "basis": "spec",
+                "facets": ALL_FACETS,
+                "description": "声称的角点速度失配量须与实例一致（0.1*cos(0)=0.1 vs g'(0)=0，失配 0.1）",
+                "param": "corner_velocity_mismatch",
+                "true_value": 0.1,
+                "rtol": 0.01,
+                "patterns": [
+                    # corner/velocity 上下文前置——裸 "mismatch of NUM" 会咬到能量容差等
+                    # 无关失配表述（2026-07-14 贪婪模式教训）。
+                    r"(?:corner|velocity|v\s*\(\s*0\s*\)|u_t)[^.]{0,100}?(?:mismatch|discrepancy|incompatibilit\w*)\s*(?:of|is|=|:)\s*(?:about\s+)?([0-9]+(?:\.[0-9]+)?)",
+                    r"u_t\s*\(\s*0\s*,\s*0\s*\)\s*=\s*([0-9]+(?:\.[0-9]+)?)",
+                    r"v\s*\(\s*0\s*\)\s*=\s*([0-9]+(?:\.[0-9]+)?)",
+                ],
+                "on_contradiction": "cap_wrong_corner_value",
+                "selftest": {
+                    "gold": "The corner check gives v(0) = 0.1 from the initial velocity against a boundary time derivative of zero, a mismatch of 0.1.",
+                    "tamper": "The corner check gives v(0) = 0.5 from the initial velocity, so the mismatch is 0.5 and must be handled.",
+                },
+            },
+        ],
         "cap_rules_mode": "replace",
         "cap_rules": [
+            {"rule_id": "cap_no_corner_arithmetic", "trigger": "claim",
+             "condition": "the plan never states the two corner-compatibility values the prompt explicitly requires (initial-velocity endpoint value vs boundary time derivative)",
+             "affected_facets": ["problem_formalization"], "max_score": 3,
+             "rationale": "The numeric corner check is an announced deliverable; prose-only compatibility talk does not satisfy it."},
+            {"rule_id": "cap_wrong_corner_value", "trigger": "claim",
+             "condition": "states a corner-mismatch value inconsistent with the public instance (0.1)",
+             "affected_facets": ["problem_formalization", "physics_constraints"], "max_score": 2,
+             "rationale": "Hallucinated specification: both corner values follow from the public data."},
             {"rule_id": "cap_velocity_ic_value", "trigger": "cue",
              "condition": "enforces only the displacement initial condition, or treats the initial velocity as a value constraint on u rather than a constraint on the time derivative of the network output (or an equivalent hard-encoding)",
              "affected_facets": ["physics_constraints", "training_strategy"], "max_score": 2,
@@ -152,7 +207,11 @@ REWRITES = {
             "physics-informed modeling workflow for the velocity field. Justify "
             "quantitatively — in terms of the viscosity scale — how your sampling "
             "strategy and network capacity resolve the internal layer within the stated "
-            "budget, and what you would monitor to detect an under-resolved layer."
+            "budget, and what you would monitor to detect an under-resolved layer. "
+            "Your plan must state its collocation and optimization budget in explicit "
+            "numbers: the total points in memory, how many of them are concentrated in "
+            "the layer region, and the total optimizer steps. These numbers are a "
+            "required deliverable."
         ),
         "tags_add": ["viscous_layer", "compute_budget", "resolution_economics"],
     },
@@ -172,6 +231,22 @@ REWRITES = {
                 gold="Training uses 25,000 optimizer steps in total: 20,000 Adam steps followed by 5,000 L-BFGS steps.",
                 tamper="We train for 100,000 optimizer steps to ensure convergence of the layer region.",
             ),
+            # 回炉 §2（2026-07-15）：arithmetic claim 只在数字在场时触发，批次 1
+            # 六模型零触发——预算数字改为强制交付物，缺席即 cap（022 成功模式）。
+            {
+                "claim_id": "budget_split_stated",
+                "type": "required_deliverable",
+                "basis": "spec",
+                "facets": ALL_FACETS,
+                "home_facet": "training_strategy",
+                "description": "题面要求以显式数字给出配点/步数预算拆分；全文无任何配点或步数数字即触发",
+                "patterns": POINTS_PATTERNS + STEPS_PATTERNS,
+                "on_contradiction": "cap_budget_violation",
+                "selftest": {
+                    "gold": "We allocate 18,000 collocation points, concentrating 6,000 of them inside the viscous layer, and train for 25,000 optimizer steps.",
+                    "tamper": "We concentrate collocation points adaptively inside the viscous layer via residual-based resampling and train until the layer converges.",
+                },
+            },
         ],
         "cap_rules_mode": "replace",
         "cap_rules": [
@@ -180,9 +255,9 @@ REWRITES = {
              "affected_facets": ["training_strategy"], "max_score": 3,
              "rationale": "Named techniques without layer-budget arithmetic are template text."},
             {"rule_id": "cap_budget_violation", "trigger": "claim",
-             "condition": "the proposed sampling or optimization plan exceeds the stated compute budget, or ignores it",
+             "condition": "the stated budget numbers are absent (despite being an announced deliverable), exceed the stated compute budget, or are ignored",
              "affected_facets": ["training_strategy", "model_choice"], "max_score": 3,
-             "rationale": "The budget is part of the public specification; exceeding it is a specification violation."},
+             "rationale": "The budget split-with-numbers is part of the public specification; omission and violation are both specification failures."},
             {"rule_id": "cap_no_underresolution_indicator", "trigger": "cue",
              "condition": "validation includes no indicator specific to an under-resolved layer (residual concentration near the front, layer-width estimate vs theory, oscillation detection)",
              "affected_facets": ["validation_failure_risks"], "max_score": 3,
@@ -603,14 +678,17 @@ REWRITES = {
     "revision": "rewritten",
     "public": {
         "problem": (
-            "A researcher models heat conduction in a one-dimensional rod. One end is "
-            "held at a fixed temperature. At the other end, heat is injected into the "
-            "rod at a prescribed constant rate through the boundary surface. The initial "
-            "temperature profile is known, and the material properties are given. Design "
-            "a physics-informed modeling workflow for the temperature field. Make the "
+            "A researcher models heat conduction in a one-dimensional rod of unit "
+            "length with unit conductivity and unit thermal diffusivity. The left end "
+            "(x = 0) is held at temperature 0. At the right end (x = 1), heat is "
+            "injected into the rod at the constant rate q_in = 0.5 through the boundary "
+            "surface. The initial temperature is 0 throughout the rod. Design a "
+            "physics-informed modeling workflow for the temperature field. Make the "
             "boundary treatment fully explicit: write the flux condition as a signed "
             "relation between the outward normal derivative and the stated injection "
-            "rate, and explain how you verify the sign is physically correct. Include in "
+            "rate, and explain how you verify the sign is physically correct. Derive "
+            "and state, as a number, the steady-state temperature that the heated end "
+            "must approach at long times, and use it as a validation anchor. Include in "
             "your validation an energy-balance check relating the change of total "
             "thermal energy in the rod to the boundary fluxes, with a tolerance."
         ),
@@ -659,7 +737,7 @@ REWRITES = {
                 "type": "param_value",
                 "basis": "spec",
                 "facets": ALL_FACETS,
-                "description": "计划若断言具体 alpha 数值，须与私有实例一致（公开题面无数值）",
+                "description": "计划若断言具体 alpha 数值，须与实例一致（回炉 §2 后 q_in/k/alpha 已公开于题面）",
                 "param": "alpha",
                 "true_value": 1.0,
                 "rtol": 0.01,
@@ -676,9 +754,54 @@ REWRITES = {
                     "tamper": "We take the thermal diffusivity alpha = 0.01, typical for such materials.",
                 },
             },
+            # 回炉 §2（2026-07-15）：批次 1 该题 spread=1/满分率 70%——符号支点已成
+            # 公共知识。新增稳态端温数值承诺：q_in=0.5,k=1 → u_ss(x)=0.5x → u(1)=0.5。
+            {
+                "claim_id": "steady_state_value_stated",
+                "type": "required_deliverable",
+                "basis": "spec",
+                "facets": ALL_FACETS,
+                "home_facet": "validation_failure_risks",
+                "description": "题面要求推导并写出稳态热端温度数值（0.5）作为验证锚点；全文缺席即触发",
+                "patterns": [
+                    r"(?:steady[- ]state|long[- ]time|equilibrium|t\s*(?:->|→)\s*(?:infinity|inf|∞))[^.]{0,140}?0\.5\b",
+                    r"0\.5\b[^.]{0,100}?(?:steady[- ]state|equilibrium|linear\s+profile|long[- ]time)",
+                    r"u(?:_ss)?\s*\(\s*1\s*(?:,\s*(?:t|∞|infinity))?\s*\)\s*(?:=|->|→|approaches|tends\s+to)\s*0\.5",
+                    r"0\.5\s*\*?\s*x\b[^.]{0,60}?(?:steady|equilibrium|linear)",
+                ],
+                "on_contradiction": "cap_no_energy_balance",
+                "selftest": {
+                    "gold": "At steady state the profile is linear, u_ss(x) = 0.5*x, so the heated end approaches 0.5 and we use this value as a validation anchor.",
+                    "tamper": "At long times the temperature approaches a steady profile whose end value we monitor during validation.",
+                },
+            },
+            {
+                "claim_id": "steady_state_end_temperature",
+                "type": "param_value",
+                "basis": "spec",
+                "facets": ALL_FACETS,
+                "description": "声称的稳态热端温度须与实例一致（q_in*L/k = 0.5）",
+                "param": "steady_end_temperature",
+                "true_value": 0.5,
+                "rtol": 0.01,
+                "patterns": [
+                    r"(?:steady[- ]state|equilibrium|long[- ]time)[^.]{0,100}?(?:heated\s+end|right\s+end|u\s*\(\s*1\s*\)|end\s+temperature)[^.]{0,60}?(?:=|of|:|approaches|reaches|tends\s+to)\s*([0-9]+(?:\.[0-9]+)?)",
+                    r"u(?:_ss)?\s*\(\s*1\s*(?:,\s*(?:t|∞|infinity))?\s*\)\s*(?:=|->|→|approaches|tends\s+to)\s*([0-9]+(?:\.[0-9]+)?)",
+                    r"u_ss\s*\(\s*x\s*\)\s*=\s*([0-9]+(?:\.[0-9]+)?)\s*\*?\s*x",
+                ],
+                "on_contradiction": "cap_wrong_steady_value",
+                "selftest": {
+                    "gold": "The steady-state profile is u_ss(x) = 0.5*x, so u(1) approaches 0.5 at long times.",
+                    "tamper": "At steady state the heated end approaches u(1) = 2.0, which we use as the validation anchor.",
+                },
+            },
         ],
         "cap_rules_mode": "replace",
         "cap_rules": [
+            {"rule_id": "cap_wrong_steady_value", "trigger": "claim",
+             "condition": "states a steady-state heated-end temperature inconsistent with the public instance (q_in*L/k = 0.5)",
+             "affected_facets": ["physics_constraints", "validation_failure_risks"], "max_score": 2,
+             "rationale": "Hallucinated specification: the steady value follows from the public numbers."},
             {"rule_id": "cap_flux_sign", "trigger": "claim",
              "condition": "flux boundary condition stated without an explicit sign convention tied to the outward normal, or with a sign inconsistent with the stated physical direction of heat flow",
              "affected_facets": ["physics_constraints", "training_strategy"], "max_score": 2,
@@ -687,12 +810,12 @@ REWRITES = {
              "condition": "flux condition enforced as a value constraint on u rather than on its normal derivative",
              "affected_facets": ["physics_constraints"], "max_score": 2,
              "rationale": "Mistakes the mathematical type of the boundary condition."},
-            {"rule_id": "cap_no_energy_balance", "trigger": "cue",
-             "condition": "validation contains no energy-balance or flux-consistency check",
+            {"rule_id": "cap_no_energy_balance", "trigger": "claim",
+             "condition": "the plan never states the required steady-state anchor number and validation contains no quantitative energy-balance check (upgraded from cue to claim, rework §2 2026-07-15)",
              "affected_facets": ["validation_failure_risks"], "max_score": 3,
-             "rationale": "The energy budget d/dt integral(u) = net boundary flux is the fundamental consistency check for this task."},
+             "rationale": "The steady anchor and energy budget are announced numeric deliverables; prose-only mention does not satisfy them."},
             {"rule_id": "cap_hallucinated_value", "trigger": "claim",
-             "condition": "plan asserts a specific numeric value contradicting the private instance (the public statement contains no numbers)",
+             "condition": "plan asserts a numeric material value contradicting the public instance (q_in=0.5, k=alpha=1)",
              "affected_facets": [], "max_score": 2,
              "rationale": "Hallucinated specification values."},
             {"rule_id": "cap_same_bc_type", "trigger": "cue",
@@ -731,6 +854,7 @@ REWRITES = {
             ],
             "validation_failure_risks": [
                 "energy-balance check: rate of change of total thermal energy vs net boundary flux, with tolerance",
+                "derives and uses the steady-state heated-end value 0.5 (= q_in*L/k) as a validation anchor",
                 "field error against the series/steady reference",
                 "separate Dirichlet and flux boundary errors",
                 "names flux sign error as an explicit failure risk",
@@ -833,10 +957,13 @@ REWRITES = {
             "sharp interfaces may form. Design a physics-informed modeling workflow. "
             "Specify precisely (i) the complete list of fields your network(s) output, "
             "(ii) the complete list of residual equations you train on, written so that "
-            "the derivative order of each residual is unambiguous, and (iii) how mass "
-            "conservation is monitored quantitatively over the simulated horizon. If "
-            "you train directly on the fourth-order form, justify the differentiation "
-            "cost and conditioning consequences explicitly."
+            "the derivative order of each residual is unambiguous, together with the "
+            "boundary conditions for every output field of your formulation, and "
+            "(iii) how mass conservation is monitored quantitatively over the simulated "
+            "horizon — including a numeric drift tolerance and the monitoring cadence; "
+            "both are required deliverables. If you train directly on the fourth-order "
+            "form, justify the differentiation cost and conditioning consequences "
+            "explicitly."
         ),
         "tags_add": ["mixed_formulation", "structural_commitment"],
     },
@@ -876,13 +1003,56 @@ REWRITES = {
                 "description": "声称监控质量守恒但无漂移阈值/容差（守恒承诺不可证伪）",
                 "pattern": r"mass\s+(?:conservation|is\s+conserved)|conserv\w*[^.]{0,40}\bmass\b|total\s+(?:phase\s+)?mass",
                 "support_patterns": [
-                    r"toleran", r"threshold", r"drift[^.]{0,60}(?:below|under|<|bound)",
-                    r"[0-9]+(?:\.[0-9]+)?\s*%", r"1e-[0-9]", r"10\^\{?-",
+                    # 回炉 §2（2026-07-15）：批次 1 零触发——裸 "tolerance/threshold"
+                    # 字样即算支持，模型口头对冲即逃逸。收紧为必须带数字。
+                    r"(?:toleran\w*|threshold|drift)[^.]{0,60}?(?:[0-9]+(?:\.[0-9]+)?\s*(?:%|percent)|1e-[0-9]|10\^\{?-[0-9]|0\.0*[0-9]+)",
+                    r"(?:[0-9]+(?:\.[0-9]+)?\s*(?:%|percent)|1e-[0-9]|10\^\{?-[0-9])[^.]{0,60}?(?:toleran\w*|threshold|drift)",
                 ],
                 "on_contradiction": "cap_conservation_no_tolerance",
                 "selftest": {
                     "gold": "We monitor total phase mass over the horizon and require the drift to stay below a tolerance of 1e-3 relative to the initial mass.",
                     "tamper": "Total phase mass is monitored during training to confirm the conserved dynamics are respected.",
+                },
+            },
+            # 回炉 §2（2026-07-15）：数值容差 + μ 边界条件配对，两个新强制承诺。
+            {
+                "claim_id": "mass_drift_tolerance_stated",
+                "type": "required_deliverable",
+                "basis": "spec",
+                "facets": ALL_FACETS,
+                "home_facet": "validation_failure_risks",
+                "description": "题面要求给出质量漂移的数值容差；全文无带数字的容差表述即触发",
+                "patterns": [
+                    r"(?:mass|conserv\w*|drift)[^.]{0,100}?(?:1e-[0-9]+|10\^\{?-[0-9]+|[0-9]+(?:\.[0-9]+)?\s*(?:%|percent)|0\.0*[0-9]+)",
+                    r"(?:1e-[0-9]+|10\^\{?-[0-9]+|[0-9]+(?:\.[0-9]+)?\s*(?:%|percent))[^.]{0,80}?(?:mass|conserv\w*|drift)",
+                ],
+                "on_contradiction": "cap_conservation_no_tolerance",
+                "selftest": {
+                    "gold": "Mass conservation is checked every 500 steps with a relative drift tolerance of 1e-3.",
+                    "tamper": "Mass conservation is monitored regularly and any noticeable drift triggers retraining with stronger constraints.",
+                },
+            },
+            {
+                "claim_id": "split_without_mu_bc",
+                "type": "claim_without_support",
+                "basis": "plan_internal",
+                "facets": ["model_choice", "physics_constraints", "training_strategy"],
+                "scope": "plan",
+                "description": "声明混合/分裂形式（μ 为输出场）但从未给 μ 的边界条件（题面已要求每个输出场的 BC）",
+                "pattern": r"mixed\s+formulation|split(?:ting)?\s+(?:form|scheme|formulation)|outputs?[^.]{0,40}\(\s*u\s*,\s*mu\s*\)",
+                "support_patterns": [
+                    # 邻近匹配会把 "outputs (u, mu); the boundary..." 误当 μ-BC 证据
+                    # ——须是介词连接的 BC 陈述句式。
+                    r"(?:periodic|neumann|natural|no[- ]flux|zero[- ]flux)\s+(?:boundary\s+)?conditions?\s+(?:on|for)[^.]{0,40}?(?:\bmu\b|chemical\s+potential)",
+                    r"(?:boundary\s+conditions?|bcs?)\s+(?:on|for)\s+(?:both\s+)?[^.]{0,30}?\bmu\b",
+                    r"(?:\bmu\b|chemical\s+potential)[^.]{0,30}?(?:satisfies|obeys|inherits)[^.]{0,40}?(?:boundary|periodic|neumann|no[- ]flux)",
+                    r"(?:on|for)\s+both\s+u\s+and\s+(?:\bmu\b|chemical\s+potential)",
+                    r"grad\s*\(?\s*mu\s*\)?\s*(?:\.|·)\s*n\s*=\s*0",
+                ],
+                "on_contradiction": "cap_split_without_mu_bc",
+                "selftest": {
+                    "gold": "We use the mixed formulation with outputs (u, mu) and impose periodic boundary conditions on both u and mu.",
+                    "tamper": "We use the mixed formulation with outputs (u, mu); the boundary conditions fix u at the domain walls.",
                 },
             },
         ],
@@ -893,9 +1063,13 @@ REWRITES = {
              "affected_facets": ["model_choice", "training_strategy"], "max_score": 3,
              "rationale": "Nominal-splitting trap: mentioning mu is not a structural commitment."},
             {"rule_id": "cap_conservation_no_tolerance", "trigger": "claim",
-             "condition": "claims mass-conservation monitoring without any drift tolerance or threshold",
+             "condition": "claims mass-conservation monitoring without a numeric drift tolerance, or omits the numeric tolerance the prompt requires as a deliverable",
              "affected_facets": ["validation_failure_risks"], "max_score": 4,
-             "rationale": "A conservation promise without a falsifiable threshold is template text."},
+             "rationale": "A conservation promise without a falsifiable numeric threshold is template text."},
+            {"rule_id": "cap_split_without_mu_bc", "trigger": "claim",
+             "condition": "declares a mixed/split formulation with mu as an output field but never states mu's boundary conditions (the prompt requires BCs for every output field)",
+             "affected_facets": ["model_choice", "physics_constraints"], "max_score": 3,
+             "rationale": "The coupled second-order system is well-posed only with BCs for both fields; omitting mu's BC is the structural version of nominal splitting."},
         ],
         "failure_traps_add": [
             "nominal chemical potential (mentioned but not an output/residual)",
@@ -1015,14 +1189,16 @@ REWRITES = {
             "A geoscience team models steady Darcy flow through a porous medium whose "
             "permeability field is known but piecewise-heterogeneous: it contains "
             "sharp, channel-like contrasts across internal interfaces where the "
-            "permeability jumps by orders of magnitude. Boundary conditions are "
-            "available. Design a physics-informed modeling workflow for the hydraulic "
-            "head. Make explicit (i) the exact differential or integral form of the "
-            "residual you train on, and why it remains mathematically valid where the "
-            "permeability is not differentiable, (ii) what is continuous across a "
-            "permeability interface and what is not, and how your representation and "
-            "sampling respect that, and (iii) a validation check specific to interface "
-            "behavior, not just a global error."
+            "permeability jumps by a factor of 100 in the reference configuration. "
+            "Boundary conditions are available. Design a physics-informed modeling "
+            "workflow for the hydraulic head. Make explicit (i) the exact differential "
+            "or integral form of the residual you train on, and why it remains "
+            "mathematically valid where the permeability is not differentiable, "
+            "(ii) what is continuous across a permeability interface and what is not — "
+            "including, as a number, the factor by which the normal derivative of the "
+            "head jumps across the reference interface — and how your representation "
+            "and sampling respect that, and (iii) a validation check specific to "
+            "interface behavior, not just a global error."
         ),
         "tags_add": ["conservative_form", "interface_flux", "piecewise_coefficients"],
     },
@@ -1067,6 +1243,27 @@ REWRITES = {
                     "tamper": "Across the permeability interface both the head and its normal derivative are continuous.",
                 },
             },
+            # 回炉 §2（2026-07-15）：批次 1 spread=2/零触发——界面物理表述题无数值锚。
+            # 契合比值公开为 100，跳变算术改为强制交付物。方向歧义（100 或 1/100
+            # 取决于朝向）故不设 param_value 单真值对账，两个方向都算完成算术。
+            {
+                "claim_id": "jump_ratio_stated",
+                "type": "required_deliverable",
+                "basis": "spec",
+                "facets": ALL_FACETS,
+                "home_facet": "physics_constraints",
+                "description": "题面要求写出法向导数跨界面的跳变倍数（契合比 100，方向另算 0.01）；全文缺席即触发",
+                "patterns": [
+                    r"(?:derivative|gradient|dh/dn|∂h/∂n)[^.]{0,120}?(?:factor\s+of\s+|by\s+|ratio\s+(?:of\s+)?|=\s*|:\s*)(?:100|1/100|0\.01)\b",
+                    r"(?:factor\s+of\s+|jumps?\s+by\s+|ratio\s+(?:of\s+)?)(?:100|1/100|0\.01)\b[^.]{0,100}?(?:derivative|gradient|interface)",
+                    r"(?:kappa_?1\s*/\s*kappa_?2|permeability\s+ratio)[^.]{0,80}?(?:100|1/100|0\.01)\b",
+                ],
+                "on_contradiction": "cap_no_jump_arithmetic",
+                "selftest": {
+                    "gold": "Flux continuity forces the normal derivative of the head to jump by the permeability ratio: a factor of 100 across the reference interface.",
+                    "tamper": "The normal derivative of the head jumps across the interface by the permeability ratio, which our sampling respects.",
+                },
+            },
         ],
         "cap_rules_mode": "replace",
         "cap_rules": [
@@ -1082,6 +1279,10 @@ REWRITES = {
              "condition": "validation has no interface-specific check (flux jump across interfaces, local residual concentration)",
              "affected_facets": ["validation_failure_risks"], "max_score": 3,
              "rationale": "Global error hides interface failure."},
+            {"rule_id": "cap_no_jump_arithmetic", "trigger": "claim",
+             "condition": "the plan never states the numeric derivative-jump factor the prompt explicitly requires (permeability ratio 100, or 1/100 by orientation)",
+             "affected_facets": ["physics_constraints"], "max_score": 3,
+             "rationale": "The jump arithmetic is an announced deliverable; interface prose without the number does not satisfy it."},
         ],
         "failure_traps_add": [
             "expands the divergence form across non-smooth kappa",
@@ -1097,7 +1298,7 @@ REWRITES = {
         "set": {
             "canonical_pde": "steady Darcy, conservative form: div(kappa(x)*grad(h)) = 0 with kappa piecewise constant (sharp channel-like contrasts)",
             "parameter_values": {
-                "kappa_contrast": "100:1 (private instance)",
+                "kappa_contrast": "100:1 (回炉 §2 2026-07-15 起公开于题面)",
                 "geometry": ("two-zone layered medium on [0,1]^2 (private): interface y=0.5, "
                              "kappa=1.0 for y>0.5, kappa=0.01 for y<0.5"),
                 "bc": "h(x,1)=1, h(x,0)=0, zero-flux lateral sides, f=0",
@@ -1124,8 +1325,10 @@ REWRITES = {
             "both phase and amplitude accuracy matter. Design a physics-informed "
             "modeling workflow and discuss training and validation risks. Quantify your "
             "sampling in points per wavelength and show the resulting total budget is "
-            "consistent with the stated domain-to-wavelength ratio; a named "
-            "architecture without this arithmetic is not sufficient."
+            "consistent with the stated domain-to-wavelength ratio: state both the "
+            "points-per-wavelength figure and the resulting total collocation count as "
+            "explicit numbers — they are required deliverables. A named architecture "
+            "without this arithmetic is not sufficient."
         ),
         "tags_add": ["points_per_wavelength", "sampling_arithmetic"],
     },
@@ -1155,6 +1358,39 @@ REWRITES = {
                 "selftest": {
                     "gold": "We use 10 points per wavelength; the domain spans roughly 20 wavelengths in each direction, giving a total of 40,000 collocation points.",
                     "tamper": "We use 10 points per wavelength; the domain spans roughly 20 wavelengths in each direction, and a total of 2,000 collocation points suffices.",
+                },
+            },
+            # 回炉 §2（2026-07-15）：arithmetic claim 需三量齐备才可判，批次 1 零触发
+            # ——缺席即逃逸。ppw 数字与总配点数分别设为强制交付物（n_wl 题面已给 20）。
+            {
+                "claim_id": "ppw_figure_stated",
+                "type": "required_deliverable",
+                "basis": "spec",
+                "facets": ALL_FACETS,
+                "home_facet": "training_strategy",
+                "description": "题面要求以显式数字给出每波长配点数；全文缺席即触发",
+                "patterns": [
+                    NUM + r"\s*(?:collocation\s+)?points?\s+per\s+wavelength",
+                    r"ppw\s*(?:=|of|:)\s*" + NUM,
+                ],
+                "on_contradiction": "cap_no_sampling_arithmetic",
+                "selftest": {
+                    "gold": "We sample 12 points per wavelength to control the phase error over twenty wavelengths.",
+                    "tamper": "We refine the sampling adaptively near oscillatory regions until the residual stabilizes.",
+                },
+            },
+            {
+                "claim_id": "total_points_stated",
+                "type": "required_deliverable",
+                "basis": "spec",
+                "facets": ALL_FACETS,
+                "home_facet": "training_strategy",
+                "description": "题面要求以显式数字给出总配点数；全文缺席即触发",
+                "patterns": POINTS_PATTERNS,
+                "on_contradiction": "cap_no_sampling_arithmetic",
+                "selftest": {
+                    "gold": "The budget works out to 57,600 collocation points in total, refreshed by resampling every 2,000 steps.",
+                    "tamper": "The collocation set is drawn each epoch to cover the domain densely enough for the frequency content.",
                 },
             },
             {
@@ -1199,6 +1435,10 @@ REWRITES = {
              "condition": "states a points-per-wavelength figure, a domain-to-wavelength ratio, and a total collocation budget that are mutually inconsistent by more than an order of magnitude",
              "affected_facets": ["training_strategy"], "max_score": 3,
              "rationale": "Unverified quantitative claim: the three numbers are all given by the plan itself."},
+            {"rule_id": "cap_no_sampling_arithmetic", "trigger": "claim",
+             "condition": "the plan omits the points-per-wavelength figure or the total collocation count that the prompt requires as explicit numeric deliverables",
+             "affected_facets": ["training_strategy"], "max_score": 3,
+             "rationale": "The sampling arithmetic is an announced deliverable; adaptive-sampling prose without numbers does not satisfy it."},
         ],
         "failure_traps_add": [
             "PPW arithmetic inconsistent",
