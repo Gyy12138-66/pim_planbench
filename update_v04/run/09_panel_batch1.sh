@@ -67,14 +67,15 @@ python3 scripts/build_model_output_rows_v03.py \
   --output scores/pilot_v0.4/ModelOutput_batch1_v0.4.csv \
   --quality-output scores/pilot_v0.4/model_output_quality_batch1_v0.4.csv
 
-# P-A 定稿（2026-07-15 起与六题回炉一起生效）：strict-five θ=0.85，
-# v0.4 量纲；批次 2 新样本复核通过前视为暂定校准。
+# P-A θ 修订 0.85→0.80（作者裁决 2026-07-15 深夜）：六题回炉后新数据上
+# θ 全扫描无 C1/C2 双过点（cap 机制的结构性张力），取 0.80（C1=14.1% 过线）
+# 并配合 002/012 二轮回炉补足 C2。批次 2 新样本复核通过前视为暂定校准。
 python3 update_v04/scorer_v04/score_v04.py \
   --input scores/pilot_v0.4/ModelOutput_batch1_v0.4.csv \
   --output scores/pilot_v0.4/ModelOutput_batch1_scored_v0.4.csv \
   --summary scores/pilot_v0.4/score_summary_by_model_batch1_v0.4.csv \
   --task-summary scores/pilot_v0.4/score_summary_by_task_model_batch1_v0.4.csv \
-  --strict-five-threshold 0.85
+  --strict-five-threshold 0.80
 
 python3 update_v04/run/06_item_metrics.py \
   --scored-csv scores/pilot_v0.4/ModelOutput_batch1_scored_v0.4.csv \

@@ -93,8 +93,11 @@ REWRITES = {
             "(ii) the two numeric values that decide corner compatibility at "
             "(x,t) = (0,0) — the initial-velocity value at the endpoint and the time "
             "derivative of the boundary condition — whether they match, and what the "
-            "workflow does about any mismatch, and (iii) which physical invariants of "
-            "the ideal system you will monitor during validation and with what tolerance."
+            "workflow does about any mismatch, including along which line in the "
+            "space-time domain the corner mismatch propagates and the size of the "
+            "velocity discontinuity it carries, and how your validation detects that "
+            "propagating defect, and (iii) which physical invariants of the ideal "
+            "system you will monitor during validation and with what tolerance."
         ),
         "tags_add": ["derivative_ic", "corner_compatibility", "energy_conservation"],
     },
@@ -145,6 +148,27 @@ REWRITES = {
                     "tamper": "The corner check gives v(0) = 0.5 from the initial velocity, so the mismatch is 0.5 and must be handled.",
                 },
             },
+            # 回炉二轮（2026-07-15 深夜）：一轮后全员会做角点算术，spread 压回 2。
+            # 加深支点：失配沿特征线 x=ct 传播、携带 0.1 的速度间断——机制+数值
+            # 双承诺（模式词与 0.1 必须同窗出现）。
+            {
+                "claim_id": "characteristic_propagation_stated",
+                "type": "required_deliverable",
+                "basis": "spec",
+                "facets": ALL_FACETS,
+                "home_facet": "validation_failure_risks",
+                "description": "题面要求写出角点失配的传播线（特征线 x=ct）与其携带的速度间断幅值 0.1；机制词与数值全文不同窗共现即触发",
+                "patterns": [
+                    r"(?:characteristic|x\s*=\s*c\s*\*?\s*t|light\s+cone)[^.]{0,140}?0\.1\b",
+                    r"0\.1\b[^.]{0,120}?(?:characteristic|propagat\w*|x\s*=\s*c\s*\*?\s*t)",
+                    r"(?:discontinuit\w*|jump|defect)[^.]{0,60}?(?:of\s+|=\s*|:\s*)?0\.1\b[^.]{0,80}?(?:propagat\w*|travels?|characteristic|along)",
+                ],
+                "on_contradiction": "cap_no_characteristic_analysis",
+                "selftest": {
+                    "gold": "The 0.1 velocity mismatch at the corner propagates along the characteristic x = c*t, carrying a u_t discontinuity of 0.1 that our validation traces with a residual probe along that line.",
+                    "tamper": "The corner mismatch of 0.1 is handled by relaxing the corner residual weight so training remains stable near (0,0).",
+                },
+            },
         ],
         "cap_rules_mode": "replace",
         "cap_rules": [
@@ -156,6 +180,10 @@ REWRITES = {
              "condition": "states a corner-mismatch value inconsistent with the public instance (0.1)",
              "affected_facets": ["problem_formalization", "physics_constraints"], "max_score": 2,
              "rationale": "Hallucinated specification: both corner values follow from the public data."},
+            {"rule_id": "cap_no_characteristic_analysis", "trigger": "claim",
+             "condition": "the plan never states where the corner mismatch propagates (the characteristic x=ct) together with the carried discontinuity magnitude 0.1, despite the prompt requiring both",
+             "affected_facets": ["physics_constraints", "validation_failure_risks"], "max_score": 3,
+             "rationale": "Detecting the corner defect requires knowing it propagates along the characteristic; corner-local remedies alone miss the announced deliverable."},
             {"rule_id": "cap_velocity_ic_value", "trigger": "cue",
              "condition": "enforces only the displacement initial condition, or treats the initial velocity as a value constraint on u rather than a constraint on the time derivative of the network output (or an equivalent hard-encoding)",
              "affected_facets": ["physics_constraints", "training_strategy"], "max_score": 2,
@@ -483,6 +511,7 @@ REWRITES = {
             ],
         },
         "set": {
+            "c4_exemption": "保险型（C4 修正案 2026-07-15）：正则化缺席陷阱，批次 1 前沿面板全员正确避开（spread 4 达标），tamper selftest 证明检出能力，保留以防弱模型面板",
             "parameter_values": {
                 "source_instance": ("two-lobe Gaussian mixture (private): "
                                     "f = A1*exp(-|x-c1|^2/(2*sigma^2)) + A2*exp(-|x-c2|^2/(2*sigma^2)), "
@@ -505,34 +534,59 @@ REWRITES = {
     "revision": "rewritten",
     "public": {
         "problem": (
-            "A team has sparse sensor measurements of a one-dimensional wave field over "
-            "a time window. The wave speed is known, but neither initial conditions nor "
-            "boundary conditions are provided. Whether the field is recoverable at all "
-            "depends on how the sensor locations and the recording window relate to the "
-            "domain of dependence of the wave equation. Design a physics-informed "
-            "modeling workflow that (i) states a concrete sufficiency argument — in "
-            "terms of wave speed, sensor positions, and window length — for which part "
-            "of the space-time domain is recoverable, (ii) declares every assumption "
-            "made about the unprovided initial and boundary information, and (iii) "
-            "specifies what the workflow reports for regions it cannot constrain. Plans "
-            "that silently assume full initial or boundary data are not acceptable."
+            "A team has sparse sensor measurements of a one-dimensional wave field on "
+            "the unit interval: four interior sensors at x = 0.2, 0.4, 0.6, 0.8, each "
+            "recording over the window [0, T] with T = 2. The wave speed is c = 1. "
+            "Neither initial conditions nor boundary conditions are provided. Whether "
+            "the field is recoverable at all depends on how the sensor locations and "
+            "the recording window relate to the domain of dependence of the wave "
+            "equation. Design a physics-informed modeling workflow that (i) states a "
+            "concrete sufficiency argument for which part of the space-time domain is "
+            "recoverable — make it quantitative: state the value of c*T, compare it "
+            "against the domain length and the largest sensor gap, and these numbers "
+            "are required deliverables, (ii) declares every assumption made about the "
+            "unprovided initial and boundary information, and (iii) specifies what the "
+            "workflow reports for regions it cannot constrain. Plans that silently "
+            "assume full initial or boundary data are not acceptable."
         ),
         "tags_add": ["observability", "data_assimilation", "underdetermined"],
     },
     "private": {
         "task_type_decl": "inverse",
         "human_review": RESOLVED_HR,
-        "verifiable_claims": [],   # 全 cue 题：锥覆盖对账需要几何推理，v0.4 正则做不到高精确率
+        # 回炉二轮（2026-07-15 深夜）：全 cue 政策解除——实例数值公开后，
+        # 锥覆盖算术（c*T=2 vs 域长 1、最大传感器间隙 0.2）可高精确率核验。
+        "verifiable_claims": [
+            {
+                "claim_id": "cone_arithmetic_stated",
+                "type": "required_deliverable",
+                "basis": "spec",
+                "facets": ALL_FACETS,
+                "home_facet": "problem_formalization",
+                "description": "题面要求量化充分性论证：写出 c*T=2 并与域长 1/最大间隙 0.2 比较；全文无任何锥覆盖算术数字即触发",
+                "patterns": [
+                    r"c\s*[*·x×]?\s*T\s*(?:=|≈|is|:)\s*2(?:\.0)?\b",
+                    r"2(?:\.0)?\s*(?:>|exceeds|is\s+greater\s+than|≥)\s*(?:the\s+)?(?:domain|unit|length|1(?:\.0)?\b)",
+                    r"(?:largest|maximum|max|adjacent)\s+(?:sensor\s+)?(?:gap|spacing|separation)[^.]{0,50}?0\.2\b",
+                    r"(?:influence|dependence)\s+cones?[^.]{0,100}?(?:2(?:\.0)?|0\.2)\b",
+                ],
+                "on_contradiction": "cap_no_observability_argument",
+                "selftest": {
+                    "gold": "With c = 1 and T = 2 the product c*T = 2 exceeds the unit domain length, and the largest sensor gap is 0.2, so the sensor influence cones jointly cover the space-time slab.",
+                    "tamper": "The influence cones of the sensors jointly cover the domain for a sufficiently long recording window, so the reconstruction argument goes through.",
+                },
+            },
+        ],
         "cap_rules_mode": "replace",
         "cap_rules": [
             {"rule_id": "cap_hallucinated_icbc", "trigger": "cue",
              "condition": "assumes complete initial or boundary conditions that the prompt does not provide, without labeling them as assumptions and without stating how the workflow changes if they are unavailable",
              "affected_facets": ["problem_formalization"], "max_score": 2,
              "rationale": "Hallucinated specification — the prompt explicitly withholds IC/BC."},
-            {"rule_id": "cap_no_observability_argument", "trigger": "cue",
-             "condition": "no sufficiency/observability argument connects sensors, wave speed, and window to the claimed reconstruction",
+            {"rule_id": "cap_no_observability_argument", "trigger": "claim",
+             "condition": "the plan never states the cone-coverage arithmetic the prompt requires as numbers (c*T=2 vs domain length 1, largest sensor gap 0.2) — qualitative observability prose does not satisfy the deliverable (upgraded from cue, rework round 2, 2026-07-15)",
              "affected_facets": ["problem_formalization", "validation_failure_risks"], "max_score": 3,
-             "rationale": "The observability argument is the explicit deliverable of the task."},
+             "rationale": "The quantitative observability argument is the explicit deliverable of the task."},
             {"rule_id": "cap_recovery_beyond_cones", "trigger": "cue",
              "condition": "claims to reconstruct the entire space-time field from sensors whose domains of influence provably do not cover it",
              "affected_facets": ["problem_formalization", "physics_constraints"], "max_score": 2,
@@ -553,7 +607,7 @@ REWRITES = {
             "parameter_values": {
                 "c": "1.0",
                 "sensors": ("4 interior sensors at x = 0.2, 0.4, 0.6, 0.8, each recording "
-                            "25 equispaced times in [0, T] (private layout; "
+                            "25 equispaced times in [0, T] (布局回炉二轮 2026-07-15 起公开于题面; "
                             "100 space-time observations total)"),
                 "window": "T = 2.0",
                 "noise": "1 percent Gaussian noise",
@@ -943,6 +997,9 @@ REWRITES = {
             ],
         },
         "expected_loss_terms_note": "constraints may instead be satisfied by construction via a periodic embedding — the plan must then declare this under Model Choice (no loss term expected in that case)",
+        "set": {
+            "c4_exemption": "保险型（C4 修正案 2026-07-15）：仅值周期性陷阱，前沿面板全员正确覆盖导数级周期性（spread 4 达标），tamper selftest 证明检出能力",
+        },
     },
 },
 
@@ -1175,6 +1232,7 @@ REWRITES = {
             ],
         },
         "set": {
+            "c4_exemption": "保险型（C4 修正案 2026-07-15）：绝对压力/散度监控陷阱，前沿面板全员正确表述规范自由度，tamper selftest 证明检出能力",
             "unknowns": ["u(x,y,t)", "v(x,y,t)", "p(x,y,t) up to an additive constant"],
             "parameter_values": {"instance": "Taylor-Green vortex, nu = 0.01 (private reference; execution-validity candidate)"},
         },
@@ -1771,6 +1829,7 @@ REWRITES = {
             ],
         },
         "set": {
+            "c4_exemption": "保险型（C4 修正案 2026-07-15）：浮力/对流项遗漏陷阱，前沿面板全员正确写出双向耦合，tamper selftest 证明检出能力",
             "canonical_pde": "Boussinesq system (nondimensional): u_t + u·grad(u) = -grad(p) + Pr*lap(u) + Ra*Pr*T*e_z; div(u)=0; T_t + u·grad(T) = lap(T)",
             "parameter_values": {"Ra": "5e3 (laminar steady rolls, private instance)", "Pr": "0.71"},
         },

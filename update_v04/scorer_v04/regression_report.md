@@ -68,10 +68,12 @@
 
 | task                              | arm   |   contradiction |   support | kinds                                 |
 |:----------------------------------|:------|----------------:|----------:|:--------------------------------------|
-| easy_wave_1d_icbc_002             | S1    |               0 |         1 | missing_deliverable                   |
-| easy_wave_1d_icbc_002             | S2    |               0 |         1 | missing_deliverable                   |
+| easy_wave_1d_icbc_002             | S1    |               0 |         2 | missing_deliverable                   |
+| easy_wave_1d_icbc_002             | S2    |               0 |         2 | missing_deliverable                   |
 | easy_burgers_1d_periodic_004      | S1    |               0 |         1 | missing_deliverable                   |
 | easy_burgers_1d_periodic_004      | S2    |               0 |         1 | missing_deliverable                   |
+| medium_wave_sparse_sensors_012    | S1    |               0 |         1 | missing_deliverable                   |
+| medium_wave_sparse_sensors_012    | S2    |               0 |         1 | missing_deliverable                   |
 | medium_heat_mixed_bc_014          | S1    |               0 |         1 | missing_deliverable                   |
 | medium_heat_mixed_bc_014          | S2    |               0 |         1 | missing_deliverable                   |
 | hard_cahn_hilliard_017            | S1    |               0 |         1 | missing_deliverable                   |

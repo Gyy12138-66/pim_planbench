@@ -4,8 +4,9 @@
   C1  facet 满分率 < 15%（全库非 canary；v0.3 现状 38.1%）
   C2  重写题（revision != unchanged）spread 中位数 ≥ 4
   C3  [已废除 2026-07-15 修正案] 难度层均分仅作描述性报告（脱钩=论文发现）
-  C4  每道 claim-capable 重写题至少 1 个模型触发任务特异 cap
-      （claim_findings 非空；全 cue 题 002/006/012 无 claims，记 N/A）
+  C4  [修正案 2026-07-15] claim 能力认定 = 面板触发 ∨ deliverable 合规
+      （required_deliverable 存在且零缺席）∨ 数据侧 c4_exemption 豁免
+      （全 cue 题从 references 派生，记 N/A）
 
 exit 0 = 全部适用判据 PASS（题集可冻结，进批次 2）；exit 2 = 有判据 FAIL
 （不达标题回炉修订——见逐题表）。
@@ -26,8 +27,9 @@ DEFAULT_SCORED = os.path.join(ROOT, "scores", "pilot_v0.4",
                               "ModelOutput_batch1_scored_v0.4.csv")
 DEFAULT_REFS = os.path.join(ROOT, "dataset", "references_private_v0.4.jsonl")
 DIFF_ORDER = ["easy", "medium", "hard", "hard_plus"]
-ALL_CUE_TASKS = {"easy_wave_1d_icbc_002", "easy_reaction_diffusion_1d_006",
-                 "medium_wave_sparse_sensors_012"}
+# C4 修正案（作者裁决 2026-07-15，rework_batch1_v0.4.md §1）：全 cue 集合改为
+# 从 references 派生（verifiable_claims 为空），不再硬编码——002/012 回炉获得
+# claims 后自动退出 N/A 集。
 
 
 def main() -> int:
@@ -69,8 +71,22 @@ def main() -> int:
     # "规划难度与执行难度脱钩"作为论文实证发现报告，支点密度 tier 另行入元数据。
     c3_monotone = all(layer_mean[a] > layer_mean[b]
                       for a, b in zip(DIFF_ORDER, DIFF_ORDER[1:]))
-    c4_applicable = [t for t in revised if t not in ALL_CUE_TASKS]
-    c4_missing = [t for t in c4_applicable if not claim_hits.get(t)]
+    # C4 修正案语义：claim 能力认定 = 面板实弹触发，或（有 required_deliverable
+    # 且面板零缺席 = 题面强制生效、全员合规——机器可查），或数据侧 c4_exemption
+    # 豁免（保险型陷阱：前沿面板正确避开，tamper selftest 证明能力）。
+    all_cue_tasks = {t for t in revised if not refs[t].get("verifiable_claims")}
+    c4_applicable = [t for t in revised if t not in all_cue_tasks]
+    c4_missing, c4_complied, c4_exempt = [], [], []
+    for t in c4_applicable:
+        if claim_hits.get(t):
+            continue
+        if any(c.get("type") == "required_deliverable"
+               for c in refs[t].get("verifiable_claims", [])):
+            c4_complied.append(t)
+        elif refs[t].get("c4_exemption"):
+            c4_exempt.append(t)
+        else:
+            c4_missing.append(t)
     c4 = not c4_missing
 
     print("== 批次 1 预注册验收（item_analysis §6）==")
@@ -79,9 +95,13 @@ def main() -> int:
     print(f"C3 难度层均分[已废除,仅报告]: {'单调' if c3_monotone else '非单调'}  ("
           + " > ".join(f"{d} {layer_mean[d]:.1f}" for d in DIFF_ORDER)
           + ")  修正案 2026-07-15：脱钩转论文发现")
-    print(f"C4 重写题 claim cap≥1:  {'PASS' if c4 else 'FAIL'}"
-          + (f"  未触发: {sorted(c4_missing)}" if c4_missing else "")
-          + f"  (适用 {len(c4_applicable)} 题, 全 cue 题 {len(ALL_CUE_TASKS)} 记 N/A)")
+    print(f"C4 claim 能力[修正案]:  {'PASS' if c4 else 'FAIL'}"
+          + (f"  未认定: {sorted(c4_missing)}" if c4_missing else "")
+          + f"  (适用 {len(c4_applicable)} 题, 全 cue 题 {len(all_cue_tasks)} 记 N/A)")
+    if c4_complied:
+        print(f"    合规型（deliverable 强制生效,面板零缺席）: {sorted(c4_complied)}")
+    if c4_exempt:
+        print(f"    保险型豁免（c4_exemption,tamper selftest 证明能力）: {sorted(c4_exempt)}")
     print("\n逐题（重写题）: task | spread | 满分率 | claim cap 模型数")
     for t in sorted(revised):
         sub = [float(r["score"]) for r in rows if r["task_id"] == t]
