@@ -62,7 +62,16 @@
 | medium_burgers_inverse_viscosity_010 | deepseek/deepseek-v4-pro      | -                     |            0 |    22 |    22 | -                                  |
 | medium_burgers_inverse_viscosity_010 | qwen/qwen3.7-max              | -                     |            0 |    24 |    24 | -                                  |
 
+## R6 堆砌臂（S1/S2 × 25 题 × claim_verifier_v04）
+
+矛盾类检出 0/50（门）；有检出的臂如下（support 类 = claim_without_support，属正当遏制记录）：
+
+| task                   | arm   |   contradiction |   support | kinds             |
+|:-----------------------|:------|----------------:|----------:|:------------------|
+| hard_cahn_hilliard_017 | S2    |               0 |         1 | unsupported_claim |
+
 ## 判据
 
 R1 D3 数值篡改检出（003/005/016/023）；R2 D3 幻觉组件检出（010）；
-R3 D2 任务类型检出（5 题）；R4 G/T/N/D1 零误伤；R5 cap 后 D2/D3 < G。
+R3 D2 任务类型检出（5 题）；R4 G/T/N/D1 零误伤；R5 cap 后 D2/D3 < G；
+R6 S1/S2 堆砌臂矛盾类零检出（support 类计数入报告）。

@@ -234,7 +234,7 @@ def apply_caps(facet_scores, findings, ref):
 
 def load_references(path):
     refs = {}
-    with open(path) as fh:
+    with open(path, encoding="utf-8") as fh:
         for line in fh:
             if line.strip():
                 d = json.loads(line)

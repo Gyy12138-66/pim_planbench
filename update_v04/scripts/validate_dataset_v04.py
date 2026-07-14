@@ -110,9 +110,9 @@ def main():
     root = Path(args.repo_root)
     ds = root / "dataset"
 
-    pubs = [json.loads(l) for l in (ds / "tasks_public_v0.4.jsonl").read_text().splitlines() if l.strip()]
-    privs = [json.loads(l) for l in (ds / "references_private_v0.4.jsonl").read_text().splitlines() if l.strip()]
-    v03_ids = {json.loads(l)["id"] for l in (ds / "references_private_v0.3.jsonl").read_text().splitlines() if l.strip()}
+    pubs = [json.loads(l) for l in (ds / "tasks_public_v0.4.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
+    privs = [json.loads(l) for l in (ds / "references_private_v0.4.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
+    v03_ids = {json.loads(l)["id"] for l in (ds / "references_private_v0.3.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()}
     pub_by_id = {d["id"]: d for d in pubs}
     priv_by_id = {d["id"]: d for d in privs}
 
@@ -201,7 +201,7 @@ def main():
         err("dataset/CHANGELOG_v0.4.md 缺失")
     else:
         rows = dict(re.findall(r"^\|\s*`?([a-zA-Z0-9_]+)`?\s*\|\s*([a-z_]+)\s*\|",
-                               chlog.read_text(), re.MULTILINE))
+                               chlog.read_text(encoding="utf-8"), re.MULTILINE))
         for priv in privs:
             tid = priv["id"]
             if tid.startswith(CANARY_PREFIX):

@@ -216,8 +216,8 @@ def main():
     root = Path(args.repo_root)
     ds = root / "dataset"
 
-    pubs = [json.loads(l) for l in (ds / "tasks_public_v0.3.jsonl").read_text().splitlines() if l.strip()]
-    privs = [json.loads(l) for l in (ds / "references_private_v0.3.jsonl").read_text().splitlines() if l.strip()]
+    pubs = [json.loads(l) for l in (ds / "tasks_public_v0.3.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
+    privs = [json.loads(l) for l in (ds / "references_private_v0.3.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
     priv_by_id = {d["id"]: d for d in privs}
 
     out_pub, out_priv, stats = [], [], {"rewritten": 0, "light_edit": 0, "relocated": 0,
@@ -256,9 +256,11 @@ def main():
     out_priv.append(c_priv)
 
     (ds / "tasks_public_v0.4.jsonl").write_text(
-        "".join(json.dumps(d, ensure_ascii=False) + "\n" for d in out_pub))
+        "".join(json.dumps(d, ensure_ascii=False) + "\n" for d in out_pub),
+        encoding="utf-8")
     (ds / "references_private_v0.4.jsonl").write_text(
-        "".join(json.dumps(d, ensure_ascii=False) + "\n" for d in out_priv))
+        "".join(json.dumps(d, ensure_ascii=False) + "\n" for d in out_priv),
+        encoding="utf-8")
 
     n_claims = sum(len(d.get("verifiable_claims", [])) for d in out_priv)
     n_claim_rules = sum(1 for d in out_priv for r in d.get("facet_cap_rules", [])
